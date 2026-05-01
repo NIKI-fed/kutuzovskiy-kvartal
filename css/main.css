@@ -320,6 +320,78 @@ body {
     letter-spacing: 1.5px;
 }
 
+/* ========== СЕКЦИЯ "РАСПОЛОЖЕНИЕ" ========== */
+.location-fullwidth {
+    width: 100%;
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.location-fullwidth__inner {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.location-fullwidth__tag {
+    display: inline-block;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #2c7a6e;
+    font-weight: 500;
+}
+
+/* Три колонки с иконками */
+.location-fullwidth__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-block: 60px;
+}
+
+.location-stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.location-stat__icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.location-stat__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.location-stat__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin-bottom: 4px;
+}
+
+.location-stat__desc {
+    font-size: 14px;
+    color: #5a6e7c;
+    line-height: 1.4;
+}
+
+/* Карта с отступами */
+.location-fullwidth__map {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.location-fullwidth__map iframe {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: none;
+}
+
 /* ========== СЕКЦИЯ С ГАЛЕРЕЕЙ В ШАХМАТНОМ ПОРЯДКЕ ========== */
 .features-fullwidth {
     width: 100%;
