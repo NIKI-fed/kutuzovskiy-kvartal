@@ -61,13 +61,13 @@ function openModal() {
     modal.classList.add('active');
     if (modalBody) modalBody.style.display = 'block';
     if (modalSuccess) modalSuccess.style.display = 'none';
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
     if (!modal) return;
     modal.classList.remove('active');
-    document.body.style.overflow = '';
+    // document.body.style.overflow = '';
 }
 
 document.querySelectorAll('[data-modal-open]').forEach(btn => {
@@ -78,7 +78,7 @@ document.querySelectorAll('[data-modal-close]').forEach(btn => {
     btn.addEventListener('click', closeModal);
 });
 
-modal?.addEventListener('click', (e) => {
+modal?.addEventListener('mousedown', (e) => {
     if (e.target === modal) closeModal();
 });
 

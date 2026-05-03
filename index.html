@@ -16,8 +16,8 @@
                     <a href="/" class="logo">Строительная<span>Компания</span></a>
                     <nav class="nav">
                         <a href="#about" class="nav__link">О комплексе</a>
-                        <a href="#projects" class="nav__link">Акции</a>
-                        <a href="#actions" class="nav__link">О компании</a>
+                        <a href="#actions" class="nav__link">Акции</a>
+                        <a href="#actionsвввdd" class="nav__link">О компании</a>
                     </nav>
                     <div class="header__right">
                         <a href="tel:+74951234567" class="header__phone">+7 (495) 123-45-67</a>
@@ -56,9 +56,9 @@
                 <div class="about-fullwidth__inner">
                     <!-- Левая колонка: светлый фон -->
                     <div class="about-fullwidth__content">
-                        <span class="about-fullwidth__tag">[ О комплексе ]</span>
-                        <h2 class="about-fullwidth__title">Для тех, кто ценит эксклюзивные виды,<br>свободу и <span>стремится жить в эстетике</span></h2>
-                        <p class="about-fullwidth__text">Респектабельное расположение, лаконичная архитектура, продуманная до мелочей, высокое качество строительства и сервис</p>
+                        <span class="section__tag">[ О комплексе ]</span>
+                        <h2 class="section__title section__title-about">Для тех, кто ценит эксклюзивные виды,<br>свободу и <span>стремится жить в эстетике</span></h2>
+                        <p class="section__text">Респектабельное расположение, лаконичная архитектура, продуманная до мелочей, высокое качество строительства и сервис</p>
                     </div>
 
                     <!-- Правая колонка: тёмный фон, ссылки на очереди -->
@@ -83,32 +83,38 @@
             <section class="location-fullwidth">
                 <div class="location-fullwidth__inner">
                     <div class="location-fullwidth__header">
-                        <span class="about-fullwidth__tag">[ Расположение ]</span>
+                        <span class="section__tag">[ Расположение ]</span>
                     </div>
 
-                    <h2 class="about-fullwidth__title features-fullwidth__title">Жизнь в центре событий</h2>
+                    <h2 class="section__title">Жизнь в центре событий</h2>
 
                     <!-- Три колонки с иконками -->
                     <div class="location-fullwidth__stats">
                         <div class="location-stat">
-                            <div class="location-stat__icon">🚶</div>
+                            <div class="card__icon">
+                                <img src="assets/icons/1.jpg">
+                            </div>
                             <div class="location-stat__content">
-                                <div class="feature-card__title">15 минут до моря</div>
-                                <div class="about-fullwidth__text">Пешком по набережной</div>
+                                <div class="card__title">15 минут до моря</div>
+                                <div class="card__text">Пешком по набережной</div>
                             </div>
                         </div>
                         <div class="location-stat">
-                            <div class="location-stat__icon">🌳</div>
+                            <div class="card__icon">
+                                <img src="assets/icons/1.jpg">
+                            </div>
                             <div class="location-stat__content">
-                                <div class="feature-card__title">5 минут до парка</div>
-                                <div class="about-fullwidth__text">Сосновый лес и зоны отдыха</div>
+                                <div class="card__title">5 минут до парка</div>
+                                <div class="card__text">Сосновый лес и зоны отдыха</div>
                             </div>
                         </div>
                         <div class="location-stat">
-                            <div class="location-stat__icon">🏫</div>
+                            <div class="card__icon">
+                                <img src="assets/icons/1.jpg">
+                            </div>
                             <div class="location-stat__content">
-                                <div class="feature-card__title">Всё рядом</div>
-                                <div class="about-fullwidth__text">Школа, детский сад, аптека, магазины</div>
+                                <div class="card__title">Всё рядом</div>
+                                <div class="card__text">Школа, детский сад, аптека, магазины</div>
                             </div>
                         </div>
                     </div>
@@ -116,7 +122,7 @@
                     <!-- Карта на всю ширину с отступами -->
                     <div class="location-fullwidth__map">
                         <iframe 
-                            src="https://yandex.ru/map-widget/v1/?ll=37.617698,55.755864&z=15&pt=37.617698,55.755864,pm2rdm"
+                            src="https://yandex.ru/map-widget/v1/?ll=37.617698,55.755864&z=17&pt=37.617698,55.755864,pm2rdm&scroll=false"
                             width="100%" 
                             height="400" 
                             frameborder="0"
@@ -158,11 +164,11 @@
                     <!-- ПРАВАЯ ЧАСТЬ: текст и сетка с иконками -->
                     <div class="features-fullwidth__content">
                         <div class="features-fullwidth__header">
-                            <span class="about-fullwidth__tag">[ Инфраструктура ]</span>
-                            <h2 class="about-fullwidth__title features-fullwidth__title ">
+                            <span class="section__tag">[ Инфраструктура ]</span>
+                            <h2 class="section__title">
                                 Все необходимое<br>для комфортной жизни<br>и работы в <span>шаговой доступности</span>
                             </h2>
-                            <p class="about-fullwidth__text">
+                            <p class="section__text">
                                 На первых этажах домов предусмотрены помещения для офисов и street-retail: 
                                 аптеки, супермаркеты, кафе, рестораны, фитнес-центры, салоны красоты.
                             </p>
@@ -170,25 +176,73 @@
 
                         <div class="features-fullwidth__grid">
                             <div class="feature-card">
-                                <div class="feature-card__icon">🚗</div>
-                                <h3 class="feature-card__title">Подземный паркинг</h3>
-                                <p class="about-fullwidth__text">Места для велосипедов, станции для зарядки электроавто</p>
+                                <div class="card__icon">
+                                    <img src="assets/icons/1.jpg">
+                                </div>
+                                <h3 class="card__title">Подземный паркинг</h3>
+                                <p class="card__text">Места для велосипедов, станции для зарядки электроавто</p>
                             </div>
                             <div class="feature-card">
-                                <div class="feature-card__icon">💼</div>
-                                <h3 class="feature-card__title">Офисы и коворкинги</h3>
-                                <p class="about-fullwidth__text">Коворкинг-зона прямо в жилом комплексе, офисы на первом этаже</p>
+                                <div class="card__icon">
+                                    <img src="assets/icons/1.jpg">
+                                </div>
+                                <h3 class="card__title">Офисы и коворкинги</h3>
+                                <p class="card__text">Коворкинг-зона прямо в жилом комплексе, офисы на первом этаже</p>
                             </div>
                             <div class="feature-card">
-                                <div class="feature-card__icon">🏃</div>
-                                <h3 class="feature-card__title">Спорт. площадки</h3>
-                                <p class="about-fullwidth__text">Площадки для малышей, воркаут зоны</p>
+                                <div class="card__icon">
+                                    <img src="assets/icons/1.jpg">
+                                </div>
+                                <h3 class="card__title">Спорт. площадки</h3>
+                                <p class="card__text">Площадки для малышей, воркаут зоны</p>
                             </div>
                             <div class="feature-card">
-                                <div class="feature-card__icon">🛍️</div>
-                                <h3 class="feature-card__title">Торговый центр</h3>
-                                <p class="about-fullwidth__text">Кофейни, спортивные студии, детские развивающие центры, клиники и др</p>
+                                <div class="card__icon">
+                                    <img src="assets/icons/1.jpg">
+                                </div>
+                                <h3 class="card__title">Торговый центр</h3>
+                                <p class="card__text">Кофейни, спортивные студии, детские развивающие центры, клиники и др</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <!-- Секция: условия -->
+            <section id="actions" class="location-fullwidth">
+                <div class="location-fullwidth__inner">
+                    <div class="location-fullwidth__header">
+                        <span class="section__tag">[ Условия ]</span>
+                    </div>
+
+                    <h2 class="section__title">
+                        <span>Предлагаем самые выгодные условия</span><br>
+                        на старте продаж жилого комплекса
+                    </h2>
+
+                    <!-- Три карточки в строку -->
+                    <div class="conditions-grid">
+                        <div class="condition-card">
+                            <div class="condition-card__icon">
+                                <img src="assets/icons/1.jpg" alt="Иконка">
+                            </div>
+                            <h3 class="card__title">Ипотека от 5%</h3>
+                            <p class="card__text">Господдержка для всей семьи. Первоначальный взнос от 15%</p>
+                        </div>
+                        <div class="condition-card">
+                            <div class="condition-card__icon">
+                                <img src="assets/icons/1.jpg" alt="Иконка">
+                            </div>
+                            <h3 class="card__title">Рассрочка 0%</h3>
+                            <p class="card__text">Без процентов на весь срок. Первый взнос от 5%</p>
+                        </div>
+                        <div class="condition-card">
+                            <div class="condition-card__icon">
+                                <img src="assets/icons/1.jpg" alt="Иконка">
+                            </div>
+                            <h3 class="card__title">Скидка до 14,8%</h3>
+                            <p class="card__text">Скидка при 100% оплате или ипотеке </p>
                         </div>
                     </div>
                 </div>

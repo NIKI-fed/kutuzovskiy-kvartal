@@ -65,7 +65,7 @@ body {
     width: 100%;
 }
 
-/* ========== 3. ХЕДЕР (FIXED) ========== */
+/* ========== 3. ХЕДЕР ========== */
 .header {
     position: fixed;
     top: 0;
@@ -130,10 +130,58 @@ body {
 }
 
 .mobile-menu-toggle {
-    display: none; /* Скрыт на десктопе */
+    display: none;
 }
 
-/* ========== 4. HERO-СЕКЦИЯ (С ФОНОМ И ЗАТЕМНЕНИЕМ) ========== */
+/* ========== 4. ОБЩИЕ СТИЛИ СЕКЦИЙ ========== */
+.section__tag {
+    display: inline-block;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: rgba(97,164,190);
+    margin-bottom: 28px;
+    font-weight: 500;
+}
+
+.section__title {
+    font-size: 70px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 32px;
+    color: #1a2c3e;
+}
+
+.section__title span {
+    font-weight: 400;
+    color: rgba(97,164,190);
+}
+
+.section__text {
+    font-size: 20px;
+    color: #4a5e6e;
+    line-height: 1.5;
+}
+
+.card__title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin-bottom: 4px;
+}
+
+.card__text {
+    font-size: 18px;
+    color: #4a5e6e;
+    line-height: 1.5;
+    max-width: 90%;
+}
+
+.card__icon img {
+    width: 120px;
+}
+
+/* ========== 5. HERO ========== */
 .hero {
     margin-top: 90px;
     min-height: 90vh;
@@ -213,18 +261,12 @@ body {
     line-height: 1.5;
 }
 
-.hero__image {
-    height: 500px;
-    border-radius: 32px;
-}
-
-/* ========== 5. СЕКЦИЯ "О КОМПЛЕКСЕ" — ФОН НА ВСЮ ШИРИНУ ========== */
+/* ========== 6. СЕКЦИЯ "О КОМПЛЕКСЕ" ========== */
 .about-fullwidth {
     width: 100%;
     display: flex;
 }
 
-/* Внутренний контейнер для контента с отступами */
 .about-fullwidth__inner {
     display: flex;
     width: 100%;
@@ -232,61 +274,32 @@ body {
     padding: 0;
 }
 
-/* ===== ЛЕВАЯ КОЛОНКА (СВЕТЛЫЙ ФОН) ===== */
 .about-fullwidth__content {
     flex: 1;
     background: rgba(34,44,66);
     padding: 120px 0 120px 100px;
 }
 
-/* Ограничиваем ширину текста, чтобы он не растягивался бесконечно */
+.section__title-about {
+    color: #ffffff;
+}
+
 .about-fullwidth__content > * {
     max-width: 800px;
     margin-left: 0;
     margin-right: auto;
 }
 
-.about-fullwidth__tag {
-    display: inline-block;
-    font-size: 16px;
-    letter-spacing: 2px;
-    color: rgba(97,164,190);
-    margin-bottom: 28px;
-    font-weight: 500;
-}
-
-.about-fullwidth__title {
-    font-size: 70px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    margin-bottom: 32px;
-    color: #ffffff;
-}
-
-.about-fullwidth__title span {
-    font-weight: 400;
-    color: rgba(97,164,190);
-}
-
-.about-fullwidth__text {
-    font-size: 20px;
-    color: #4a5e6e;
-    line-height: 1.5;
-}
-
-/* ===== ПРАВАЯ КОЛОНКА (ТЁМНЫЙ ФОН) ===== */
 .about-fullwidth__links {
     flex: 1;
     background: rgba(22,33,56);
-    padding: 120px 50px 120px 80px;  /* Правый отступ 50px, левый отступ 80px для воздуха между колонками */
+    padding: 120px 50px 120px 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 48px;
 }
 
-/* Ограничиваем ширину блоков-ссылок */
 .about-fullwidth__links > * {
     max-width: 400px;
 }
@@ -320,7 +333,7 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* ========== СЕКЦИЯ "РАСПОЛОЖЕНИЕ" ========== */
+/* ========== 7. СЕКЦИЯ "РАСПОЛОЖЕНИЕ" ========== */
 .location-fullwidth {
     width: 100%;
     padding: 80px 0;
@@ -333,15 +346,6 @@ body {
     padding: 0 50px;
 }
 
-.location-fullwidth__tag {
-    display: inline-block;
-    font-size: 14px;
-    letter-spacing: 2px;
-    color: #2c7a6e;
-    font-weight: 500;
-}
-
-/* Три колонки с иконками */
 .location-fullwidth__stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -355,30 +359,11 @@ body {
     gap: 16px;
 }
 
-.location-stat__icon {
-    font-size: 32px;
-    flex-shrink: 0;
-}
-
 .location-stat__content {
     display: flex;
     flex-direction: column;
 }
 
-.location-stat__title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1a2c3e;
-    margin-bottom: 4px;
-}
-
-.location-stat__desc {
-    font-size: 14px;
-    color: #5a6e7c;
-    line-height: 1.4;
-}
-
-/* Карта с отступами */
 .location-fullwidth__map {
     width: 100%;
     border-radius: 16px;
@@ -392,10 +377,9 @@ body {
     border: none;
 }
 
-/* ========== СЕКЦИЯ С ГАЛЕРЕЕЙ В ШАХМАТНОМ ПОРЯДКЕ ========== */
+/* ========== 8. СЕКЦИЯ С ГАЛЕРЕЕЙ ========== */
 .features-fullwidth {
     width: 100%;
-    /* height: 90%; */
     padding: 80px 0;
     background: #ffffff;
 }
@@ -408,9 +392,8 @@ body {
     gap: 80px;
 }
 
-/* ===== ЛЕВАЯ ЧАСТЬ: ГРИД 2×7 С КАРТИНКАМИ ===== */
 .features-fullwidth__gallery {
-    flex: 0.9;  /* Чуть уже */
+    flex: 0.9;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: minmax(100px, auto);
@@ -430,7 +413,6 @@ body {
     display: block;
 }
 
-/* Подпись поверх картинки */
 .gallery-img__caption {
     position: absolute;
     bottom: 0;
@@ -444,44 +426,32 @@ body {
     letter-spacing: 0.5px;
     text-align: left;
     transition: all 0.3s ease;
-    pointer-events: none; /* Чтобы подпись не мешала кликать по картинке */
+    pointer-events: none;
 }
 
-/* При наведении подпись становится ярче */
 .gallery-img:hover .gallery-img__caption {
     padding-bottom: 20px;
     background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
 }
 
-.gallery-img .placeholder-bg {
-    width: 100%;
-    height: 100%;
-    min-height: 120px;
-}
-
-/* Картинка 1: левая колонка, 4 строки */
 .gallery-img--large-1 {
     grid-row: span 4;
 }
 
-/* Картинка 2: левая колонка, 3 строки (под большой) */
 .gallery-img--small-1 {
     grid-row: span 3;
 }
 
-/* Картинка 3: правая колонка, 3 строки (на уровне с большой левой) */
 .gallery-img--small-2 {
     grid-row: span 4;
 }
 
-/* Картинка 4: правая колонка, 4 строки (под малой правой) */
 .gallery-img--large-2 {
     grid-row: span 3;
 }
 
-/* ===== ПРАВАЯ ЧАСТЬ: ТЕКСТ + СЕТКА 2×2 ===== */
 .features-fullwidth__content {
-    flex: 1.1;  /* Чуть шире */
+    flex: 1.1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -491,18 +461,6 @@ body {
     margin-bottom: 60px;
 }
 
-.features-fullwidth__title {
-    color: #1a2c3e;
-}
-
-.features-fullwidth__desc {
-    font-size: 18px;
-    color: #4a5e6e;
-    line-height: 1.5;
-    max-width: 90%;
-}
-
-/* Сетка 2×2 для карточек с иконками */
 .features-fullwidth__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -516,181 +474,76 @@ body {
     position: relative;
 }
 
-/* Нижняя граница нужной длины */
 .feature-card:nth-child(1)::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 90%;        /* Длина границы */
-    height: 2px;        /* Толщина */
+    width: 90%;
+    height: 2px;
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Правая граница нужной длины */
 .feature-card:nth-child(1)::before {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 2px;         /* Толщина */
-    height: 80%;       /* Длина границы */
+    width: 2px;
+    height: 80%;
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Верхняя граница нужной длины */
 .feature-card:nth-child(4)::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 90%;        /* Длина границы */
-    height: 2px;        /* Толщина */
+    width: 90%;
+    height: 2px;
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Левая граница нужной длины */
 .feature-card:nth-child(4)::before {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 2px;         /* Толщина */
-    height: 80%;       /* Длина границы */
+    width: 2px;
+    height: 80%;
     background: rgba(0, 0, 0, 0.1);
 }
 
-.feature-card__icon {
-    font-size: 36px;
-    margin-bottom: 14px;
-}
-
-.feature-card__title {
-    font-size: 36px;
-    font-weight: 600;
-    color: #1a2c3e;
-    margin-bottom: 8px;
-}
-
-.feature-card__text {
-    font-size: 14px;
-    color: #5a6e7c;
-    line-height: 1.4;
-}
-
-/* Плейсхолдер для картинок */
-.placeholder-bg {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    width: 100%;
-    height: 100%;
-}
-
-/* ========== 6. СЕКЦИЯ "ПРОЕКТЫ" (ОЧЕРЕДИ) ========== */
-.projects {
-    padding: 100px 0;
-    background: #ffffff;
-}
-
-.projects-grid {
+/* ========== 9. СЕКЦИЯ "УСЛОВИЯ" ========== */
+.conditions-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-}
-
-.project-card {
-    border-radius: 24px;
-    overflow: hidden;
-    transition: 0.3s;
-    background: #fff;
-    box-shadow: 0 10px 25px -10px rgba(0,0,0,0.05);
-}
-
-.project-card:hover {
-    transform: translateY(-6px);
-}
-
-.project-img {
-    height: 240px;
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-}
-
-.project-card h3 {
-    font-size: 22px;
-    margin: 20px 20px 8px;
-}
-
-.project-card p {
-    margin: 0 20px 8px;
-    color: #5a6e7c;
-}
-
-.project-link {
-    display: block;
-    margin: 16px 20px 20px;
-    text-decoration: none;
-    color: #2c7a6e;
-    font-weight: 500;
-}
-
-/* ========== 7. СЕКЦИЯ "АКЦИИ" (КАРУСЕЛЬ) ========== */
-.actions {
-    padding: 100px 0;
-    background: #ffffff;
-}
-
-.carousel-container {
-    position: relative;
-    overflow: hidden;
-    padding: 0 48px;
-}
-
-.carousel-track {
-    display: flex;
-    transition: transform 0.5s ease;
     gap: 30px;
 }
 
-.carousel-slide {
-    flex: 0 0 calc(33.333% - 20px);
-    background: #f8fbfc;
-    border-radius: 24px;
-    padding: 24px;
+.condition-card {
+    background: #eef2f4;
+    border-radius: 20px;
+    padding: 40px 32px;
+    transition: all 0.3s ease;
 }
 
-.carousel-slide h3 {
-    font-size: 22px;
-    margin-bottom: 8px;
+.condition-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
 }
 
-.carousel-slide p {
-    color: #5a6e7c;
-    margin-bottom: 20px;
+.condition-card__icon {
+    margin-bottom: 24px;
 }
 
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: white;
-    border: 1px solid #e2e8f0;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    font-size: 28px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    z-index: 5;
+.condition-card__icon img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
 }
 
-.carousel-btn.prev {
-    left: 0;
-}
-
-.carousel-btn.next {
-    right: 0;
-}
-
-/* ========== 8. CTA-БАННЕР ========== */
+/* ========== 10. CTA-БАННЕР ========== */
 .cta {
     background: #1a2c3e;
     color: white;
@@ -714,7 +567,7 @@ body {
     color: white;
 }
 
-/* ========== 9. ПОДВАЛ ========== */
+/* ========== 11. ПОДВАЛ ========== */
 .footer {
     background: #101f2c;
     color: #90a3b2;
@@ -744,7 +597,7 @@ body {
     color: white;
 }
 
-/* ========== 10. МОДАЛЬНОЕ ОКНО ========== */
+/* ========== 12. МОДАЛКА ========== */
 .modal {
     position: fixed;
     top: 0;
@@ -841,7 +694,7 @@ body {
     margin: 0 auto 24px;
 }
 
-/* ========== 11. COOKIES-УВЕДОМЛЕНИЕ ========== */
+/* ========== 13. Всплывающее окно COOKIES ========== */
 .cookies-notice {
     position: fixed;
     bottom: 24px;
@@ -873,7 +726,95 @@ body {
     background: #2c7a6e;
 }
 
-/* ========== 12. ПЛЕЙСХОЛДЕРЫ ДЛЯ КАРТИНОК ========== */
-.placeholder-bg {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+/* ========== 14. ЮРИДИЧЕСКИЕ СТРАНИЦЫ (ПОЛИТИКИ, СОГЛАШЕНИЯ) ========== */
+.legal-page {
+    margin-top: 90px;
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.legal-page__inner {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.legal-page__container {
+    max-width: 900px;
+    width: 100%;
+}
+
+.legal-page__title {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    color: #1a2c3e;
+}
+
+.legal-page__date {
+    font-size: 14px;
+    color: #5a6e7c;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.legal-page__content {
+    width: 100%;
+}
+
+.legal-page__content p {
+    font-size: 16px;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.legal-page__content h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin: 32px 0 16px;
+}
+
+.legal-page__content h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin: 24px 0 12px;
+}
+
+.legal-page__content ul {
+    margin: 16px 0 20px 24px;
+}
+
+.legal-page__content li {
+    font-size: 16px;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.legal-page__content a {
+    color: #2c7a6e;
+    text-decoration: none;
+}
+
+.legal-page__content a:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 48px;
+    color: #2c7a6e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
 }
