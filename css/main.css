@@ -73,7 +73,7 @@ body {
     width: 100%;
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
-    z-index: 1000;
+    z-index: 10;
     padding: 24px 0;
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
@@ -261,6 +261,67 @@ body {
     line-height: 1.5;
 }
 
+/* ===== КАРТОЧКИ ОЧЕРЕДЕЙ В HERO (ПРАВАЯ ЧАСТЬ) ===== */
+.hero__right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.hero-queues {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.hero-queue-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 20px 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hero-queue-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(8px);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero-queue-card__value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.hero-queue-card__label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.hero-queue-card__arrow {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.hero-queue-card:hover .hero-queue-card__arrow {
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
 /* ========== 6. СЕКЦИЯ "О КОМПЛЕКСЕ" ========== */
 .about-fullwidth {
     width: 100%;
@@ -281,6 +342,10 @@ body {
 }
 
 .section__title-about {
+    color: #ffffff;
+}
+
+.dark-card__title {
     color: #ffffff;
 }
 
@@ -692,6 +757,18 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0 auto 24px;
+}
+
+.input-error {
+    border-color: #e74c3c !important;
+    background-color: #fff5f5 !important;
+    outline: none;
+}
+
+.btn--primary:disabled {
+    background: #a0b8c5;
+    cursor: default;
+    transform: none;
 }
 
 /* ========== 13. Всплывающее окно COOKIES ========== */

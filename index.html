@@ -44,9 +44,25 @@
                             <p class="hero__text">Уникальный апартаментный комплекс на чистейшем берегу Черного моря. Современный гостиничный комплекс с собственными парковыми зонами. Признан лучшим объектом для инвестиций</p>
                             <button class="btn btn--primary btn--large btn--modal" data-modal-open>Подобрать квартиру →</button>
                         </div>
-                        <!-- <div class="hero__right">
-                            <div class="hero__image placeholder-bg"></div>
-                        </div> -->
+                        <div class="hero__right">
+                            <div class="hero-queues">
+                                <a href="/queue1.html" class="hero-queue-card">
+                                    <span class="hero-queue-card__value">Первая очередь</span>
+                                    <span class="hero-queue-card__label">Сдача 3 кв. 2026</span>
+                                    <span class="hero-queue-card__arrow">→</span>
+                                </a>
+                                <a href="/queue2.html" class="hero-queue-card">
+                                    <span class="hero-queue-card__value">Вторая очередь</span>
+                                    <span class="hero-queue-card__label">Сдача 4 кв. 2026</span>
+                                    <span class="hero-queue-card__arrow">→</span>
+                                </a>
+                                <a href="/queue3.html" class="hero-queue-card">
+                                    <span class="hero-queue-card__value">Третья очередь</span>
+                                    <span class="hero-queue-card__label">Сдача 3 кв. 2027</span>
+                                    <span class="hero-queue-card__arrow">→</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -62,7 +78,7 @@
                     </div>
 
                     <!-- Правая колонка: тёмный фон, ссылки на очереди -->
-                    <div class="about-fullwidth__links">
+                    <!-- <div class="about-fullwidth__links">
                         <a href="/queue1.html" class="about-link">
                             <span class="about-link__value">2 кв. 2026</span>
                             <span class="about-link__label">Сдача первой очереди</span>
@@ -75,6 +91,24 @@
                             <span class="about-link__value">2 кв. 2028</span>
                             <span class="about-link__label">Сдача третьей очереди</span>
                         </a>
+                    </div> -->
+                    <div class="features-fullwidth__grid about-fullwidth__links">
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">3 гектара</h3>
+                            <p class="card__text">Територия комплекса</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Офисы и коворкинги</h3>
+                            <p class="card__text">Коворкинг-зона прямо в жилом комплексе, офисы на первом этаже</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Спорт. площадки</h3>
+                            <p class="card__text">Площадки для малышей, воркаут зоны</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Торговый центр</h3>
+                            <p class="card__text">Кофейни, спортивные студии, детские развивающие центры, клиники и др</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -279,6 +313,7 @@
             <div class="modal__overlay" data-modal-close></div>
             <div class="modal__content">
                 <button class="modal__close" data-modal-close>×</button>
+                
                 <div class="modal__body" id="modal-body">
                     <h3>Подобрать квартиру</h3>
                     <p>Оставьте контакты — мы перезвоним и ответим на все вопросы</p>
@@ -292,12 +327,14 @@
                         <button type="submit" class="btn btn--primary btn--full">Отправить</button>
                     </form>
                 </div>
+
                 <div class="modal__body modal__success" id="modal-success" style="display: none;">
                     <div class="success-icon">✓</div>
                     <h3>Спасибо!</h3>
                     <p>Мы свяжемся с вами в ближайшее время.</p>
                     <button class="btn btn--primary" data-modal-close>Закрыть</button>
                 </div>
+
             </div>
         </div>
 
