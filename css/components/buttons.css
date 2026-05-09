@@ -1,0 +1,41 @@
+/* ========== КНОПКИ И ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ========== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 40px;
+    text-decoration: none;
+    background: none;
+}
+
+.btn--primary {
+    background: #1a2c3e;
+    color: white;
+    padding: 12px 28px;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.btn--primary:hover {
+    background: #2c7a6e;
+    transform: translateY(-2px);
+}
+
+.btn--large {
+    padding: 16px 36px;
+    font-size: 18px;
+}
+
+.btn--small {
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.btn--full {
+    width: 100%;
+}

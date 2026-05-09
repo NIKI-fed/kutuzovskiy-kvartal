@@ -1,0 +1,31 @@
+/* ========== Всплывающее окно COOKIES ========== */
+.cookies-notice {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: #1a2c3e;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    z-index: 1050;
+    max-width: 500px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cookies-notice a {
+    color: #7dd3fc;
+    text-decoration: underline;
+}
+
+.cookies-notice .btn--small {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.cookies-notice .btn--small:hover {
+    background: #2c7a6e;
+}

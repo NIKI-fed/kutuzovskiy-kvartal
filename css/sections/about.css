@@ -1,0 +1,67 @@
+/* ========== СЕКЦИЯ "О КОМПЛЕКСЕ" ========== */
+.about {
+    width: 100%;
+    display: flex;
+}
+
+.about__inner {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.about__content {
+    flex: 1;
+    background: rgba(34,44,66);
+    padding: 120px 0 120px 100px;
+}
+
+.about__content > * {
+    max-width: 800px;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.about__links {
+    flex: 1;
+    background: rgba(22,33,56);
+    padding: 120px 50px 120px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 48px;
+}
+
+.about__links > * {
+    max-width: 400px;
+}
+
+.about-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    padding: 20px 0;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-link:hover {
+    border-bottom-color: rgba(255, 255, 255, 0.4);
+    transform: translateX(6px);
+}
+
+.about-link__value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+}
+
+.about-link__label {
+    font-size: 16px;
+    color: #a0c4d4;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}

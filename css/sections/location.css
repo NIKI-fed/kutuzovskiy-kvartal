@@ -1,0 +1,37 @@
+/* ========== СЕКЦИЯ "РАСПОЛОЖЕНИЕ" ========== */
+.location {
+    width: 100%;
+    padding: 40px 0;
+    background: #ffffff;
+}
+
+.location__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-block: 60px;
+}
+
+.location-stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.location-stat__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.location__map {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.location__map iframe {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: none;
+}

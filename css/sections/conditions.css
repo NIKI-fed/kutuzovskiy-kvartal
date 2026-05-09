@@ -1,0 +1,28 @@
+/* ========== СЕКЦИЯ "УСЛОВИЯ" ========== */
+.conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.condition-card {
+    background: #eef2f4;
+    border-radius: 20px;
+    padding: 40px 32px;
+    transition: all 0.3s ease;
+}
+
+.condition-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
+}
+
+.condition-card__icon {
+    margin-bottom: 24px;
+}
+
+.condition-card__icon img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}

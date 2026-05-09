@@ -1,0 +1,119 @@
+/* ========== БЛОК "ОФИС ПРОДАЖ" ========== */
+.sell {
+    position: relative;
+    min-height: 600px;
+}
+
+.sell__container {
+    position: relative;
+    height: 500px;
+    width: 100%;
+    padding: 0 100px;
+    background-image: url("../../assets/6.jpg");
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: flex-end;
+}
+
+.sell__container-title {   
+    position: relative;
+    z-index: 2;
+}
+
+.sell__title {
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 48px;
+    color: #ffffff;
+    text-align: left;
+}
+
+.sell__inner {
+    padding: 60px 100px;
+    background-color: #1a2c3e;
+}
+
+.sell__contacts {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.sell__card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    width: 450px;
+    height: 200px;
+}
+
+.sell__card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px 40px;
+    width: 100%;
+    height: 100%;
+}
+
+.sell__info-title {
+    font-size: 16px;
+    color: rgb(173, 173, 173);
+}
+
+.sell__info-text {
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+}
+
+.sell__info-text a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.sell__info-text a:hover {
+    transform: translateX(4px);
+    opacity: 0.8;
+}
+
+/* Социальные сети */
+.sell__social-icons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.sell__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.sell__social-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+}
+
+.sell__social-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.sell__social-link {
+    font-size: 24px;
+    text-decoration: none;
+}

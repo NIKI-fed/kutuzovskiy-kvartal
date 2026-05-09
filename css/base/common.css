@@ -1,0 +1,115 @@
+/* Мобильный экран 360px, широкоформатный 2К монитор 2560px */
+/* ========== ГЛОБАЛЬНЫЕ СТИЛИ ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: #1a2c3e;
+    line-height: 1.4;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    z-index: 2;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* ========== ОБЩИЕ СТИЛИ СЕКЦИЙ ========== */
+
+.section__inner {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 50px 50px;
+}
+
+.section__tag {
+    display: inline-block;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: rgba(97,164,190);
+    margin-bottom: 28px;
+    font-weight: 500;
+}
+
+.section__title {
+    font-size: clamp(1rem, 0.4477rem + 2.4545vw, 4.375rem); /*от 16px до 70px*/
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 32px;
+    color: #1a2c3e;
+}
+
+.section__title span {
+    font-weight: 400;
+    color: rgba(97,164,190);
+}
+
+.section__text {
+    font-size: 20px;
+    color: #4a5e6e;
+    line-height: 1.5;
+}
+
+.card__title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin-bottom: 4px;
+}
+
+.card__text {
+    font-size: 18px;
+    color: #4a5e6e;
+    line-height: 1.5;
+    max-width: 90%;
+}
+
+.card__icon img {
+    width: 120px;
+}
+
+/* ========== ТЕКСТ ДЛЯ ТЁМНЫХ КАРТОЧЕК ========== */
+.dark-card__title {
+    color: #ffffff;
+}
+
+@media (width < 1440px) {
+    /* .section__title {
+        font-size: 48px;
+    } */
+
+    .card__title {
+        font-size: 28px;
+    }
+    
+    .card__text {
+        font-size: 16px;
+        max-width: 90%;
+    }
+    
+    .card__icon img {
+        width: 100px;
+    }
+}

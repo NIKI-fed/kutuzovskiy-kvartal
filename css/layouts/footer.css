@@ -1,0 +1,29 @@
+/* ========== ФУТЕР ========== */
+.footer {
+    background: #101f2c;
+    color: #90a3b2;
+    padding: 48px 0 24px;
+}
+
+.footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer__links {
+    display: flex;
+    gap: 32px;
+}
+
+.footer__links a {
+    color: #90a3b2;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer__links a:hover {
+    color: white;
+}

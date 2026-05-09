@@ -32,7 +32,8 @@
 
             <!-- Hero-секция-->
             <section class="hero">
-                <div class="container hero__container">
+                <div class="overlay"></div>
+                <div class="container">
                     <div class="hero__grid">
                         <div class="hero__left">
                             <div class="hero__subtitle">Город • Район</div>
@@ -68,17 +69,17 @@
             </section>
 
             <!-- О комплексе (разделение цветом: слева светлее, справа темнее) -->
-            <section id="about" class="about-fullwidth">
-                <div class="about-fullwidth__inner">
+            <section id="about" class="about">
+                <div class="about__inner">
                     <!-- Левая колонка: светлый фон -->
-                    <div class="about-fullwidth__content">
+                    <div class="about__content">
                         <span class="section__tag">[ О комплексе ]</span>
-                        <h2 class="section__title section__title-about">Для тех, кто ценит эксклюзивные виды,<br>свободу и <span>стремится жить в эстетике</span></h2>
+                        <h2 class="section__title dark-card__title">Для тех, кто ценит эксклюзивные виды,<br>свободу и <span>стремится жить в эстетике</span></h2>
                         <p class="section__text">Респектабельное расположение, лаконичная архитектура, продуманная до мелочей, высокое качество строительства и сервис</p>
                     </div>
 
                     <!-- Правая колонка: тёмный фон, ссылки на очереди -->
-                    <!-- <div class="about-fullwidth__links">
+                    <!-- <div class="about__links">
                         <a href="/queue1.html" class="about-link">
                             <span class="about-link__value">2 кв. 2026</span>
                             <span class="about-link__label">Сдача первой очереди</span>
@@ -92,7 +93,7 @@
                             <span class="about-link__label">Сдача третьей очереди</span>
                         </a>
                     </div> -->
-                    <div class="features-fullwidth__grid about-fullwidth__links">
+                    <div class="features__grid about__links">
                         <div class="feature-card">
                             <h3 class="card__title dark-card__title">3 гектара</h3>
                             <p class="card__text">Територия комплекса</p>
@@ -114,16 +115,16 @@
             </section>
 
             <!-- Секция: Расположение -->
-            <section class="location-fullwidth">
-                <div class="location-fullwidth__inner">
-                    <div class="location-fullwidth__header">
+            <section class="location">
+                <div class="section__inner">
+                    <div>
                         <span class="section__tag">[ Расположение ]</span>
                     </div>
 
                     <h2 class="section__title">Жизнь в центре событий</h2>
 
                     <!-- Три колонки с иконками -->
-                    <div class="location-fullwidth__stats">
+                    <div class="location__stats">
                         <div class="location-stat">
                             <div class="card__icon">
                                 <img src="assets/icons/1.jpg">
@@ -154,7 +155,7 @@
                     </div>
 
                     <!-- Карта на всю ширину с отступами -->
-                    <div class="location-fullwidth__map">
+                    <div class="location__map">
                         <iframe 
                             src="https://yandex.ru/map-widget/v1/?ll=37.617698,55.755864&z=17&pt=37.617698,55.755864,pm2rdm&scroll=false"
                             width="100%" 
@@ -168,11 +169,11 @@
 
             <!-- Инфраструктура и удобства (продолжение блока "О комплексе") -->
             <!-- Секция: левая часть — галерея картинками в шахматном порядке, правая — текст + иконки -->
-            <section class="features-fullwidth">
-                <div class="features-fullwidth__inner">
+            <section class="section__inner">
+                <div class="infrastructure__inner">
                     
                     <!-- ЛЕВАЯ ЧАСТЬ: грид 2 колонки, 7 строк, картинки в шахматном порядке -->
-                    <div class="features-fullwidth__gallery">
+                    <div class="infrastructure__gallery">
                         <!-- Картинка 1: занимает 1 колонку и 4 строки -->
                         <div class="gallery-img gallery-img--large-1">
                             <img src="assets/2.jpg" alt="Описание">
@@ -196,8 +197,8 @@
                     </div>
 
                     <!-- ПРАВАЯ ЧАСТЬ: текст и сетка с иконками -->
-                    <div class="features-fullwidth__content">
-                        <div class="features-fullwidth__header">
+                    <div class="infrastructure__content">
+                        <div class="infrastructure__header">
                             <span class="section__tag">[ Инфраструктура ]</span>
                             <h2 class="section__title">
                                 Все необходимое<br>для комфортной жизни<br>и работы в <span>шаговой доступности</span>
@@ -208,29 +209,29 @@
                             </p>
                         </div>
 
-                        <div class="features-fullwidth__grid">
-                            <div class="feature-card">
+                        <div class="infrastructure__grid">
+                            <div class="infrastructure-card">
                                 <div class="card__icon">
                                     <img src="assets/icons/1.jpg">
                                 </div>
                                 <h3 class="card__title">Подземный паркинг</h3>
                                 <p class="card__text">Места для велосипедов, станции для зарядки электроавто</p>
                             </div>
-                            <div class="feature-card">
+                            <div class="infrastructure-card">
                                 <div class="card__icon">
                                     <img src="assets/icons/1.jpg">
                                 </div>
                                 <h3 class="card__title">Офисы и коворкинги</h3>
                                 <p class="card__text">Коворкинг-зона прямо в жилом комплексе, офисы на первом этаже</p>
                             </div>
-                            <div class="feature-card">
+                            <div class="infrastructure-card">
                                 <div class="card__icon">
                                     <img src="assets/icons/1.jpg">
                                 </div>
                                 <h3 class="card__title">Спорт. площадки</h3>
                                 <p class="card__text">Площадки для малышей, воркаут зоны</p>
                             </div>
-                            <div class="feature-card">
+                            <div class="infrastructure-card">
                                 <div class="card__icon">
                                     <img src="assets/icons/1.jpg">
                                 </div>
@@ -242,11 +243,19 @@
                 </div>
             </section>
 
+            <!-- CTA блок -->
+            <section class="cta">
+                <div class="container">
+                    <h2>Место, где вы будете загадывать желания<br>и проводить время с любимыми</h2>
+                    <button class="btn btn--large btn--modal" data-modal-open>Подобрать квартиру →</button>
+                </div>
+            </section>
+
             
             <!-- Секция: условия -->
-            <section id="actions" class="location-fullwidth">
-                <div class="location-fullwidth__inner">
-                    <div class="location-fullwidth__header">
+            <section id="actions" class="location">
+                <div class="section__inner">
+                    <div class="location__header">
                         <span class="section__tag">[ Условия ]</span>
                     </div>
 
@@ -282,18 +291,74 @@
                 </div>
             </section>
 
-            
-            
-
-            <!-- CTA блок -->
-            <section class="cta">
-                <div class="container">
-                    <h2>Место, где вы будете загадывать желания<br>и проводить время с любимыми</h2>
-                    <button class="btn btn--large btn--modal" data-modal-open>Подобрать квартиру →</button>
+            <!-- Блок: Офис продаж -->
+            <section class="sell">
+                
+                <div class="sell__container">
+                    <div class="overlay"></div>
+                    <div class="sell__container-title">
+                        <h2 class="section__title dark-card__title">Ждём вас в офисе продаж</h2>
+                    </div>
+                </div>
+                
+                <div class="sell__inner">
+                    <div class="df">
+                        <div class="sell__contacts">
+                            <div class="sell__card">
+                                <div class="sell__card-content">
+                                    <div class="sell__info-title">[Адрес офиса продаж]</div>
+                                    <div class="sell__info-text">Москва, Ленинский пр., 7</div>
+                                </div>
+                            </div>
+                            <div class="sell__card">
+                                <div class="sell__card-content">
+                                    <div class="sell__info-title">[Телефон]</div>
+                                    <div class="sell__info-text">
+                                        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sell__card">
+                                <div class="sell__card-content">
+                                    <div class="sell__info-title">[Почта]</div>
+                                    <div class="sell__info-text">
+                                        <a href="mailto:email@email.com">email@email.com</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sell__card">
+                                <div class="sell__card-content">
+                                    <div class="sell__info-title">[Соц. сети]</div>
+                                    <div class="sell__social-icons">
+                                        <a href="#" class="sell__social-link" target="_blank" rel="noopener noreferrer">📱</a>
+                                            <!-- <img src="assets/icons/telegram.svg" alt="Telegram" class="sell__social-icon"> -->
+                                        </a>
+                                        <a href="#" class="sell__social-link" target="_blank" rel="noopener noreferrer">📱</a>
+                                            <!-- <img src="assets/icons/whatsapp.svg" alt="WhatsApp" class="sell__social-icon"> -->
+                                        </a>
+                                        <a href="#" class="sell__social-link" target="_blank" rel="noopener noreferrer">📱</a>
+                                            <!-- <img src="assets/icons/vk.svg" alt="ВКонтакте" class="sell__social-icon"> -->
+                                        </a>
+                                        <a href="#" class="sell__social-link" target="_blank" rel="noopener noreferrer">📱</a>
+                                            <!-- <img src="assets/icons/youtube.svg" alt="YouTube" class="sell__social-icon"> -->
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
-            
+
+
+
         </main>
+
+
+
+
 
         <footer class="footer">
             <div class="container">
@@ -307,6 +372,10 @@
                 </div>
             </div>
         </footer>
+
+
+        <!-- Кнопка ВВЕРХ -->
+        <button class="go-top" aria-label="Наверх"></button>
 
         <!-- Модальное окно -->
         <div class="modal" id="modal">
@@ -344,6 +413,7 @@
             <button class="btn btn--small" id="cookies-accept">Принять</button>
         </div>
 
-        <script src="js/main.js"></script>
+        <script type="module" src="js/main.js"></script>
+
     </body>
 </html>
