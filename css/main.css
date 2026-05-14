@@ -1,4 +1,5 @@
 /* Base */
+@import url('base/fonts.css');
 @import url('base/common.css');
 
 /* Layouts */
@@ -12,6 +13,8 @@
 @import url('sections/infrastructure.css');
 @import url('sections/conditions.css');
 @import url('sections/cta.css');
+@import url('sections/gallery.css');
+@import url('sections/about_company.css');
 @import url('sections/sell.css');
 
 /* Components */

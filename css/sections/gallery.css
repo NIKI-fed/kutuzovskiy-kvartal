@@ -1,0 +1,71 @@
+/* ========== ХАОТИЧНАЯ ГАЛЕРЕЯ ========== */
+.gallery-random {
+    width: 100%;
+    padding: 60px 50px;
+    background: #ffffff;
+}
+
+.gallery-random__inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+    gap: 0;
+}
+
+.gallery-random__item {
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-random__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    will-change: transform;
+}
+
+.gallery-random__item:hover {
+    z-index: 10;
+}
+
+.gallery-random__item:hover img {
+    transform: scale(1.15);
+}
+
+/* Разные размеры для хаотичности */
+.gallery-random__item--1 {
+    grid-row: span 2;
+    grid-column: span 1;
+}
+
+.gallery-random__item--2 {
+    grid-row: span 3;
+    grid-column: span 1;
+}
+
+.gallery-random__item--3 {
+    grid-row: span 2;
+    grid-column: span 2;
+}
+
+.gallery-random__item--4 {
+    grid-row: span 1;
+    grid-column: span 1;
+}
+
+.gallery-random__item--5 {
+    grid-row: span 2;
+    grid-column: span 1;
+}
+
+.gallery-random__item--6 {
+    grid-row: span 2;
+    grid-column: span 1;
+}
+
+.gallery-random__item--7 {
+    grid-row: span 1;
+    grid-column: span 2;
+}

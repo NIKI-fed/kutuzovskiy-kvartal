@@ -1,0 +1,69 @@
+/* ========== ПРОЕКТЫ/КАРТОЧКИ ОБЪЕКТОВ ========== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.project-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Чтобы карточка не вылезала за пределы грида */
+}
+
+.project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+}
+
+.project-card__img {
+    height: 240px;
+    overflow: hidden;
+}
+
+.project-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-card__img img {
+    transform: scale(1.05);
+}
+
+.project-card__title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin: 20px 20px 8px;
+}
+
+.project-card__location {
+    font-size: 14px;
+    color: #5a6e7c;
+    margin: 0 20px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.project-card__location::before {
+    content: '📍';
+    font-size: 12px;
+}
+
+.project-card__desc {
+    font-size: 14px;
+    color: #4a5e6e;
+    line-height: 1.5;
+    margin: 0 20px 20px;
+    flex-grow: 1;
+}
