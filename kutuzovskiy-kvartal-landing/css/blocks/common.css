@@ -1,0 +1,8 @@
+/* ========== ОБЩИЕ СТИЛИ ========== */
+body {
+    font-family: 'try-grtsk-giga-regular', 'Inter', sans-serif;
+    background: #0a1220;
+    color: #ffffff;
+    line-height: 1.4;
+}
+

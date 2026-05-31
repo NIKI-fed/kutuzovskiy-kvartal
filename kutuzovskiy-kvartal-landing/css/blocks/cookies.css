@@ -1,0 +1,32 @@
+/* ========== COOKIES УВЕДОМЛЕНИЕ ========== */
+.cookies-notice {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: #1a2c3e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    z-index: 1000;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+}
+
+.cookies-notice a {
+    color: #7dd3fc;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .cookies-notice {
+        left: 16px;
+        right: 16px;
+        max-width: none;
+        border-radius: 20px;
+    }
+}

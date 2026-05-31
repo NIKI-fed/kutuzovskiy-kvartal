@@ -1,0 +1,106 @@
+/* ========== ЮРИДИЧЕСКИЕ СТРАНИЦЫ ========== */
+.legal-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.legal-page__content {
+    flex: 1;
+    max-width: 900px;
+    width: 90%;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+}
+
+.legal-page__title {
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: #1a2c3e;
+}
+
+.legal-page__date {
+    font-size: 14px;
+    color: #5a6e7c;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.legal-page__text {
+    font-size: 16px;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.legal-page__text a {
+    color: #2c7a6e;
+    text-decoration: none;
+}
+
+.legal-page__text a:hover {
+    text-decoration: underline;
+}
+
+.legal-page__subtitle {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin: 32px 0 16px;
+}
+
+.legal-page__subtitle--small {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a2c3e;
+    margin: 24px 0 12px;
+}
+
+.legal-page__list {
+    margin: 16px 0 20px 24px;
+}
+
+.legal-page__list li {
+    font-size: 16px;
+    color: #334155;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.legal-page__list a {
+    color: #2c7a6e;
+    text-decoration: none;
+}
+
+.legal-page__list a:hover {
+    text-decoration: underline;
+}
+
+.legal-page__back {
+    display: inline-block;
+    margin-top: 48px;
+    color: #2c7a6e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.legal-page__back:hover {
+    text-decoration: underline;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .legal-page__title {
+        font-size: 32px;
+    }
+    
+    .legal-page__content {
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+}

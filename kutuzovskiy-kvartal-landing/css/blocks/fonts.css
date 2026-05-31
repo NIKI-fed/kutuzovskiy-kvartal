@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'try-grtsk-giga-regular';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/try-grtsk-giga-regular.ttf') format('truetype');
+}
+
+/* ========== ШРИФТ ========== */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/fonts/inter-cyrillic-wght-normal.woff2') format('woff2');
+}

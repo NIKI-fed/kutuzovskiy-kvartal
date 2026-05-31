@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кутузовский квартал — Скоро</title>
+    <meta name="description" content="Старт продаж скоро. Оставьте заявку, чтобы узнать первыми.">
+    <!-- <link rel="preload" href="/fonts/Inter-VariableFont_opsz_wght.woff" as="font" type="font/woff2" crossorigin> -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="hero">
+
+        <section class="hero__container" id="heroContainer">
+            <!-- Первый экран: заголовок + телефон -->
+            <div class="container__inner" >
+                <h1 class="container__inner-title">ЖК Клубный дом «на&nbsp;Кутузова»<br>Старт продаж скоро!</h1>
+                <p class="container__inner-phone">
+                    <a href="tel:+74872702703" class="inner__phone-link">
+                        <span class="phone-prefix">+7 (4872)</span>
+                        <span class="phone-number">702-703</span>
+                    </a>
+                </p>
+                <p class="container__inner-invite">Оставьте заявку — узнайте первым о&nbsp;старте</p>
+            </div>
+
+            <!-- Форма (изначально скрыта) -->
+            <div class="soon-page__form-wrapper" id="formWrapper">
+                <div class="form-container">
+                    <form id="callback-form">
+                        <input type="text" name="name" placeholder="Ваше имя" required>
+                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                        <input type="email" name="email" placeholder="Email (необязательно)">
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="consent" required>
+                            <label for="consent">Я согласен на <a href="consent.html" target="_blank">обработку персональных данных</a></label>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full">Узнать первым</button>
+                    </form>
+                    <div class="success-message" id="success-message" style="display: none;">
+                        <div class="success-icon">✓</div>
+                        <h3>Спасибо!</h3>
+                        <p>Мы сообщим вам о старте продаж первыми.</p>
+                        <!-- <button class="btn btn--primary" id="resetFormBtn">Хорошо</button> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__copy">© 2026 Кутузовский квартал</div>
+            <div class="footer__links">
+                <a href="privacy.html">Политика конфиденциальности</a>
+                <a href="consent.html">Согласие на обработку ПД</a>
+                <a href="cookies.html">Политика cookie</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cookies-notice" id="cookies-notice" style="display: none;">
+        <p>Мы используем cookie-файлы для улучшения работы сайта. <a href="cookies.html" target="_blank">Подробнее</a></p>
+        <button class="btn btn--small" id="cookies-accept">Принять</button>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
