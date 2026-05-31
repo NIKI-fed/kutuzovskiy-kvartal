@@ -2,12 +2,51 @@ import csv
 import os
 import re
 from datetime import datetime
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, Blueprint, send_from_directory, request, jsonify
 
-# Base directory of the landing static files
-LANDING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'kutuzovskiy-kvartal-landing')
+# Base directories
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LANDING_DIR = os.path.join(BASE_DIR, 'kutuzovskiy-kvartal-landing')
+TESTING_DIR = os.path.join(BASE_DIR, 'testing')
 
 app = Flask(__name__, static_folder=LANDING_DIR, static_url_path='')
+
+# ── Testing Blueprint ─────────────────────────────────────────────────────────
+testing_bp = Blueprint(
+    'testing',
+    __name__,
+    static_folder=TESTING_DIR,
+    static_url_path='/',
+)
+
+
+@testing_bp.route('/')
+def testing_index():
+    return send_from_directory(TESTING_DIR, 'index.html')
+
+
+@testing_bp.route('/consent')
+def testing_consent():
+    return send_from_directory(TESTING_DIR, 'consent.html')
+
+
+@testing_bp.route('/cookies')
+def testing_cookies():
+    return send_from_directory(TESTING_DIR, 'cookies.html')
+
+
+@testing_bp.route('/privacy')
+def testing_privacy():
+    return send_from_directory(TESTING_DIR, 'privacy.html')
+
+
+@testing_bp.route('/<path:page>.html')
+def testing_page(page):
+    """Serve any .html file placed in the testing/ directory (e.g. queue1.html)."""
+    return send_from_directory(TESTING_DIR, f'{page}.html')
+
+
+app.register_blueprint(testing_bp, url_prefix='/testing')
 
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
