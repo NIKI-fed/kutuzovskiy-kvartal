@@ -106,3 +106,12 @@
     cursor: default;
     transform: none;
 }
+
+/* Успешная отправка */
+
+.modal__success {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}

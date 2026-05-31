@@ -54,7 +54,7 @@ if (form) {
             if (response.ok) {
                 // Показываем сообщение об успехе
                 if (modalBody) modalBody.style.display = 'none';
-                if (modalSuccess) modalSuccess.style.display = 'block';
+                if (modalSuccess) modalSuccess.style.display = 'flex';
                 
                 // Очищаем форму
                 form.reset();
