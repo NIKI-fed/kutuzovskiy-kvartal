@@ -24,6 +24,7 @@
 .btn--primary:hover {
     background: #2c7a6e;
     transform: translateY(-2px);
+    background: #d4af37;
 }
 
 .btn--large {
