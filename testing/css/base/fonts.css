@@ -6,3 +6,19 @@
     font-display: swap;
     src: url('../../fonts/Inter-VariableFont_opsz_wght.woff') format('woff2');
 }
+
+@font-face {
+    font-family: 'Labor-Union';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/Labor-Union.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Jonova-Regular';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/Jonova-Regular.ttf') format('truetype');
+}

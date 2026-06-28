@@ -9,6 +9,7 @@
     z-index: 1;
     overflow: hidden;
     background-color: #222C42;
+    color: #ffffff;
 }
 
 .hero::before {
@@ -36,58 +37,56 @@
 }
 
 .hero__container {
-    max-width: 1440px;
-    margin: 0 auto;
+    width: 1440px;
+    margin-left: 230px;
+    /* margin: 0 auto; */
     padding: 0 32px;
     z-index: 2;
 }
 
 .hero__grid {
     display: grid;
-    grid-template-columns: 1fr min-content;
-    gap: 60px;
-    align-items: center;
+    grid-template-columns: min-content 1fr;
+    gap: 240px;
+    font-family: Jonova-Regular, 'Inter';;
 }
 
 .hero__subtitle {
-    font-size: 14px;
+    font-size: 24px;
     text-transform: uppercase;
     letter-spacing: 3px;
-    color: #ffffff;
     margin-bottom: 24px;
 }
 
 .hero__title {
-    font-size: 64px;
+    font-family: Labor-Union, 'Inter';
+    font-size: 96px;
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.2;
-    margin-bottom: 24px;
-    color: #ffffff;
+    margin-bottom: 60px;
 }
 
-.hero__features {
+.hero__left {
     display: flex;
-    gap: 32px;
-    margin: 32px 0 40px;
-    color: #ffffff;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hero__left button {
+    width: 440px;
+    background-color: #ffffff;
+    color: #204773;
+
 }
 
 .hero-feature {
-    font-size: 18px;
+    font-size: 32px;
     font-weight: 500;
-}
-
-.hero-feature span {
-    display: block;
-    font-size: 14px;
-    font-weight: 400;
-    color: #ffffff;
 }
 
 .hero__text {
     font-size: 18px;
-    color: #ffffff;
     max-width: 90%;
     margin-bottom: 40px;
     line-height: 1.5;
@@ -96,24 +95,20 @@
 /* ===== КАРТОЧКИ ОЧЕРЕДЕЙ В HERO (ПРАВАЯ ЧАСТЬ) ===== */
 .hero__right {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    justify-content: space-between;
 }
 
 .hero-queues {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    /* max-width: 800px; */
+    gap: 37px;
+    width: 550px;
 }
 
 .hero-queue-card {
     display: grid;
-    grid-template-columns: min-content 200px min-content;
-    align-items: center;
+    grid-template-columns: min-content 1fr;
     gap: 40px;
-    /* justify-content: space-between; */
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -130,16 +125,14 @@
 }
 
 .hero-queue-img {
-    max-width: 150px;
+    max-width: 130px;
+    border-radius: 10px;
 }
 
 .hero-queue-card__value {
     font-size: 24px;
     font-weight: 600;
     color: #ffffff;
-    /* margin-bottom: 4px; */
-    /* display: block; */
-    /* min-width: 300px; */
 }
 
 .hero-queue-card__value span {

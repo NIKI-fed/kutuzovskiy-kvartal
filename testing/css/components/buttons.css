@@ -24,7 +24,6 @@
 .btn--primary:hover {
     background: #2c7a6e;
     transform: translateY(-2px);
-    background: #d4af37;
 }
 
 .btn--large {
@@ -39,4 +38,12 @@
 
 .btn--full {
     width: 100%;
+}
+
+.btn--modal {
+    text-transform: uppercase;
+    padding: 36px 45px;
+    background-color: #204773;
+    border-radius: 10px;
+    font-size: 24px;
 }
