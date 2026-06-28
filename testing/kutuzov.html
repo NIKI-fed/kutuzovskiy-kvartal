@@ -34,46 +34,77 @@
         <main>
 
             <!-- Hero-секция-->
-            <section class="hero">
+            <section class="hero hero__kutuzov">
                 <div class="overlay"></div>
                 <div class="hero__container">
                     <div class="hero__subtitle">Тула • ул. Кутузова</div>
-                    <h1 class="hero__title">Жилой комплекс<br>Кутузовский квартал</h1>
+                    <h1 class="hero__title">Клубный дом<br>"На Кутузова"</h1>
 
                     <div class="hero__grid">
 
-                        <div class="hero__left">
+                        <!-- <div class="hero__left">
                             <div class="hero-feature">15 минут <span>до центра</span></div>
                             <button class="btn btn--primary btn--large btn--modal" data-modal-open>Подобрать квартиру ⟶</button>
-                        </div>
-
-                        <div class="hero__right">
-                            <div class="hero-queues">
-
-                                <a href="kutuzov.html" class="hero-queue-card">
-                                    <img class="hero-queue-img" src="assets/images/logo_queue.png">
-                                    <div class="hero-queue-card__value">
-                                        Клубный&nbsp;дом "на&nbsp;Кутузова"<br>
-                                        Сдача III квартал 2027
-                                    </div>
-                                </a>
-
-                                <a href="tolstoy.html" class="hero-queue-card">
-                                    <img class="hero-queue-img" src="assets/images/logo_queue.png">
-                                    <div class="hero-queue-card__value">
-                                        Клубный&nbsp;дом “Толстой”<br>
-                                        Сдача II квартал 2028
-                                    </div>
-                                </a>
-
-                            </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
                 </div>
             </section>
 
+            <!-- Секция "Доступные планировки" -->
+            <section class="planning-section">
+                <div class="planning-container">
+                    <!-- Заголовок -->
+                    <span class="planning__badge">• КВАРТИРЫ</span>
+                    <div class="planning__header">
+                        <h2 class="planning__title">ДОСТУПНЫЕ ПЛАНИРОВКИ</h2>
+                        <p class="planning__description">
+                            В квартирном фонде ЖК "Кутузовский квартал" каждый найдёт жильё в своём ритме жизни — как большие семьи, которые хотят улучшить жилищные условия, так и молодые люди, которые мечтают о своей первой недвижимости. Но главное, он для тех, кто выбирает комфорт!
+                        </p>
+                    </div>
+
+                    <!-- Карточка квартиры -->
+                    <div class="apartment-card">
+                        <!-- Изображение (заглушка) -->
+                        <div class="apartment-card__image">
+                            <div class="image-placeholder">
+                                <span>2-комнатная квартира</span>
+                            </div>
+                        </div>
+
+                        <!-- Контент -->
+                        <div class="apartment-card__content">
+                            <h3 class="apartment-card__title">2 КОМНАТНАЯ КВАРТИРА</h3>
+
+                            <div class="apartment-card__info">
+                                <div class="info-item">
+                                    <span class="info-item__value">52 кв метра</span>
+                                </div>
+                                <div class="info-item info-item--full">
+                                    <span class="info-item__label">Клубный дом "На Кутузова"</span>
+                                </div>
+                            </div>
+
+                            <div class="apartment-card__floors">
+                                <span class="floors-label">Доступны квартиры на этажах</span>
+                                <div class="floors-list">
+                                    <button class="floor-btn active" data-floor="1">1</button>
+                                    <button class="floor-btn" data-floor="2">2</button>
+                                    <button class="floor-btn" data-floor="3">3</button>
+                                    <button class="floor-btn" data-floor="4">4</button>
+                                    <button class="floor-btn" data-floor="5">5</button>
+                                </div>
+                            </div>
+
+                            <!-- Кнопка с вашим существующим классом -->
+                            <button class="btn btn--primary btn--booking" data-modal-open>
+                                ЗАБОНИРОВАТЬ ПЛАНИРОВКУ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
         </main>
 

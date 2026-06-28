@@ -16,6 +16,7 @@
 @import url('sections/gallery.css');
 @import url('sections/about_company.css');
 @import url('sections/sell.css');
+@import url('sections/planning.css');
 
 /* Components */
 @import url('components/buttons.css');
