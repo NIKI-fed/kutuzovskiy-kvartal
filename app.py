@@ -10,6 +10,7 @@ LANDING_DIR = os.path.join(BASE_DIR, 'kutuzovskiy-kvartal-landing')
 TESTING_DIR = os.path.join(BASE_DIR, 'testing')
 
 app = Flask(__name__, static_folder=LANDING_DIR, static_url_path='')
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
 
 # ── Testing Blueprint ─────────────────────────────────────────────────────────
 testing_bp = Blueprint(
@@ -47,6 +48,13 @@ def testing_page(page):
 
 
 app.register_blueprint(testing_bp, url_prefix='/testing')
+
+
+# ── Agents cabinet ───────────────────────────────────────────────────────────
+from agents import agents_bp, init_db  # noqa: E402
+
+app.register_blueprint(agents_bp)
+init_db()
 
 
 # ── CORS ─────────────────────────────────────────────────────────────────────

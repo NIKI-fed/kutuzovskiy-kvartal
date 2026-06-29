@@ -1,0 +1,32 @@
+{% extends "agents/base.html" %}
+{% block title %}{{ house.name }} — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <nav class="breadcrumbs">
+        <a href="{{ url_for('agents.houses') }}">Дома</a>
+        <span class="breadcrumbs__sep">/</span>
+        <span>{{ house.name }}</span>
+    </nav>
+
+    <h1 class="page-title">{{ house.name }}</h1>
+
+    <div class="card-grid">
+        {% for f in flats %}
+        <a class="flat-card flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
+            <div class="flat-card__top">
+                <span class="flat-card__num">№ {{ f.flat_number }}</span>
+                <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
+            </div>
+            <div class="flat-card__body">
+                <div class="flat-card__rooms">{{ f.rooms }}-комн.</div>
+                <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
+                <div class="flat-card__floor">этаж {{ f.floor }}</div>
+                <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
+            </div>
+        </a>
+        {% else %}
+        <p class="empty">Квартир пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "agents/base.html" %}
+{% block title %}Квартира № {{ flat.flat_number }} — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <nav class="breadcrumbs">
+        <a href="{{ url_for('agents.houses') }}">Дома</a>
+        <span class="breadcrumbs__sep">/</span>
+        <a href="{{ url_for('agents.house', house_id=house.id) }}">{{ house.name }}</a>
+        <span class="breadcrumbs__sep">/</span>
+        <span>№ {{ flat.flat_number }}</span>
+    </nav>
+
+    <div class="flat-detail">
+        <div class="flat-detail__media">
+            {% if images %}
+            <div class="plan-gallery">
+                {% for img in images %}
+                <img class="plan-gallery__img" src="{{ img }}" alt="Планировка квартиры № {{ flat.flat_number }}">
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="plan-empty">Планировка появится позже</div>
+            {% endif %}
+        </div>
+
+        <div class="flat-detail__info">
+            <span class="status status--{{ flat.status }}">{{ status_label(flat.status) }}</span>
+            <h1 class="flat-detail__title">Квартира № {{ flat.flat_number }}</h1>
+            <div class="flat-detail__sub">{{ house.name }}</div>
+
+            <dl class="spec">
+                <div class="spec__row"><dt>Комнат</dt><dd>{{ flat.rooms }}</dd></div>
+                <div class="spec__row"><dt>Площадь</dt><dd>{{ '%.1f'|format(flat.area_m2) }} м²</dd></div>
+                <div class="spec__row"><dt>Этаж</dt><dd>{{ flat.floor }}</dd></div>
+                <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
+            </dl>
+
+            <button type="button" class="btn btn--primary btn--large" id="reserve-btn">Оформить заявку</button>
+            <div class="reserve-msg" id="reserve-msg" hidden>Заявка отправлена. Менеджер свяжется с вами.</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('agents.static', filename='js/flat.js') }}"></script>
+{% endblock %}

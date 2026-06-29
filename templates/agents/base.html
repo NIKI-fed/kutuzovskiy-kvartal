@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}Личный кабинет агента{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('agents.static', filename='css/agents.css') }}">
+</head>
+<body>
+    {% if session.get('agent_id') %}
+    <header class="cab-header">
+        <div class="cab-header__inner">
+            <a href="{{ url_for('agents.houses') }}" class="cab-header__brand">
+                <img src="/testing/assets/images/logo.png" alt="" class="cab-header__logo">
+                <span>Личный кабинет агента</span>
+            </a>
+            <div class="cab-header__user">
+                <span class="cab-header__name">{{ session.get('agent_name') }}</span>
+                <a href="{{ url_for('agents.logout') }}" class="cab-header__logout">Выйти</a>
+            </div>
+        </div>
+    </header>
+    {% endif %}
+
+    <main class="cab-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

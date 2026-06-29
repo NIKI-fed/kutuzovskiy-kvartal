@@ -1,0 +1,23 @@
+{% extends "agents/base.html" %}
+{% block title %}Дома — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <h1 class="page-title">Дома</h1>
+    <div class="card-grid">
+        {% for h in houses %}
+        <a class="house-card" href="{{ url_for('agents.house', house_id=h.id) }}">
+            <div class="house-card__image">
+                {% if h.image_url %}<img src="{{ h.image_url }}" alt="{{ h.name }}">{% endif %}
+            </div>
+            <div class="house-card__body">
+                <h2 class="house-card__title">{{ h.name }}</h2>
+                {% if h.address %}<div class="house-card__meta">{{ h.address }}</div>{% endif %}
+                {% if h.delivery_quarter %}<div class="house-card__meta house-card__meta--accent">Сдача: {{ h.delivery_quarter }}</div>{% endif %}
+            </div>
+        </a>
+        {% else %}
+        <p class="empty">Домов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

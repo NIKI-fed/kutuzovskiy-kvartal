@@ -1,0 +1,24 @@
+{% extends "agents/base.html" %}
+{% block title %}Вход — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <form class="login-card" method="post" action="{{ url_for('agents.login') }}">
+        <h1 class="login-card__title">Личный кабинет агента</h1>
+        <p class="login-card__subtitle">Войдите, чтобы продолжить</p>
+
+        {% if error %}<div class="login-card__error">{{ error }}</div>{% endif %}
+
+        <label class="field">
+            <span class="field__label">Логин</span>
+            <input class="field__input" type="text" name="username" autocomplete="username" required autofocus>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Пароль</span>
+            <input class="field__input" type="password" name="password" autocomplete="current-password" required>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--full">Войти</button>
+    </form>
+</div>
+{% endblock %}
