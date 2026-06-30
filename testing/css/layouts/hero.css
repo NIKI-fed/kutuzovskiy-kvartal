@@ -1,7 +1,7 @@
 /* ========== HERO ========== */
 
 .hero {
-    margin-top: 90px;
+    margin-top: clamp(4.375rem, 1.6667rem + 12.037vw, 12.5rem);
     min-height: 95vh;
     display: flex;
     align-items: center;
@@ -30,6 +30,10 @@
     background-image: url("../../assets/images/kutuzov/1_3.jpg");
 }
 
+.hero__tolstoy::before {
+    background-image: url("../../assets/images/tolstoy/2_3.png");
+}
+
 @keyframes heroBgScale {
     0% {
         transform: scale(1.2);
@@ -41,9 +45,8 @@
 
 .hero__container {
     width: 1440px;
-    margin-left: 230px;
-    /* margin: 0 auto; */
-    padding: 0 32px;
+    margin-left: clamp(0rem, -49.5139rem + 63.8889vw, 14.375rem);
+    padding: 0 clamp(0.625rem, 0.0625rem + 2.5vw, 2rem);;
     z-index: 2;
 }
 
@@ -55,7 +58,7 @@
 }
 
 .hero__subtitle {
-    font-size: 24px;
+    font-size: clamp(0.75rem, 0.5rem + 1.1111vw, 1.5rem);
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 24px;
@@ -63,7 +66,7 @@
 
 .hero__title {
     font-family: Labor-Union, 'Inter';
-    font-size: 96px;
+    font-size: clamp(1.375rem, -0.1667rem + 6.8519vw, 6rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -80,11 +83,11 @@
     width: 440px;
     background-color: #ffffff;
     color: #204773;
-
+    font-size: clamp(1.125rem, 0.9716rem + 0.6818vw, 1.5rem);
 }
 
 .hero-feature {
-    font-size: 32px;
+    font-size: clamp(1rem, 0.5909rem + 1.8182vw, 2rem);
     font-weight: 500;
 }
 
@@ -133,13 +136,13 @@
 }
 
 .hero-queue-card__value {
-    font-size: 24px;
+    font-size: clamp(1.125rem, 1.0161rem + 0.4839vw, 1.5rem);
     font-weight: 600;
     color: #ffffff;
 }
 
 .hero-queue-card__value span {
-    font-size: 14px;
+    font-size: clamp(0.875rem, 0.7661rem + 0.4839vw, 1.25rem);
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -169,4 +172,81 @@
     100% {
         transform: scale(1);
     }
+}
+
+/* ============================================
+АДАПТИВ ДЛЯ HERO-СЕКЦИИ
+============================================ */
+
+/* 1440px - 1600px: начало адаптации */
+@media (max-width: 1600px) {
+    .hero__container {
+        width: 100%;
+    }
+
+    .hero__grid {
+        gap: clamp(60px, 8vw, 120px);
+    }
+
+    .hero-queues {
+        width: clamp(320px, 30vw, 450px);
+    }
+
+    .hero-queue-card {
+        gap: 24px;
+        padding: 16px 20px;
+    }
+
+    .hero-queue-img {
+        max-width: 100px;
+    }
+}
+
+/* перестраиваем сетку на 1 колонку */
+@media (max-width: 1200px) {
+    .hero {
+        min-height: 90vw;
+        padding: 60px 0 80px;
+    }
+
+    .hero__grid {
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+    }
+
+    .hero__left {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        order: 2;
+    }
+
+    .hero__right {
+        justify-content: flex-start;
+        order: 1;
+    }
+
+    .hero__left button {
+        max-width: 500px;
+        width: 100%;
+        order: 3;
+        margin-top: 8px;
+    }
+    
+    .hero-queues {
+        width: 100%;
+        max-width: 500px;
+        gap: 20px;
+    }
+
+    .hero-queue-card {
+        padding: 16px 20px;
+        gap: 20px;
+    }
+
+    .hero-queue-img {
+        max-width: 90px;
+    }
+
 }

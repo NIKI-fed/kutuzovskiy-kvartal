@@ -4,20 +4,30 @@
     align-items: center;
     justify-content: center;
     border: none;
-    font-family: 'Inter', sans-serif;
+    font-family: Jonova-Regular, 'Inter';
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 40px;
-    text-decoration: none;
-    background: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    background: #204773;
+    color: #fff;
+    font-size: clamp(1.125rem, 0.3375rem + 3.5vw, 2rem);
+}
+
+.btn:hover {
+    background: #2c7a6e;
+    transform: translateY(-2px);
+    color: #fff;
 }
 
 .btn--primary {
+    font-family: Jonova-Regular, 'Inter';
     background: #1a2c3e;
     color: white;
     padding: 12px 28px;
-    font-size: 15px;
+    /* padding: clamp(0.375rem, 0.2216rem + 0.6818vw, 0.75rem) clamp(0.75rem, 0.3409rem + 1.8182vw, 1.75rem); */
+    /* font-size: 15px; */
     white-space: nowrap;
 }
 
@@ -28,12 +38,12 @@
 
 .btn--large {
     padding: 16px 36px;
-    font-size: 18px;
+    /* font-size: 18px; */
 }
 
 .btn--small {
     padding: 8px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
 }
 
 .btn--full {
@@ -41,9 +51,15 @@
 }
 
 .btn--modal {
+    font-family: Jonova-Regular, 'Inter';
     text-transform: uppercase;
     padding: 36px 45px;
     background-color: #204773;
     border-radius: 10px;
-    font-size: 24px;
+    /* font-size: 24px; */
+}
+
+.btn--booking {
+    padding: 35px 80px;
+    /* padding: clamp(0.5rem, -0.1903rem + 3.0682vw, 2.1875rem) clamp(1.25rem, -0.2841rem + 6.8182vw, 5rem); */
 }

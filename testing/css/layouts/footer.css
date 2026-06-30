@@ -15,15 +15,16 @@
 
 .footer__links {
     display: flex;
-    gap: 32px;
+    gap: clamp(1rem, 0.5909rem + 1.8182vw, 2rem);
 }
 
 .footer__links a {
     color: #90a3b2;
     text-decoration: none;
-    font-size: 14px;
+    font-size: clamp(0.75rem, 0.6989rem + 0.2273vw, 0.875rem);
 }
 
 .footer__links a:hover {
     color: white;
 }
+
