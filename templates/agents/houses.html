@@ -7,7 +7,7 @@
         {% for h in houses %}
         <a class="house-card" href="{{ url_for('agents.house', house_id=h.id) }}">
             <div class="house-card__image">
-                {% if h.image_url %}<img src="{{ h.image_url }}" alt="{{ h.name }}">{% endif %}
+                <img src="/assets/images/logo.png" alt="{{ h.name }}">
             </div>
             <div class="house-card__body">
                 <h2 class="house-card__title">{{ h.name }}</h2>

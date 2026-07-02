@@ -1,0 +1,28 @@
+{% extends "agents/base.html" %}
+{% block title %}Аккаунт создан — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <div class="login-card">
+        <h1 class="login-card__title">Аккаунт создан</h1>
+        <p class="login-card__subtitle">Сохраните данные для входа</p>
+
+        <div class="reg-result">
+            <div class="reg-result__row">
+                <span class="field__label">Логин</span>
+                <span class="reg-result__value">{{ username }}</span>
+            </div>
+            <div class="reg-result__row">
+                <span class="field__label">Пароль</span>
+                <span class="reg-result__value reg-result__value--mono">{{ password }}</span>
+            </div>
+        </div>
+
+        <div class="reg-warning">
+            Ваш пароль для входа в кабинет: <strong>{{ password }}</strong>.
+            Сохраните его. Восстановление пароля возможно будет только через администратора.
+        </div>
+
+        <a href="{{ url_for('agents.login') }}" class="btn btn--primary btn--full">Войти в кабинет</a>
+    </div>
+</div>
+{% endblock %}

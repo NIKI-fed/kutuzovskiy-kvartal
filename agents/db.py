@@ -1,9 +1,24 @@
 import json
 import os
+import secrets
 import sqlite3
+import string
 
 from flask import current_app, g
 from werkzeug.security import generate_password_hash
+
+# Readable alphabet (no easily confused characters like 0/O, 1/l/I).
+_PASSWORD_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789"
+_PASSWORD_LENGTH = 10
+
+# Hardcoded administrator credentials.
+ADMIN_USERNAME = "superuser"
+ADMIN_PASSWORD = "july2026"
+ADMIN_NAME = "Администратор"
+
+
+def generate_password(length: int = _PASSWORD_LENGTH) -> str:
+    return "".join(secrets.choice(_PASSWORD_ALPHABET) for _ in range(length))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
@@ -14,7 +29,8 @@ CREATE TABLE IF NOT EXISTS agents (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    name          TEXT NOT NULL DEFAULT ''
+    name          TEXT NOT NULL DEFAULT '',
+    is_admin      INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS houses (
@@ -37,6 +53,18 @@ CREATE TABLE IF NOT EXISTS flats (
     status       TEXT NOT NULL DEFAULT 'available',
     plan_images  TEXT NOT NULL DEFAULT '[]',
     FOREIGN KEY (house_id) REFERENCES houses (id)
+);
+
+CREATE TABLE IF NOT EXISTS reservations (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    flat_id       INTEGER NOT NULL UNIQUE,
+    agent_id      INTEGER NOT NULL,
+    client_name   TEXT NOT NULL,
+    client_phone  TEXT NOT NULL,
+    client_email  TEXT NOT NULL DEFAULT '',
+    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (flat_id) REFERENCES flats (id),
+    FOREIGN KEY (agent_id) REFERENCES agents (id)
 );
 """
 
@@ -66,6 +94,32 @@ def _create_schema(db: sqlite3.Connection):
     db.commit()
 
 
+def _migrate_asset_paths(db: sqlite3.Connection):
+    """Rewrite legacy '/testing/assets/...' URLs to '/assets/...' in existing rows."""
+    for row in db.execute("SELECT id, image_url FROM houses").fetchall():
+        new_image = (row["image_url"] or "").replace("/testing/assets/", "/assets/")
+        if new_image != row["image_url"]:
+            db.execute("UPDATE houses SET image_url = ? WHERE id = ?", (new_image, row["id"]))
+    for row in db.execute("SELECT id, plan_images FROM flats").fetchall():
+        new_plans = (row["plan_images"] or "").replace("/testing/assets/", "/assets/")
+        if new_plans != row["plan_images"]:
+            db.execute("UPDATE flats SET plan_images = ? WHERE id = ?", (new_plans, row["id"]))
+    db.commit()
+
+
+def _migrate_admin_column(db: sqlite3.Connection):
+    """Add the 'is_admin' column to a pre-existing agents table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(agents)")}
+    if "is_admin" not in columns:
+        db.execute("ALTER TABLE agents ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0")
+        db.commit()
+
+
+def _ensure_admin(db: sqlite3.Connection):
+    """Make sure the hardcoded administrator account always exists."""
+    add_agent(db, ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_NAME, is_admin=1)
+
+
 def _seed(db: sqlite3.Connection):
     if db.execute("SELECT COUNT(*) FROM agents").fetchone()[0] == 0:
         add_agent(db, "agent", "agent123", "Агент по умолчанию")
@@ -77,12 +131,12 @@ def _seed(db: sqlite3.Connection):
                 "name": "Клубный дом «На Кутузова»",
                 "address": "г. Тула, ул. Кутузова",
                 "delivery_quarter": "III квартал 2027",
-                "image_url": "/testing/assets/images/na_kutuzova.jpg",
+                "image_url": "/assets/images/na_kutuzova.jpg",
                 "plans": [
-                    "/testing/assets/images/kutuzov/1_1.jpg",
-                    "/testing/assets/images/kutuzov/1_2.jpg",
-                    "/testing/assets/images/kutuzov/1_3.jpg",
-                    "/testing/assets/images/kutuzov/1_4.jpg",
+                    "/assets/images/kutuzov/1_1.jpg",
+                    "/assets/images/kutuzov/1_2.jpg",
+                    "/assets/images/kutuzov/1_3.jpg",
+                    "/assets/images/kutuzov/1_4.jpg",
                 ],
             },
             {
@@ -90,14 +144,14 @@ def _seed(db: sqlite3.Connection):
                 "name": "Клубный дом «Толстой»",
                 "address": "г. Тула",
                 "delivery_quarter": "II квартал 2028",
-                "image_url": "/testing/assets/images/tolstoy.jpg",
+                "image_url": "/assets/images/tolstoy.jpg",
                 "plans": [
-                    "/testing/assets/images/tolstoy/2_1.png",
-                    "/testing/assets/images/tolstoy/2_2.png",
-                    "/testing/assets/images/tolstoy/2_3.png",
-                    "/testing/assets/images/tolstoy/2_4.png",
-                    "/testing/assets/images/tolstoy/2_5.png",
-                    "/testing/assets/images/tolstoy/2_6.png",
+                    "/assets/images/tolstoy/2_1.png",
+                    "/assets/images/tolstoy/2_2.png",
+                    "/assets/images/tolstoy/2_3.png",
+                    "/assets/images/tolstoy/2_4.png",
+                    "/assets/images/tolstoy/2_5.png",
+                    "/assets/images/tolstoy/2_6.png",
                 ],
             },
         ]
@@ -158,17 +212,45 @@ def init_db():
     db = connect()
     try:
         _create_schema(db)
+        _migrate_admin_column(db)
+        _migrate_asset_paths(db)
+        _ensure_admin(db)
         _seed(db)
     finally:
         db.close()
 
 
-def add_agent(db, username, password, name=""):
+def add_agent(db, username, password, name="", is_admin=0):
     """Insert or update an agent account (password is hashed)."""
     password_hash = generate_password_hash(password)
     db.execute(
-        "INSERT INTO agents (username, password_hash, name) VALUES (?, ?, ?) "
-        "ON CONFLICT(username) DO UPDATE SET password_hash=excluded.password_hash, name=excluded.name",
-        (username, password_hash, name),
+        "INSERT INTO agents (username, password_hash, name, is_admin) VALUES (?, ?, ?, ?) "
+        "ON CONFLICT(username) DO UPDATE SET "
+        "password_hash=excluded.password_hash, name=excluded.name, is_admin=excluded.is_admin",
+        (username, password_hash, name, 1 if is_admin else 0),
     )
     db.commit()
+
+
+def username_exists(db, username) -> bool:
+    return db.execute(
+        "SELECT 1 FROM agents WHERE username = ?", (username,)
+    ).fetchone() is not None
+
+
+def register_agent(db, username, name):
+    """Create a new agent account with a server-generated password.
+
+    Returns the generated plaintext password (shown to the agent once).
+    Raises ValueError if the username is already taken.
+    """
+    username = (username or "").strip()
+    if not username:
+        raise ValueError("Логин обязателен")
+    if username == ADMIN_USERNAME:
+        raise ValueError("Этот логин недоступен")
+    if username_exists(db, username):
+        raise ValueError("Такой логин уже занят")
+    password = generate_password()
+    add_agent(db, username, password, name)
+    return password

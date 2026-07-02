@@ -35,13 +35,81 @@
                 <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
             </dl>
 
-            <button type="button" class="btn btn--primary btn--large" id="reserve-btn">Оформить заявку</button>
-            <div class="reserve-msg" id="reserve-msg" hidden>Заявка отправлена. Менеджер свяжется с вами.</div>
+            {% if is_admin %}
+            {% if flat.status == 'reserved' and reservation %}
+            <div class="reserve-info reserve-info--admin">
+                <div class="reserve-info__title">Бронь администратора: данные о резерве</div>
+                <dl class="spec">
+                    <div class="spec__row"><dt>Агент</dt><dd>{{ reservation.agent_name }} ({{ reservation.agent_username }})</dd></div>
+                    <div class="spec__row"><dt>Клиент</dt><dd>{{ reservation.client_name }}</dd></div>
+                    <div class="spec__row"><dt>Телефон</dt><dd>{{ reservation.client_phone }}</dd></div>
+                    {% if reservation.client_email %}
+                    <div class="spec__row"><dt>Email</dt><dd>{{ reservation.client_email }}</dd></div>
+                    {% endif %}
+                    <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
+                </dl>
+                <p class="reserve-info__note">Режим администратора: снятие брони недоступно.</p>
+            </div>
+            {% elif flat.status == 'available' %}
+            <div class="reserve-info reserve-info--locked">
+                <div class="reserve-info__title">Квартира свободна</div>
+                <p class="reserve-info__note">Режим администратора: только просмотр.</p>
+            </div>
+            {% elif flat.status == 'sold' %}
+            <div class="reserve-info reserve-info--locked">
+                <div class="reserve-info__title">Квартира продана</div>
+            </div>
+            {% endif %}
+
+            {% elif flat.status == 'available' %}
+            <form class="reserve-form" method="post"
+                  action="{{ url_for('agents.reserve_flat', house_id=house.id, flat_id=flat.id) }}">
+                <h2 class="reserve-form__title">Забронировать для клиента</h2>
+                <label class="field">
+                    <span class="field__label">Имя клиента</span>
+                    <input class="field__input" type="text" name="client_name" required>
+                </label>
+                <label class="field">
+                    <span class="field__label">Телефон клиента</span>
+                    <input class="field__input" type="tel" name="client_phone" placeholder="+7 (___) ___-__-__" required>
+                </label>
+                <label class="field">
+                    <span class="field__label">Email (необязательно)</span>
+                    <input class="field__input" type="email" name="client_email">
+                </label>
+                <button type="submit" class="btn btn--primary btn--large btn--full">Забронировать</button>
+            </form>
+
+            {% elif flat.status == 'reserved' and is_owner and reservation %}
+            <div class="reserve-info reserve-info--owner">
+                <div class="reserve-info__title">Вы забронировали эту квартиру</div>
+                <dl class="spec">
+                    <div class="spec__row"><dt>Клиент</dt><dd>{{ reservation.client_name }}</dd></div>
+                    <div class="spec__row"><dt>Телефон</dt><dd>{{ reservation.client_phone }}</dd></div>
+                    {% if reservation.client_email %}
+                    <div class="spec__row"><dt>Email</dt><dd>{{ reservation.client_email }}</dd></div>
+                    {% endif %}
+                    <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
+                </dl>
+                <form method="post"
+                      action="{{ url_for('agents.cancel_reservation', house_id=house.id, flat_id=flat.id) }}"
+                      onsubmit="return confirm('Снять бронь с этой квартиры?');">
+                    <button type="submit" class="btn btn--danger btn--full">Снять бронь</button>
+                </form>
+            </div>
+
+            {% elif flat.status == 'reserved' %}
+            <div class="reserve-info reserve-info--locked">
+                <div class="reserve-info__title">Квартира забронирована другим агентом</div>
+                <p class="reserve-info__note">Данные клиента скрыты. Бронь может снять только агент, оформивший её.</p>
+            </div>
+
+            {% elif flat.status == 'sold' %}
+            <div class="reserve-info reserve-info--locked">
+                <div class="reserve-info__title">Квартира продана</div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('agents.static', filename='js/flat.js') }}"></script>
 {% endblock %}

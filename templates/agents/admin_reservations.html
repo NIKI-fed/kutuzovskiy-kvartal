@@ -1,0 +1,45 @@
+{% extends "agents/base.html" %}
+{% block title %}Все брони — Панель администратора{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <h1 class="page-title">Все брони</h1>
+
+    {% if reservations %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Агент</th>
+                    <th>Дом</th>
+                    <th>Квартира</th>
+                    <th>Клиент</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr>
+                    <td class="data-table__muted">{{ r.created_at }}</td>
+                    <td>{{ r.agent_name }}<br><span class="data-table__muted">{{ r.agent_username }}</span></td>
+                    <td>{{ r.house_name }}</td>
+                    <td>
+                        <a href="{{ url_for('agents.flat', house_id=r.house_id, flat_id=r.flat_id) }}">№ {{ r.flat_number }}</a>
+                        <span class="data-table__muted">{{ r.rooms }}-комн., {{ '%.1f'|format(r.area_m2) }} м², эт. {{ r.floor }}</span>
+                    </td>
+                    <td>{{ r.client_name }}</td>
+                    <td>{{ r.client_phone }}</td>
+                    <td>{{ r.client_email or '—' }}</td>
+                    <td><span class="status status--{{ r.status }}">{{ status_label(r.status) }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">Броней пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}

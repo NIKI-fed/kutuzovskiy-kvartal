@@ -2,52 +2,14 @@ import csv
 import os
 import re
 from datetime import datetime
-from flask import Flask, Blueprint, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify
 
 # Base directories
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LANDING_DIR = os.path.join(BASE_DIR, 'kutuzovskiy-kvartal-landing')
-TESTING_DIR = os.path.join(BASE_DIR, 'testing')
+SITE_DIR = os.path.join(BASE_DIR, 'testing')
 
-app = Flask(__name__, static_folder=LANDING_DIR, static_url_path='')
+app = Flask(__name__, static_folder=SITE_DIR, static_url_path='')
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
-
-# ── Testing Blueprint ─────────────────────────────────────────────────────────
-testing_bp = Blueprint(
-    'testing',
-    __name__,
-    static_folder=TESTING_DIR,
-    static_url_path='/',
-)
-
-
-@testing_bp.route('/')
-def testing_index():
-    return send_from_directory(TESTING_DIR, 'index.html')
-
-
-@testing_bp.route('/consent')
-def testing_consent():
-    return send_from_directory(TESTING_DIR, 'consent.html')
-
-
-@testing_bp.route('/cookies')
-def testing_cookies():
-    return send_from_directory(TESTING_DIR, 'cookies.html')
-
-
-@testing_bp.route('/privacy')
-def testing_privacy():
-    return send_from_directory(TESTING_DIR, 'privacy.html')
-
-
-@testing_bp.route('/<path:page>.html')
-def testing_page(page):
-    """Serve any .html file placed in the testing/ directory (e.g. queue1.html)."""
-    return send_from_directory(TESTING_DIR, f'{page}.html')
-
-
-app.register_blueprint(testing_bp, url_prefix='/testing')
 
 
 # ── Agents cabinet ───────────────────────────────────────────────────────────
@@ -71,22 +33,28 @@ def add_cors_headers(response):
 
 @app.route('/')
 def index():
-    return send_from_directory(LANDING_DIR, 'index.html')
+    return send_from_directory(SITE_DIR, 'index.html')
 
 
 @app.route('/consent')
 def consent():
-    return send_from_directory(LANDING_DIR, 'consent.html')
+    return send_from_directory(SITE_DIR, 'consent.html')
 
 
 @app.route('/cookies')
 def cookies():
-    return send_from_directory(LANDING_DIR, 'cookies.html')
+    return send_from_directory(SITE_DIR, 'cookies.html')
 
 
 @app.route('/privacy')
 def privacy():
-    return send_from_directory(LANDING_DIR, 'privacy.html')
+    return send_from_directory(SITE_DIR, 'privacy.html')
+
+
+@app.route('/<path:page>.html')
+def site_page(page):
+    """Serve any .html file placed in the site directory (e.g. kutuzov.html)."""
+    return send_from_directory(SITE_DIR, f'{page}.html')
 
 
 # ── Form API ─────────────────────────────────────────────────────────────────

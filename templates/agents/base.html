@@ -10,11 +10,15 @@
     {% if session.get('agent_id') %}
     <header class="cab-header">
         <div class="cab-header__inner">
-            <a href="{{ url_for('agents.houses') }}" class="cab-header__brand">
-                <img src="/testing/assets/images/logo.png" alt="" class="cab-header__logo">
-                <span>Личный кабинет агента</span>
+            <a href="{{ url_for('agents.admin_reservations') if session.get('is_admin') else url_for('agents.houses') }}" class="cab-header__brand">
+                <img src="/assets/images/logo.png" alt="" class="cab-header__logo">
+                <span>{% if session.get('is_admin') %}Панель администратора{% else %}Личный кабинет агента{% endif %}</span>
             </a>
             <div class="cab-header__user">
+                {% if session.get('is_admin') %}
+                <a href="{{ url_for('agents.admin_reservations') }}" class="cab-header__nav">Брони</a>
+                <a href="{{ url_for('agents.houses') }}" class="cab-header__nav">Дома</a>
+                {% endif %}
                 <span class="cab-header__name">{{ session.get('agent_name') }}</span>
                 <a href="{{ url_for('agents.logout') }}" class="cab-header__logout">Выйти</a>
             </div>
@@ -23,6 +27,15 @@
     {% endif %}
 
     <main class="cab-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-group">
+            {% for category, message in messages %}
+            <div class="flash flash--{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 

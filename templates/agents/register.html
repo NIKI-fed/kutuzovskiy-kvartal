@@ -1,0 +1,26 @@
+{% extends "agents/base.html" %}
+{% block title %}Регистрация — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <form class="login-card" method="post" action="{{ url_for('agents.register') }}">
+        <h1 class="login-card__title">Новый аккаунт агента</h1>
+        <p class="login-card__subtitle">Заполните данные — пароль мы сгенерируем за вас</p>
+
+        {% if error %}<div class="login-card__error">{{ error }}</div>{% endif %}
+
+        <label class="field">
+            <span class="field__label">Имя</span>
+            <input class="field__input" type="text" name="name" value="{{ name }}" autocomplete="name" required autofocus>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Логин</span>
+            <input class="field__input" type="text" name="username" value="{{ username }}" autocomplete="username" required>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--full">Зарегистрироваться</button>
+
+        <a href="{{ url_for('agents.login') }}" class="login-card__alt">У меня уже есть аккаунт</a>
+    </form>
+</div>
+{% endblock %}
