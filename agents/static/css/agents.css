@@ -745,3 +745,154 @@ img {
         padding: 24px;
     }
 }
+
+/* ── Admin: flats management ─────────────────────────────── */
+.page-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.page-head .page-title {
+    margin-bottom: 0;
+}
+
+.btn--small {
+    padding: 8px 16px;
+    font-size: 14px;
+    background: var(--blue);
+}
+
+.btn--small:hover {
+    background: var(--teal);
+}
+
+.btn--ghost {
+    background: transparent;
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    padding: 14px 28px;
+    font-size: 15px;
+}
+
+.btn--ghost:hover {
+    background: var(--blue);
+    color: #fff;
+}
+
+.cab-container--narrow {
+    max-width: 720px;
+}
+
+.flat-form {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.field-hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: -8px 0 16px;
+}
+
+.field__file {
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+.flat-form__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.flat-form__delete {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.plan-manager {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.plan-manager__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.plan-manager__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.plan-manager__item {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg);
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.plan-manager__item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.plan-manager__remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(176, 65, 62, 0.9);
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.plan-manager__remove:hover {
+    background: var(--sold);
+}
+
+@media (max-width: 640px) {
+    .field-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .flat-form {
+        padding: 24px;
+    }
+}

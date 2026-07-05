@@ -10,6 +10,7 @@ SITE_DIR = os.path.join(BASE_DIR, 'testing')
 
 app = Flask(__name__, static_folder=SITE_DIR, static_url_path='')
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB cap on uploads
 
 
 # ── Agents cabinet ───────────────────────────────────────────────────────────

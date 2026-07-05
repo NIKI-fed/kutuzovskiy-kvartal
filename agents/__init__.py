@@ -1,5 +1,7 @@
 import json
+import os
 import re
+import uuid
 from functools import wraps
 
 from flask import (
@@ -14,8 +16,16 @@ from flask import (
     url_for,
 )
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 
-from agents.db import close_db, get_db, init_db, register_agent
+from agents.db import (
+    PLANS_DIR,
+    PLANS_URL_PREFIX,
+    close_db,
+    get_db,
+    init_db,
+    register_agent,
+)
 
 agents_bp = Blueprint(
     "agents",
@@ -313,3 +323,301 @@ def admin_reservations():
         "ORDER BY r.created_at DESC, r.id DESC"
     ).fetchall()
     return render_template("agents/admin_reservations.html", reservations=reservations)
+
+
+# ── Admin: flats management ───────────────────────────────────────────────────
+
+ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+
+
+def _allowed_image(filename: str) -> bool:
+    ext = os.path.splitext(filename or "")[1].lower().lstrip(".")
+    return ext in ALLOWED_IMAGE_EXTENSIONS
+
+
+def _save_plan_images(files) -> list:
+    """Persist uploaded plan images and return their public URLs."""
+    saved = []
+    os.makedirs(PLANS_DIR, exist_ok=True)
+    for f in files:
+        if not f or not f.filename or not _allowed_image(f.filename):
+            continue
+        ext = os.path.splitext(f.filename)[1].lower()
+        name = f"{uuid.uuid4().hex}{ext}"
+        f.save(os.path.join(PLANS_DIR, secure_filename(name)))
+        saved.append(f"{PLANS_URL_PREFIX}/{name}")
+    return saved
+
+
+def _delete_plan_file(url: str) -> None:
+    """Remove an uploaded plan file from disk (only inside the plans folder)."""
+    if not url or not url.startswith(PLANS_URL_PREFIX + "/"):
+        return
+    rel = url[len(PLANS_URL_PREFIX) + 1:].replace("\\", "/").lstrip("/")
+    if not rel or "/" in rel or ".." in rel:
+        return
+    target = os.path.join(PLANS_DIR, rel)
+    try:
+        if os.path.isfile(target):
+            os.remove(target)
+    except OSError:
+        pass
+
+
+def _flat_form_values(flat=None, form=None) -> dict:
+    if form is not None:
+        return {
+            "house_id": form.get("house_id", ""),
+            "floor": form.get("floor", ""),
+            "flat_number": form.get("flat_number", ""),
+            "rooms": form.get("rooms", ""),
+            "area_m2": form.get("area_m2", ""),
+            "price_per_m2": form.get("price_per_m2", ""),
+            "price": form.get("price", ""),
+            "status": form.get("status", "available"),
+        }
+    if flat is not None:
+        ppm = flat["price_per_m2"] if flat["price_per_m2"] else 0
+        return {
+            "house_id": flat["house_id"],
+            "floor": flat["floor"],
+            "flat_number": flat["flat_number"],
+            "rooms": flat["rooms"],
+            "area_m2": f'{flat["area_m2"]:g}',
+            "price_per_m2": f"{ppm:g}" if ppm else "",
+            "price": flat["price"],
+            "status": flat["status"],
+        }
+    return {
+        "house_id": "",
+        "floor": "",
+        "flat_number": "",
+        "rooms": "1",
+        "area_m2": "",
+        "price_per_m2": "",
+        "price": "",
+        "status": "available",
+    }
+
+
+def _validate_flat(db, form):
+    """Validate submitted flat fields. Returns (data_dict, errors_list)."""
+    errors = []
+    house_id = form.get("house_id", "").strip()
+    flat_number = form.get("flat_number", "").strip()
+    floor = form.get("floor", "").strip()
+    rooms = form.get("rooms", "").strip()
+    area_m2 = form.get("area_m2", "").strip()
+    price_per_m2 = form.get("price_per_m2", "").strip()
+    price = form.get("price", "").strip()
+    status = form.get("status", "available")
+
+    house_id_i = None
+    if house_id and house_id.lstrip("-").isdigit():
+        if db.execute("SELECT 1 FROM houses WHERE id = ?", (house_id,)).fetchone():
+            house_id_i = int(house_id)
+    if house_id_i is None:
+        errors.append("Выберите дом")
+
+    if not flat_number:
+        errors.append("Укажите номер квартиры")
+    try:
+        floor_i = int(floor)
+        if floor_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Этаж должен быть неотрицательным целым числом")
+        floor_i = 0
+    try:
+        rooms_i = int(rooms) if rooms else 1
+        if rooms_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Количество комнат должно быть целым числом")
+        rooms_i = 1
+    try:
+        area_f = float(area_m2.replace(",", "."))
+        if area_f <= 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Общая площадь должна быть положительным числом")
+        area_f = 0.0
+    try:
+        ppm_f = float(price_per_m2.replace(",", ".")) if price_per_m2 else 0.0
+        if ppm_f < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Цена за м² должна быть числом")
+        ppm_f = 0.0
+    try:
+        price_i = int(float(price.replace(",", "."))) if price else 0
+        if price_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Общая стоимость должна быть числом")
+        price_i = 0
+    if status not in ("available", "reserved", "sold"):
+        status = "available"
+    # Auto-compute total price when only area and price per m² were provided.
+    if not price and area_f > 0 and ppm_f > 0:
+        price_i = int(round(area_f * ppm_f))
+
+    data = {
+        "house_id": house_id_i,
+        "flat_number": flat_number,
+        "floor": floor_i,
+        "rooms": rooms_i,
+        "area_m2": area_f,
+        "price_per_m2": ppm_f,
+        "price": price_i,
+        "status": status,
+    }
+    return data, errors
+
+
+def _decode_images(raw) -> list:
+    try:
+        images = json.loads(raw) if raw else []
+    except (TypeError, ValueError):
+        images = []
+    return [img for img in images if isinstance(img, str)]
+
+
+@agents_bp.route("/admin/flats")
+@admin_required
+def admin_flats():
+    db = get_db()
+    flats = db.execute(
+        "SELECT f.id, f.flat_number, f.floor, f.rooms, f.area_m2, f.price, f.price_per_m2, "
+        "f.status, h.name AS house_name, h.id AS house_id "
+        "FROM flats f JOIN houses h ON h.id = f.house_id "
+        "ORDER BY h.id, f.floor, f.flat_number"
+    ).fetchall()
+    return render_template("agents/admin_flats.html", flats=flats)
+
+
+@agents_bp.route("/admin/flats/new", methods=["GET", "POST"])
+@admin_required
+def admin_flat_new():
+    db = get_db()
+    houses = db.execute("SELECT id, name FROM houses ORDER BY id").fetchall()
+
+    if request.method == "POST":
+        data, errors = _validate_flat(db, request.form)
+        if errors:
+            return render_template(
+                "agents/admin_flat_form.html",
+                houses=houses,
+                values=_flat_form_values(form=request.form),
+                images=[],
+                is_edit=False,
+                error="; ".join(errors),
+            )
+        new_urls = _save_plan_images(request.files.getlist("plan"))
+        cur = db.execute(
+            "INSERT INTO flats "
+            "(house_id, flat_number, floor, rooms, area_m2, price_per_m2, price, status, plan_images) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                data["house_id"], data["flat_number"], data["floor"], data["rooms"],
+                data["area_m2"], data["price_per_m2"], data["price"], data["status"],
+                json.dumps(new_urls),
+            ),
+        )
+        db.commit()
+        flash("Квартира добавлена", "success")
+        return redirect(url_for("agents.admin_flat_edit", flat_id=cur.lastrowid))
+
+    return render_template(
+        "agents/admin_flat_form.html",
+        houses=houses,
+        values=_flat_form_values(),
+        images=[],
+        is_edit=False,
+        error=None,
+    )
+
+
+@agents_bp.route("/admin/flats/<int:flat_id>/edit", methods=["GET", "POST"])
+@admin_required
+def admin_flat_edit(flat_id):
+    db = get_db()
+    flat = db.execute("SELECT * FROM flats WHERE id = ?", (flat_id,)).fetchone()
+    if flat is None:
+        abort(404)
+    houses = db.execute("SELECT id, name FROM houses ORDER BY id").fetchall()
+    images = _decode_images(flat["plan_images"])
+
+    if request.method == "POST":
+        data, errors = _validate_flat(db, request.form)
+        if errors:
+            return render_template(
+                "agents/admin_flat_form.html",
+                houses=houses,
+                values=_flat_form_values(form=request.form),
+                images=images,
+                is_edit=True,
+                flat_id=flat_id,
+                error="; ".join(errors),
+            )
+        images = images + _save_plan_images(request.files.getlist("plan"))
+        db.execute(
+            "UPDATE flats SET house_id = ?, flat_number = ?, floor = ?, rooms = ?, "
+            "area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
+            "WHERE id = ?",
+            (
+                data["house_id"], data["flat_number"], data["floor"], data["rooms"],
+                data["area_m2"], data["price_per_m2"], data["price"], data["status"],
+                json.dumps(images), flat_id,
+            ),
+        )
+        db.commit()
+        flash("Квартира обновлена", "success")
+        return redirect(url_for("agents.admin_flat_edit", flat_id=flat_id))
+
+    return render_template(
+        "agents/admin_flat_form.html",
+        houses=houses,
+        values=_flat_form_values(flat=flat),
+        images=images,
+        is_edit=True,
+        flat_id=flat_id,
+        error=None,
+    )
+
+
+@agents_bp.route("/admin/flats/<int:flat_id>/images/delete", methods=["POST"])
+@admin_required
+def admin_flat_image_delete(flat_id):
+    db = get_db()
+    flat = db.execute("SELECT * FROM flats WHERE id = ?", (flat_id,)).fetchone()
+    if flat is None:
+        abort(404)
+    target = request.form.get("image", "")
+    images = _decode_images(flat["plan_images"])
+    if target in images:
+        _delete_plan_file(target)
+        images = [u for u in images if u != target]
+        db.execute(
+            "UPDATE flats SET plan_images = ? WHERE id = ?",
+            (json.dumps(images), flat_id),
+        )
+        db.commit()
+        flash("План удалён", "success")
+    return redirect(url_for("agents.admin_flat_edit", flat_id=flat_id))
+
+
+@agents_bp.route("/admin/flats/<int:flat_id>/delete", methods=["POST"])
+@admin_required
+def admin_flat_delete(flat_id):
+    db = get_db()
+    flat = db.execute("SELECT * FROM flats WHERE id = ?", (flat_id,)).fetchone()
+    if flat is None:
+        abort(404)
+    for url in _decode_images(flat["plan_images"]):
+        _delete_plan_file(url)
+    db.execute("DELETE FROM reservations WHERE flat_id = ?", (flat_id,))
+    db.execute("DELETE FROM flats WHERE id = ?", (flat_id,))
+    db.commit()
+    flash("Квартира удалена", "success")
+    return redirect(url_for("agents.admin_flats"))

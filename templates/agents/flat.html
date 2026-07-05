@@ -32,6 +32,7 @@
                 <div class="spec__row"><dt>Комнат</dt><dd>{{ flat.rooms }}</dd></div>
                 <div class="spec__row"><dt>Площадь</dt><dd>{{ '%.1f'|format(flat.area_m2) }} м²</dd></div>
                 <div class="spec__row"><dt>Этаж</dt><dd>{{ flat.floor }}</dd></div>
+                <div class="spec__row"><dt>Цена за м²</dt><dd>{{ flat.price_per_m2|format_price }} ₽</dd></div>
                 <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
             </dl>
 

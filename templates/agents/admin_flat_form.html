@@ -1,0 +1,133 @@
+{% extends "agents/base.html" %}
+{% block title %}{% if is_edit %}Редактирование квартиры{% else %}Новая квартира{% endif %} — Панель администратора{% endblock %}
+{% block content %}
+<div class="cab-container cab-container--narrow">
+    <nav class="breadcrumbs">
+        <a href="{{ url_for('agents.admin_flats') }}">Квартиры</a>
+        <span class="breadcrumbs__sep">/</span>
+        <span>{% if is_edit %}№ {{ values.flat_number }}{% else %}Новая{% endif %}</span>
+    </nav>
+
+    <h1 class="page-title">{% if is_edit %}Редактирование квартиры{% else %}Новая квартира{% endif %}</h1>
+
+    {% if error %}
+    <div class="flash flash--error">{{ error }}</div>
+    {% endif %}
+
+    {% if is_edit and images %}
+    <section class="plan-manager">
+        <h2 class="plan-manager__title">Текущие планы</h2>
+        <div class="plan-manager__grid">
+            {% for img in images %}
+            <div class="plan-manager__item">
+                <img src="{{ img }}" alt="План квартиры">
+                <form method="post"
+                      action="{{ url_for('agents.admin_flat_image_delete', flat_id=flat_id) }}"
+                      onsubmit="return confirm('Удалить этот план?');">
+                    <input type="hidden" name="image" value="{{ img }}">
+                    <button type="submit" class="plan-manager__remove" aria-label="Удалить план">×</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <form class="flat-form" method="post"
+          enctype="multipart/form-data"
+          {% if is_edit %}action="{{ url_for('agents.admin_flat_edit', flat_id=flat_id) }}"{% else %}action="{{ url_for('agents.admin_flat_new') }}"{% endif %}>
+
+        <label class="field">
+            <span class="field__label">Дом</span>
+            <select class="field__input" name="house_id" required>
+                <option value="" disabled {% if not values.house_id %}selected{% endif %}>— выберите дом —</option>
+                {% for h in houses %}
+                <option value="{{ h.id }}" {% if values.house_id == h.id %}selected{% endif %}>{{ h.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <div class="field-grid">
+            <label class="field">
+                <span class="field__label">Этаж</span>
+                <input class="field__input" type="number" name="floor" min="0" value="{{ values.floor }}" required>
+            </label>
+            <label class="field">
+                <span class="field__label">Номер квартиры</span>
+                <input class="field__input" type="text" name="flat_number" value="{{ values.flat_number }}" required>
+            </label>
+        </div>
+
+        <div class="field-grid">
+            <label class="field">
+                <span class="field__label">Комнат</span>
+                <input class="field__input" type="number" name="rooms" min="0" value="{{ values.rooms }}">
+            </label>
+            <label class="field">
+                <span class="field__label">Общая площадь (м²)</span>
+                <input class="field__input" type="number" step="0.1" name="area_m2" id="area_m2" value="{{ values.area_m2 }}" required>
+            </label>
+        </div>
+
+        <div class="field-grid">
+            <label class="field">
+                <span class="field__label">Цена за м² (₽)</span>
+                <input class="field__input" type="number" step="1" name="price_per_m2" id="price_per_m2" value="{{ values.price_per_m2 }}">
+            </label>
+            <label class="field">
+                <span class="field__label">Общая стоимость (₽)</span>
+                <input class="field__input" type="number" step="1" name="price" id="price" value="{{ values.price }}">
+            </label>
+        </div>
+        <div class="field-hint">Если заполнить площадь и цену за м², общая стоимость рассчитается автоматически.</div>
+
+        <label class="field">
+            <span class="field__label">Статус</span>
+            <select class="field__input" name="status">
+                <option value="available" {% if values.status == 'available' %}selected{% endif %}>{{ status_label('available') }}</option>
+                <option value="reserved" {% if values.status == 'reserved' %}selected{% endif %}>{{ status_label('reserved') }}</option>
+                <option value="sold" {% if values.status == 'sold' %}selected{% endif %}>{{ status_label('sold') }}</option>
+            </select>
+        </label>
+
+        <label class="field">
+            <span class="field__label">План квартиры (изображение)</span>
+            <input class="field__file" type="file" name="plan" accept="image/*" multiple>
+            <span class="field-hint">PNG, JPG, GIF или WEBP. Можно загрузить несколько файлов сразу.</span>
+        </label>
+
+        <div class="flat-form__actions">
+            <button type="submit" class="btn btn--primary btn--large">{% if is_edit %}Сохранить изменения{% else %}Добавить квартиру{% endif %}</button>
+            <a href="{{ url_for('agents.admin_flats') }}" class="btn btn--ghost">Отмена</a>
+        </div>
+    </form>
+
+    {% if is_edit %}
+    <form class="flat-form__delete" method="post"
+          action="{{ url_for('agents.admin_flat_delete', flat_id=flat_id) }}"
+          onsubmit="return confirm('Удалить квартиру без возможности восстановления?');">
+        <button type="submit" class="btn btn--danger">Удалить квартиру</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    var area = document.getElementById('area_m2');
+    var ppm = document.getElementById('price_per_m2');
+    var price = document.getElementById('price');
+    if (!area || !ppm || !price) return;
+    function recompute() {
+        var a = parseFloat((area.value || '').replace(',', '.'));
+        var p = parseFloat((ppm.value || '').replace(',', '.'));
+        if (a > 0 && p >= 0) {
+            price.value = Math.round(a * p);
+        }
+    }
+    area.addEventListener('input', recompute);
+    ppm.addEventListener('input', recompute);
+})();
+</script>
+{% endblock %}

@@ -17,6 +17,7 @@
             <div class="cab-header__user">
                 {% if session.get('is_admin') %}
                 <a href="{{ url_for('agents.admin_reservations') }}" class="cab-header__nav">Брони</a>
+                <a href="{{ url_for('agents.admin_flats') }}" class="cab-header__nav">Квартиры</a>
                 <a href="{{ url_for('agents.houses') }}" class="cab-header__nav">Дома</a>
                 {% endif %}
                 <span class="cab-header__name">{{ session.get('agent_name') }}</span>

@@ -1,0 +1,47 @@
+{% extends "agents/base.html" %}
+{% block title %}Квартиры — Панель администратора{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <div class="page-head">
+        <h1 class="page-title">Квартиры</h1>
+        <a href="{{ url_for('agents.admin_flat_new') }}" class="btn btn--primary">Добавить квартиру</a>
+    </div>
+
+    {% if flats %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Дом</th>
+                    <th>Квартира</th>
+                    <th>Этаж</th>
+                    <th>Комнат</th>
+                    <th>Площадь</th>
+                    <th>Цена/м²</th>
+                    <th>Стоимость</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in flats %}
+                <tr>
+                    <td><a href="{{ url_for('agents.house', house_id=f.house_id) }}">{{ f.house_name }}</a></td>
+                    <td>№ {{ f.flat_number }}</td>
+                    <td>{{ f.floor }}</td>
+                    <td>{{ f.rooms }}</td>
+                    <td>{{ '%.1f'|format(f.area_m2) }} м²</td>
+                    <td>{{ f.price_per_m2|format_price }} ₽</td>
+                    <td>{{ f.price|format_price }} ₽</td>
+                    <td><span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span></td>
+                    <td><a href="{{ url_for('agents.admin_flat_edit', flat_id=f.id) }}" class="btn btn--small">Изменить</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">Квартир пока нет. <a href="{{ url_for('agents.admin_flat_new') }}">Добавить первую</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

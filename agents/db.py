@@ -24,6 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
 DB_PATH = os.path.join(INSTANCE_DIR, "kutuzov.db")
 
+# Uploaded flat plans are stored here and served from the site static folder.
+PLANS_DIR = os.path.join(BASE_DIR, "testing", "assets", "images", "plans")
+PLANS_URL_PREFIX = "/assets/images/plans"
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS agents (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,15 +47,16 @@ CREATE TABLE IF NOT EXISTS houses (
 );
 
 CREATE TABLE IF NOT EXISTS flats (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    house_id     INTEGER NOT NULL,
-    flat_number  TEXT NOT NULL,
-    floor        INTEGER NOT NULL,
-    rooms        INTEGER NOT NULL,
-    area_m2      REAL NOT NULL,
-    price        INTEGER NOT NULL,
-    status       TEXT NOT NULL DEFAULT 'available',
-    plan_images  TEXT NOT NULL DEFAULT '[]',
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    house_id      INTEGER NOT NULL,
+    flat_number   TEXT NOT NULL,
+    floor         INTEGER NOT NULL,
+    rooms         INTEGER NOT NULL,
+    area_m2       REAL NOT NULL,
+    price_per_m2  REAL NOT NULL DEFAULT 0,
+    price         INTEGER NOT NULL,
+    status        TEXT NOT NULL DEFAULT 'available',
+    plan_images   TEXT NOT NULL DEFAULT '[]',
     FOREIGN KEY (house_id) REFERENCES houses (id)
 );
 
@@ -112,6 +117,25 @@ def _migrate_admin_column(db: sqlite3.Connection):
     columns = {row["name"] for row in db.execute("PRAGMA table_info(agents)")}
     if "is_admin" not in columns:
         db.execute("ALTER TABLE agents ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0")
+        db.commit()
+
+
+def _migrate_price_per_m2(db: sqlite3.Connection):
+    """Add the 'price_per_m2' column to a pre-existing flats table, if missing,
+    and backfill it from price / area_m2 for existing rows."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
+    if "price_per_m2" not in columns:
+        db.execute("ALTER TABLE flats ADD COLUMN price_per_m2 REAL NOT NULL DEFAULT 0")
+        db.commit()
+    rows = db.execute(
+        "SELECT id, area_m2, price FROM flats WHERE price_per_m2 = 0 AND area_m2 > 0"
+    ).fetchall()
+    for row in rows:
+        ppm = round(row["price"] / row["area_m2"])
+        db.execute(
+            "UPDATE flats SET price_per_m2 = ? WHERE id = ?", (ppm, row["id"])
+        )
+    if rows:
         db.commit()
 
 
@@ -213,6 +237,7 @@ def init_db():
     try:
         _create_schema(db)
         _migrate_admin_column(db)
+        _migrate_price_per_m2(db)
         _migrate_asset_paths(db)
         _ensure_admin(db)
         _seed(db)
