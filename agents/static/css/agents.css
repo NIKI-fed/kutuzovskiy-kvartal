@@ -122,6 +122,13 @@ img {
 .cab-header__name {
     color: var(--muted);
     font-size: 15px;
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.15s ease;
+}
+
+.cab-header__name:hover {
+    border-bottom-color: var(--muted);
 }
 
 .cab-header__nav {
@@ -196,6 +203,22 @@ img {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
+}
+
+/* House view: grouped sections (Квартиры / Кладовые) */
+.house-group {
+    margin-bottom: 40px;
+}
+
+.group-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.house-group + .house-group .group-title {
+    margin-top: 8px;
 }
 
 /* House card */
@@ -559,6 +582,12 @@ img {
 
 .data-table a:hover {
     text-decoration: underline;
+}
+
+.data-table .btn,
+.data-table .btn:hover {
+    color: #fff;
+    text-decoration: none;
 }
 
 .data-table__muted {

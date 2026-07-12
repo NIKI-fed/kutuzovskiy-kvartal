@@ -9,12 +9,27 @@
         {% if error %}<div class="login-card__error">{{ error }}</div>{% endif %}
 
         <label class="field">
-            <span class="field__label">Имя</span>
+            <span class="field__label">Название</span>
             <input class="field__input" type="text" name="name" value="{{ name }}" autocomplete="name" required autofocus>
         </label>
 
         <label class="field">
-            <span class="field__label">Логин</span>
+            <span class="field__label">ФИО агента</span>
+            <input class="field__input" type="text" name="full_name" value="{{ full_name }}" autocomplete="name" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Телефон</span>
+            <input class="field__input" type="tel" name="phone" value="{{ phone }}" autocomplete="tel" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Эл. почта</span>
+            <input class="field__input" type="email" name="email" value="{{ email }}" autocomplete="email" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Логин для входа</span>
             <input class="field__input" type="text" name="username" value="{{ username }}" autocomplete="username" required>
         </label>
 

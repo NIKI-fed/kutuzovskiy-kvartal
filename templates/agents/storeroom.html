@@ -1,5 +1,5 @@
 {% extends "agents/base.html" %}
-{% block title %}Квартира № {{ flat.flat_number }} — Личный кабинет агента{% endblock %}
+{% block title %}Кладовая № {{ storeroom.number }} — Личный кабинет агента{% endblock %}
 {% block content %}
 <div class="cab-container">
     <nav class="breadcrumbs">
@@ -7,7 +7,7 @@
         <span class="breadcrumbs__sep">/</span>
         <a href="{{ url_for('agents.house', house_id=house.id) }}">{{ house.name }}</a>
         <span class="breadcrumbs__sep">/</span>
-        <span>№ {{ flat.flat_number }}</span>
+        <span>№ {{ storeroom.number }}</span>
     </nav>
 
     <div class="flat-detail">
@@ -15,7 +15,7 @@
             {% if images %}
             <div class="plan-gallery">
                 {% for img in images %}
-                <img class="plan-gallery__img" src="{{ img }}" alt="Планировка квартиры № {{ flat.flat_number }}">
+                <img class="plan-gallery__img" src="{{ img }}" alt="Планировка кладовой № {{ storeroom.number }}">
                 {% endfor %}
             </div>
             {% else %}
@@ -24,22 +24,20 @@
         </div>
 
         <div class="flat-detail__info">
-            <span class="status status--{{ flat.status }}">{{ status_label(flat.status) }}</span>
-            <h1 class="flat-detail__title">Квартира № {{ flat.flat_number }}</h1>
+            <span class="status status--{{ storeroom.status }}">{{ status_label(storeroom.status) }}</span>
+            <h1 class="flat-detail__title">Кладовая № {{ storeroom.number }}</h1>
             <div class="flat-detail__sub">{{ house.name }}</div>
 
             <dl class="spec">
-                <div class="spec__row"><dt>Комнат</dt><dd>{{ flat.rooms }}</dd></div>
-                <div class="spec__row"><dt>Площадь</dt><dd>{{ '%.1f'|format(flat.area_m2) }} м²</dd></div>
-                <div class="spec__row"><dt>Этаж</dt><dd>{{ flat.floor }}</dd></div>
-                <div class="spec__row"><dt>Цена за м²</dt><dd>{{ flat.price_per_m2|format_price }} ₽</dd></div>
-                <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
+                <div class="spec__row"><dt>Площадь</dt><dd>{{ '%.1f'|format(storeroom.area_m2) }} м²</dd></div>
+                <div class="spec__row"><dt>Цена за м²</dt><dd>{{ storeroom.price_per_m2|format_price }} ₽</dd></div>
+                <div class="spec__row"><dt>Цена</dt><dd>{{ storeroom.price|format_price }} ₽</dd></div>
             </dl>
 
             {% if is_admin %}
-            {% if flat.status == 'available' %}
+            {% if storeroom.status == 'available' %}
             <form class="reserve-form" method="post"
-                  action="{{ url_for('agents.reserve_flat', house_id=house.id, flat_id=flat.id) }}">
+                  action="{{ url_for('agents.reserve_storeroom', house_id=house.id, storeroom_id=storeroom.id) }}">
                 <h2 class="reserve-form__title">Забронировать для клиента</h2>
                 <label class="field">
                     <span class="field__label">Имя клиента</span>
@@ -56,7 +54,7 @@
                 <button type="submit" class="btn btn--primary btn--large btn--full">Забронировать</button>
             </form>
 
-            {% elif flat.status == 'reserved' and reservation %}
+            {% elif storeroom.status == 'reserved' and reservation %}
             <div class="reserve-info reserve-info--admin">
                 <div class="reserve-info__title">Данные о резерве (режим администратора)</div>
                 <dl class="spec">
@@ -69,21 +67,21 @@
                     <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
                 </dl>
                 <form method="post"
-                      action="{{ url_for('agents.cancel_reservation', house_id=house.id, flat_id=flat.id) }}"
-                      onsubmit="return confirm('Снять бронь с этой квартиры?');">
+                      action="{{ url_for('agents.cancel_storeroom_reservation', house_id=house.id, storeroom_id=storeroom.id) }}"
+                      onsubmit="return confirm('Снять бронь с этой кладовой?');">
                     <button type="submit" class="btn btn--danger btn--full">Снять бронь</button>
                 </form>
             </div>
 
-            {% elif flat.status == 'sold' %}
+            {% elif storeroom.status == 'sold' %}
             <div class="reserve-info reserve-info--locked">
-                <div class="reserve-info__title">Квартира продана</div>
+                <div class="reserve-info__title">Кладовая продана</div>
             </div>
             {% endif %}
 
-            {% elif flat.status == 'available' %}
+            {% elif storeroom.status == 'available' %}
             <form class="reserve-form" method="post"
-                  action="{{ url_for('agents.reserve_flat', house_id=house.id, flat_id=flat.id) }}">
+                  action="{{ url_for('agents.reserve_storeroom', house_id=house.id, storeroom_id=storeroom.id) }}">
                 <h2 class="reserve-form__title">Забронировать для клиента</h2>
                 <label class="field">
                     <span class="field__label">Имя клиента</span>
@@ -100,9 +98,9 @@
                 <button type="submit" class="btn btn--primary btn--large btn--full">Забронировать</button>
             </form>
 
-            {% elif flat.status == 'reserved' and is_owner and reservation %}
+            {% elif storeroom.status == 'reserved' and is_owner and reservation %}
             <div class="reserve-info reserve-info--owner">
-                <div class="reserve-info__title">Вы забронировали эту квартиру</div>
+                <div class="reserve-info__title">Вы забронировали эту кладовую</div>
                 <dl class="spec">
                     <div class="spec__row"><dt>Клиент</dt><dd>{{ reservation.client_name }}</dd></div>
                     <div class="spec__row"><dt>Телефон</dt><dd>{{ reservation.client_phone }}</dd></div>
@@ -112,21 +110,21 @@
                     <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
                 </dl>
                 <form method="post"
-                      action="{{ url_for('agents.cancel_reservation', house_id=house.id, flat_id=flat.id) }}"
-                      onsubmit="return confirm('Снять бронь с этой квартиры?');">
+                      action="{{ url_for('agents.cancel_storeroom_reservation', house_id=house.id, storeroom_id=storeroom.id) }}"
+                      onsubmit="return confirm('Снять бронь с этой кладовой?');">
                     <button type="submit" class="btn btn--danger btn--full">Снять бронь</button>
                 </form>
             </div>
 
-            {% elif flat.status == 'reserved' %}
+            {% elif storeroom.status == 'reserved' %}
             <div class="reserve-info reserve-info--locked">
-                <div class="reserve-info__title">Квартира забронирована другим агентом</div>
+                <div class="reserve-info__title">Кладовая забронирована другим агентом</div>
                 <p class="reserve-info__note">Данные клиента скрыты. Бронь может снять только агент, оформивший её.</p>
             </div>
 
-            {% elif flat.status == 'sold' %}
+            {% elif storeroom.status == 'sold' %}
             <div class="reserve-info reserve-info--locked">
-                <div class="reserve-info__title">Квартира продана</div>
+                <div class="reserve-info__title">Кладовая продана</div>
             </div>
             {% endif %}
         </div>

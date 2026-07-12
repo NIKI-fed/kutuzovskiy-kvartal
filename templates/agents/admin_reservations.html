@@ -12,7 +12,8 @@
                     <th>Дата</th>
                     <th>Агент</th>
                     <th>Дом</th>
-                    <th>Квартира</th>
+                    <th>Тип</th>
+                    <th>Объект</th>
                     <th>Клиент</th>
                     <th>Телефон</th>
                     <th>Email</th>
@@ -25,9 +26,15 @@
                     <td class="data-table__muted">{{ r.created_at }}</td>
                     <td>{{ r.agent_name }}<br><span class="data-table__muted">{{ r.agent_username }}</span></td>
                     <td>{{ r.house_name }}</td>
+                    <td>{% if r.kind == 'flat' %}Квартира{% else %}Кладовая{% endif %}</td>
                     <td>
-                        <a href="{{ url_for('agents.flat', house_id=r.house_id, flat_id=r.flat_id) }}">№ {{ r.flat_number }}</a>
+                        {% if r.kind == 'flat' %}
+                        <a href="{{ url_for('agents.flat', house_id=r.house_id, flat_id=r.unit_id) }}">№ {{ r.unit_number }}</a>
                         <span class="data-table__muted">{{ r.rooms }}-комн., {{ '%.1f'|format(r.area_m2) }} м², эт. {{ r.floor }}</span>
+                        {% else %}
+                        <a href="{{ url_for('agents.storeroom', house_id=r.house_id, storeroom_id=r.unit_id) }}">№ {{ r.unit_number }}</a>
+                        <span class="data-table__muted">{{ '%.1f'|format(r.area_m2) }} м²</span>
+                        {% endif %}
                     </td>
                     <td>{{ r.client_name }}</td>
                     <td>{{ r.client_phone }}</td>

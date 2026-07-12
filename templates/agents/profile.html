@@ -1,0 +1,36 @@
+{% extends "agents/base.html" %}
+{% block title %}Профиль — Личный кабинет агента{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <form class="login-card" method="post" action="{{ url_for('agents.profile') }}">
+        <h1 class="login-card__title">Профиль агента</h1>
+        <p class="login-card__subtitle">Измените свои данные</p>
+
+        {% if error %}<div class="login-card__error">{{ error }}</div>{% endif %}
+
+        <label class="field">
+            <span class="field__label">Название</span>
+            <input class="field__input" type="text" name="name" value="{{ agent.name }}" autocomplete="name" required autofocus>
+        </label>
+
+        <label class="field">
+            <span class="field__label">ФИО агента</span>
+            <input class="field__input" type="text" name="full_name" value="{{ agent.full_name }}" autocomplete="name" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Телефон</span>
+            <input class="field__input" type="tel" name="phone" value="{{ agent.phone }}" autocomplete="tel" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Эл. почта</span>
+            <input class="field__input" type="email" name="email" value="{{ agent.email }}" autocomplete="email" required>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--full">Сохранить</button>
+
+        <a href="{{ url_for('agents.houses') }}" class="login-card__alt">Назад</a>
+    </form>
+</div>
+{% endblock %}

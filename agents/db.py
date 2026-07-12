@@ -33,7 +33,11 @@ CREATE TABLE IF NOT EXISTS agents (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    password      TEXT NOT NULL DEFAULT '',
     name          TEXT NOT NULL DEFAULT '',
+    full_name     TEXT NOT NULL DEFAULT '',
+    phone         TEXT NOT NULL DEFAULT '',
+    email         TEXT NOT NULL DEFAULT '',
     is_admin      INTEGER NOT NULL DEFAULT 0
 );
 
@@ -69,6 +73,30 @@ CREATE TABLE IF NOT EXISTS reservations (
     client_email  TEXT NOT NULL DEFAULT '',
     created_at    TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (flat_id) REFERENCES flats (id),
+    FOREIGN KEY (agent_id) REFERENCES agents (id)
+);
+
+CREATE TABLE IF NOT EXISTS storerooms (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    house_id      INTEGER NOT NULL,
+    number        TEXT NOT NULL,
+    area_m2       REAL NOT NULL,
+    price_per_m2  REAL NOT NULL DEFAULT 0,
+    price         INTEGER NOT NULL,
+    status        TEXT NOT NULL DEFAULT 'available',
+    plan_images   TEXT NOT NULL DEFAULT '[]',
+    FOREIGN KEY (house_id) REFERENCES houses (id)
+);
+
+CREATE TABLE IF NOT EXISTS storeroom_reservations (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    storeroom_id  INTEGER NOT NULL UNIQUE,
+    agent_id      INTEGER NOT NULL,
+    client_name   TEXT NOT NULL,
+    client_phone  TEXT NOT NULL,
+    client_email  TEXT NOT NULL DEFAULT '',
+    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (storeroom_id) REFERENCES storerooms (id),
     FOREIGN KEY (agent_id) REFERENCES agents (id)
 );
 """
@@ -117,6 +145,31 @@ def _migrate_admin_column(db: sqlite3.Connection):
     columns = {row["name"] for row in db.execute("PRAGMA table_info(agents)")}
     if "is_admin" not in columns:
         db.execute("ALTER TABLE agents ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0")
+        db.commit()
+
+
+def _migrate_password_column(db: sqlite3.Connection):
+    """Add the 'password' column to a pre-existing agents table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(agents)")}
+    if "password" not in columns:
+        db.execute("ALTER TABLE agents ADD COLUMN password TEXT NOT NULL DEFAULT ''")
+        db.commit()
+
+
+def _migrate_agent_profile_columns(db: sqlite3.Connection):
+    """Add the full_name/phone/email columns to a pre-existing agents table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(agents)")}
+    added = False
+    if "full_name" not in columns:
+        db.execute("ALTER TABLE agents ADD COLUMN full_name TEXT NOT NULL DEFAULT ''")
+        added = True
+    if "phone" not in columns:
+        db.execute("ALTER TABLE agents ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
+        added = True
+    if "email" not in columns:
+        db.execute("ALTER TABLE agents ADD COLUMN email TEXT NOT NULL DEFAULT ''")
+        added = True
+    if added:
         db.commit()
 
 
@@ -202,6 +255,21 @@ def _seed(db: sqlite3.Connection):
                         json.dumps(flat["plans"]),
                     ),
                 )
+            for st in _sample_storerooms(h["plans"]):
+                db.execute(
+                    "INSERT INTO storerooms "
+                    "(house_id, number, area_m2, price, price_per_m2, status, plan_images) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        house_id,
+                        st["number"],
+                        st["area_m2"],
+                        st["price"],
+                        st["price_per_m2"],
+                        "available",
+                        json.dumps(st["plans"]),
+                    ),
+                )
         db.commit()
 
 
@@ -230,6 +298,26 @@ def _sample_flats(plan_pool):
     return flats
 
 
+def _sample_storerooms(plan_pool):
+    """Deterministic sample storerooms (no floor, no rooms) cycled through plan images."""
+    price_per_m2 = 135000
+    storerooms = []
+    for i in range(3):
+        area = round(4.0 + (i * 1.2), 1)
+        price = int(area * price_per_m2)
+        plans = [plan_pool[i % len(plan_pool)]]
+        storerooms.append(
+            {
+                "number": f"К{i + 1}",
+                "area_m2": area,
+                "price_per_m2": price_per_m2,
+                "price": price,
+                "plans": plans,
+            }
+        )
+    return storerooms
+
+
 def init_db():
     """Create schema + seed. Idempotent and safe to run on every startup."""
     os.makedirs(INSTANCE_DIR, exist_ok=True)
@@ -237,6 +325,8 @@ def init_db():
     try:
         _create_schema(db)
         _migrate_admin_column(db)
+        _migrate_password_column(db)
+        _migrate_agent_profile_columns(db)
         _migrate_price_per_m2(db)
         _migrate_asset_paths(db)
         _ensure_admin(db)
@@ -245,14 +335,26 @@ def init_db():
         db.close()
 
 
-def add_agent(db, username, password, name="", is_admin=0):
-    """Insert or update an agent account (password is hashed)."""
+def add_agent(db, username, password, name="", full_name="", phone="", email="", is_admin=0):
+    """Insert or update an agent account (password is hashed + stored in plaintext)."""
     password_hash = generate_password_hash(password)
     db.execute(
-        "INSERT INTO agents (username, password_hash, name, is_admin) VALUES (?, ?, ?, ?) "
+        "INSERT INTO agents (username, password_hash, password, name, full_name, phone, email, is_admin) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
         "ON CONFLICT(username) DO UPDATE SET "
-        "password_hash=excluded.password_hash, name=excluded.name, is_admin=excluded.is_admin",
-        (username, password_hash, name, 1 if is_admin else 0),
+        "password_hash=excluded.password_hash, password=excluded.password, "
+        "name=excluded.name, full_name=excluded.full_name, phone=excluded.phone, "
+        "email=excluded.email, is_admin=excluded.is_admin",
+        (username, password_hash, password, name, full_name, phone, email, 1 if is_admin else 0),
+    )
+    db.commit()
+
+
+def update_agent_profile(db, agent_id, name, full_name, phone, email):
+    """Update an agent's editable profile fields."""
+    db.execute(
+        "UPDATE agents SET name = ?, full_name = ?, phone = ?, email = ? WHERE id = ?",
+        (name, full_name, phone, email, agent_id),
     )
     db.commit()
 
@@ -263,7 +365,7 @@ def username_exists(db, username) -> bool:
     ).fetchone() is not None
 
 
-def register_agent(db, username, name):
+def register_agent(db, username, name, full_name="", phone="", email=""):
     """Create a new agent account with a server-generated password.
 
     Returns the generated plaintext password (shown to the agent once).
@@ -277,5 +379,5 @@ def register_agent(db, username, name):
     if username_exists(db, username):
         raise ValueError("Такой логин уже занят")
     password = generate_password()
-    add_agent(db, username, password, name)
+    add_agent(db, username, password, name, full_name, phone, email)
     return password

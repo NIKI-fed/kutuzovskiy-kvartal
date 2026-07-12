@@ -1,0 +1,43 @@
+{% extends "agents/base.html" %}
+{% block title %}Кладовые — Панель администратора{% endblock %}
+{% block content %}
+<div class="cab-container">
+    <div class="page-head">
+        <h1 class="page-title">Кладовые</h1>
+        <a href="{{ url_for('agents.admin_storeroom_new') }}" class="btn btn--primary">Добавить кладовую</a>
+    </div>
+
+    {% if storerooms %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Дом</th>
+                    <th>Номер</th>
+                    <th>Площадь</th>
+                    <th>Цена/м²</th>
+                    <th>Стоимость</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in storerooms %}
+                <tr>
+                    <td><a href="{{ url_for('agents.house', house_id=s.house_id) }}">{{ s.house_name }}</a></td>
+                    <td>№ {{ s.number }}</td>
+                    <td>{{ '%.1f'|format(s.area_m2) }} м²</td>
+                    <td>{{ s.price_per_m2|format_price }} ₽</td>
+                    <td>{{ s.price|format_price }} ₽</td>
+                    <td><span class="status status--{{ s.status }}">{{ status_label(s.status) }}</span></td>
+                    <td><a href="{{ url_for('agents.admin_storeroom_edit', storeroom_id=s.id) }}" class="btn btn--small">Изменить</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">Кладовых пока нет. <a href="{{ url_for('agents.admin_storeroom_new') }}">Добавить первую</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -25,6 +25,7 @@ from agents.db import (
     get_db,
     init_db,
     register_agent,
+    update_agent_profile,
 )
 
 agents_bp = Blueprint(
@@ -140,28 +141,88 @@ def register():
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
+        full_name = request.form.get("full_name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip()
         username = request.form.get("username", "").strip()
         if len(name) < 2:
             return render_template(
-                "agents/register.html", error="Имя должно содержать минимум 2 символа",
-                name=name, username=username,
+                "agents/register.html", error="Название должно содержать минимум 2 символа",
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
+            )
+        if len(full_name) < 2:
+            return render_template(
+                "agents/register.html", error="ФИО агента должно содержать минимум 2 символа",
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
+            )
+        if not _valid_phone(phone):
+            return render_template(
+                "agents/register.html", error="Укажите корректный телефон (минимум 11 цифр)",
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
+            )
+        if not _EMAIL_RE.match(email):
+            return render_template(
+                "agents/register.html", error="Укажите корректный адрес эл. почты",
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
             )
         if len(username) < 3:
             return render_template(
-                "agents/register.html", error="Логин должен содержать минимум 3 символа",
-                name=name, username=username,
+                "agents/register.html", error="Логин для входа должен содержать минимум 3 символа",
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
             )
         try:
-            password = register_agent(get_db(), username, name)
+            password = register_agent(get_db(), username, name, full_name, phone, email)
         except ValueError as exc:
             return render_template(
-                "agents/register.html", error=str(exc), name=name, username=username,
+                "agents/register.html", error=str(exc),
+                name=name, full_name=full_name, phone=phone, email=email, username=username,
             )
         return render_template(
             "agents/register_done.html", username=username, password=password,
         )
 
     return render_template("agents/register.html", error=None)
+
+
+@agents_bp.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    db = get_db()
+    agent = db.execute(
+        "SELECT * FROM agents WHERE id = ?", (session.get("agent_id"),)
+    ).fetchone()
+    if agent is None:
+        session.clear()
+        return redirect(url_for("agents.login"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        full_name = request.form.get("full_name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip()
+        values = dict(name=name, full_name=full_name, phone=phone, email=email)
+        if len(name) < 2:
+            return render_template(
+                "agents/profile.html", error="Название должно содержать минимум 2 символа", agent=values,
+            )
+        if len(full_name) < 2:
+            return render_template(
+                "agents/profile.html", error="ФИО агента должно содержать минимум 2 символа", agent=values,
+            )
+        if not _valid_phone(phone):
+            return render_template(
+                "agents/profile.html", error="Укажите корректный телефон (минимум 11 цифр)", agent=values,
+            )
+        if not _EMAIL_RE.match(email):
+            return render_template(
+                "agents/profile.html", error="Укажите корректный адрес эл. почты", agent=values,
+            )
+        update_agent_profile(db, agent["id"], name, full_name, phone, email)
+        session["agent_name"] = name or agent["username"]
+        flash("Профиль обновлён", "success")
+        return redirect(url_for("agents.profile"))
+
+    return render_template("agents/profile.html", error=None, agent=agent)
 
 
 @agents_bp.route("/logout")
@@ -188,7 +249,13 @@ def house(house_id):
         "SELECT * FROM flats WHERE house_id = ? ORDER BY floor, flat_number",
         (house_id,),
     ).fetchall()
-    return render_template("agents/house.html", house=house, flats=flats)
+    storerooms = db.execute(
+        "SELECT * FROM storerooms WHERE house_id = ? ORDER BY number",
+        (house_id,),
+    ).fetchall()
+    return render_template(
+        "agents/house.html", house=house, flats=flats, storerooms=storerooms
+    )
 
 
 @agents_bp.route("/houses/<int:house_id>/flats/<int:flat_id>")
@@ -236,8 +303,6 @@ def flat(house_id, flat_id):
 @agents_bp.route("/houses/<int:house_id>/flats/<int:flat_id>/reserve", methods=["POST"])
 @login_required
 def reserve_flat(house_id, flat_id):
-    if session.get("is_admin"):
-        abort(403)
     db = get_db()
     flat = db.execute(
         "SELECT * FROM flats WHERE id = ? AND house_id = ?", (flat_id, house_id)
@@ -288,15 +353,14 @@ def reserve_flat(house_id, flat_id):
 @agents_bp.route("/houses/<int:house_id>/flats/<int:flat_id>/cancel", methods=["POST"])
 @login_required
 def cancel_reservation(house_id, flat_id):
-    if session.get("is_admin"):
-        abort(403)
     db = get_db()
     reservation = db.execute(
         "SELECT * FROM reservations WHERE flat_id = ?", (flat_id,)
     ).fetchone()
     if reservation is None:
         abort(404)
-    if reservation["agent_id"] != session.get("agent_id"):
+    is_admin = bool(session.get("is_admin"))
+    if not is_admin and reservation["agent_id"] != session.get("agent_id"):
         flash("Снять бронь может только агент, который её оформил", "error")
         return redirect(url_for("agents.flat", house_id=house_id, flat_id=flat_id))
 
@@ -307,20 +371,149 @@ def cancel_reservation(house_id, flat_id):
     return redirect(url_for("agents.flat", house_id=house_id, flat_id=flat_id))
 
 
+@agents_bp.route("/houses/<int:house_id>/storerooms/<int:storeroom_id>")
+@login_required
+def storeroom(house_id, storeroom_id):
+    db = get_db()
+    storeroom = db.execute(
+        "SELECT * FROM storerooms WHERE id = ? AND house_id = ?",
+        (storeroom_id, house_id),
+    ).fetchone()
+    house = db.execute("SELECT * FROM houses WHERE id = ?", (house_id,)).fetchone()
+    if storeroom is None or house is None:
+        abort(404)
+    try:
+        images = json.loads(storeroom["plan_images"]) if storeroom["plan_images"] else []
+    except (TypeError, ValueError):
+        images = []
+
+    reservation = None
+    is_owner = False
+    is_admin = bool(session.get("is_admin"))
+    if storeroom["status"] == "reserved":
+        reservation = db.execute(
+            "SELECT r.*, a.name AS agent_name, a.username AS agent_username "
+            "FROM storeroom_reservations r JOIN agents a ON a.id = r.agent_id "
+            "WHERE r.storeroom_id = ?",
+            (storeroom_id,),
+        ).fetchone()
+        is_owner = (
+            not is_admin
+            and reservation is not None
+            and reservation["agent_id"] == session.get("agent_id")
+        )
+
+    return render_template(
+        "agents/storeroom.html",
+        storeroom=storeroom,
+        house=house,
+        images=images,
+        reservation=reservation,
+        is_owner=is_owner,
+        is_admin=is_admin,
+    )
+
+
+@agents_bp.route("/houses/<int:house_id>/storerooms/<int:storeroom_id>/reserve", methods=["POST"])
+@login_required
+def reserve_storeroom(house_id, storeroom_id):
+    db = get_db()
+    storeroom = db.execute(
+        "SELECT * FROM storerooms WHERE id = ? AND house_id = ?",
+        (storeroom_id, house_id),
+    ).fetchone()
+    if storeroom is None:
+        abort(404)
+
+    client_name = request.form.get("client_name", "").strip()
+    client_phone = request.form.get("client_phone", "").strip()
+    client_email = request.form.get("client_email", "").strip()
+
+    if len(client_name) < 2:
+        flash("Укажите имя клиента (минимум 2 символа)", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+    if not _valid_phone(client_phone):
+        flash("Введите корректный номер телефона клиента", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+    if client_email and not _EMAIL_RE.match(client_email):
+        flash("Введите корректный email или оставьте поле пустым", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+    if storeroom["status"] != "available":
+        flash("Кладовая уже забронирована", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+    agent_id = session.get("agent_id")
+    db.execute("BEGIN IMMEDIATE")
+    try:
+        db.execute(
+            "INSERT INTO storeroom_reservations "
+            "(storeroom_id, agent_id, client_name, client_phone, client_email) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (storeroom_id, agent_id, client_name, client_phone, client_email),
+        )
+        db.execute(
+            "UPDATE storerooms SET status = 'reserved' "
+            "WHERE id = ? AND status = 'available'",
+            (storeroom_id,),
+        )
+        db.commit()
+    except Exception:
+        db.rollback()
+        flash("Не удалось забронировать кладовую — возможно, она только что занята", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+    flash("Кладовая забронирована", "success")
+    return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+
+@agents_bp.route("/houses/<int:house_id>/storerooms/<int:storeroom_id>/cancel", methods=["POST"])
+@login_required
+def cancel_storeroom_reservation(house_id, storeroom_id):
+    db = get_db()
+    reservation = db.execute(
+        "SELECT * FROM storeroom_reservations WHERE storeroom_id = ?", (storeroom_id,)
+    ).fetchone()
+    if reservation is None:
+        abort(404)
+    is_admin = bool(session.get("is_admin"))
+    if not is_admin and reservation["agent_id"] != session.get("agent_id"):
+        flash("Снять бронь может только агент, который её оформил", "error")
+        return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+    db.execute("DELETE FROM storeroom_reservations WHERE id = ?", (reservation["id"],))
+    db.execute("UPDATE storerooms SET status = 'available' WHERE id = ?", (storeroom_id,))
+    db.commit()
+    flash("Бронь снята, кладовая снова свободна", "success")
+    return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+
 @agents_bp.route("/admin/reservations")
 @admin_required
 def admin_reservations():
     db = get_db()
     reservations = db.execute(
+        "SELECT * FROM ( "
         "SELECT r.id, r.client_name, r.client_phone, r.client_email, r.created_at, "
         "a.name AS agent_name, a.username AS agent_username, "
-        "f.flat_number, f.floor, f.rooms, f.area_m2, f.price, f.status, "
-        "h.name AS house_name, h.id AS house_id, f.id AS flat_id "
+        "h.name AS house_name, h.id AS house_id, "
+        "f.flat_number AS unit_number, f.area_m2, f.price, f.status, "
+        "f.floor, f.rooms, f.id AS unit_id, 'flat' AS kind "
         "FROM reservations r "
         "JOIN agents a ON a.id = r.agent_id "
         "JOIN flats f ON f.id = r.flat_id "
         "JOIN houses h ON h.id = f.house_id "
-        "ORDER BY r.created_at DESC, r.id DESC"
+        "UNION ALL "
+        "SELECT r.id, r.client_name, r.client_phone, r.client_email, r.created_at, "
+        "a.name AS agent_name, a.username AS agent_username, "
+        "h.name AS house_name, h.id AS house_id, "
+        "s.number AS unit_number, s.area_m2, s.price, s.status, "
+        "NULL AS floor, NULL AS rooms, s.id AS unit_id, 'storeroom' AS kind "
+        "FROM storeroom_reservations r "
+        "JOIN agents a ON a.id = r.agent_id "
+        "JOIN storerooms s ON s.id = r.storeroom_id "
+        "JOIN houses h ON h.id = s.house_id "
+        ") ORDER BY created_at DESC, id DESC"
     ).fetchall()
     return render_template("agents/admin_reservations.html", reservations=reservations)
 
@@ -442,6 +635,7 @@ def _validate_flat(db, form):
     except ValueError:
         errors.append("Общая площадь должна быть положительным числом")
         area_f = 0.0
+    area_f = round(area_f, 2)
     try:
         ppm_f = float(price_per_m2.replace(",", ".")) if price_per_m2 else 0.0
         if ppm_f < 0:
@@ -449,6 +643,7 @@ def _validate_flat(db, form):
     except ValueError:
         errors.append("Цена за м² должна быть числом")
         ppm_f = 0.0
+    ppm_f = round(ppm_f, 2)
     try:
         price_i = int(float(price.replace(",", "."))) if price else 0
         if price_i < 0:
@@ -481,6 +676,96 @@ def _decode_images(raw) -> list:
     except (TypeError, ValueError):
         images = []
     return [img for img in images if isinstance(img, str)]
+
+
+def _storeroom_form_values(storeroom=None, form=None) -> dict:
+    if form is not None:
+        return {
+            "house_id": form.get("house_id", ""),
+            "number": form.get("number", ""),
+            "area_m2": form.get("area_m2", ""),
+            "price_per_m2": form.get("price_per_m2", ""),
+            "price": form.get("price", ""),
+            "status": form.get("status", "available"),
+        }
+    if storeroom is not None:
+        ppm = storeroom["price_per_m2"] if storeroom["price_per_m2"] else 0
+        return {
+            "house_id": storeroom["house_id"],
+            "number": storeroom["number"],
+            "area_m2": f'{storeroom["area_m2"]:g}',
+            "price_per_m2": f"{ppm:g}" if ppm else "",
+            "price": storeroom["price"],
+            "status": storeroom["status"],
+        }
+    return {
+        "house_id": "",
+        "number": "",
+        "area_m2": "",
+        "price_per_m2": "",
+        "price": "",
+        "status": "available",
+    }
+
+
+def _validate_storeroom(db, form):
+    """Validate submitted storeroom fields (no floor, no rooms).
+    Returns (data_dict, errors_list)."""
+    errors = []
+    house_id = form.get("house_id", "").strip()
+    number = form.get("number", "").strip()
+    area_m2 = form.get("area_m2", "").strip()
+    price_per_m2 = form.get("price_per_m2", "").strip()
+    price = form.get("price", "").strip()
+    status = form.get("status", "available")
+
+    house_id_i = None
+    if house_id and house_id.lstrip("-").isdigit():
+        if db.execute("SELECT 1 FROM houses WHERE id = ?", (house_id,)).fetchone():
+            house_id_i = int(house_id)
+    if house_id_i is None:
+        errors.append("Выберите дом")
+
+    if not number:
+        errors.append("Укажите номер кладовой")
+    try:
+        area_f = float(area_m2.replace(",", "."))
+        if area_f <= 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Площадь должна быть положительным числом")
+        area_f = 0.0
+    area_f = round(area_f, 2)
+    try:
+        ppm_f = float(price_per_m2.replace(",", ".")) if price_per_m2 else 0.0
+        if ppm_f < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Цена за м² должна быть числом")
+        ppm_f = 0.0
+    ppm_f = round(ppm_f, 2)
+    try:
+        price_i = int(float(price.replace(",", "."))) if price else 0
+        if price_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Общая стоимость должна быть числом")
+        price_i = 0
+    if status not in ("available", "reserved", "sold"):
+        status = "available"
+    # Auto-compute total price when only area and price per m² were provided.
+    if not price and area_f > 0 and ppm_f > 0:
+        price_i = int(round(area_f * ppm_f))
+
+    data = {
+        "house_id": house_id_i,
+        "number": number,
+        "area_m2": area_f,
+        "price_per_m2": ppm_f,
+        "price": price_i,
+        "status": status,
+    }
+    return data, errors
 
 
 @agents_bp.route("/admin/flats")
@@ -621,3 +906,150 @@ def admin_flat_delete(flat_id):
     db.commit()
     flash("Квартира удалена", "success")
     return redirect(url_for("agents.admin_flats"))
+
+
+# ── Admin: storerooms management ──────────────────────────────────────────────
+
+@agents_bp.route("/admin/storerooms")
+@admin_required
+def admin_storerooms():
+    db = get_db()
+    storerooms = db.execute(
+        "SELECT s.id, s.number, s.area_m2, s.price, s.price_per_m2, "
+        "s.status, h.name AS house_name, h.id AS house_id "
+        "FROM storerooms s JOIN houses h ON h.id = s.house_id "
+        "ORDER BY h.id, s.number"
+    ).fetchall()
+    return render_template("agents/admin_storerooms.html", storerooms=storerooms)
+
+
+@agents_bp.route("/admin/storerooms/new", methods=["GET", "POST"])
+@admin_required
+def admin_storeroom_new():
+    db = get_db()
+    houses = db.execute("SELECT id, name FROM houses ORDER BY id").fetchall()
+
+    if request.method == "POST":
+        data, errors = _validate_storeroom(db, request.form)
+        if errors:
+            return render_template(
+                "agents/admin_storeroom_form.html",
+                houses=houses,
+                values=_storeroom_form_values(form=request.form),
+                images=[],
+                is_edit=False,
+                error="; ".join(errors),
+            )
+        new_urls = _save_plan_images(request.files.getlist("plan"))
+        cur = db.execute(
+            "INSERT INTO storerooms "
+            "(house_id, number, area_m2, price_per_m2, price, status, plan_images) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                data["house_id"], data["number"], data["area_m2"],
+                data["price_per_m2"], data["price"], data["status"],
+                json.dumps(new_urls),
+            ),
+        )
+        db.commit()
+        flash("Кладовая добавлена", "success")
+        return redirect(url_for("agents.admin_storeroom_edit", storeroom_id=cur.lastrowid))
+
+    return render_template(
+        "agents/admin_storeroom_form.html",
+        houses=houses,
+        values=_storeroom_form_values(),
+        images=[],
+        is_edit=False,
+        error=None,
+    )
+
+
+@agents_bp.route("/admin/storerooms/<int:storeroom_id>/edit", methods=["GET", "POST"])
+@admin_required
+def admin_storeroom_edit(storeroom_id):
+    db = get_db()
+    storeroom = db.execute(
+        "SELECT * FROM storerooms WHERE id = ?", (storeroom_id,)
+    ).fetchone()
+    if storeroom is None:
+        abort(404)
+    houses = db.execute("SELECT id, name FROM houses ORDER BY id").fetchall()
+    images = _decode_images(storeroom["plan_images"])
+
+    if request.method == "POST":
+        data, errors = _validate_storeroom(db, request.form)
+        if errors:
+            return render_template(
+                "agents/admin_storeroom_form.html",
+                houses=houses,
+                values=_storeroom_form_values(form=request.form),
+                images=images,
+                is_edit=True,
+                storeroom_id=storeroom_id,
+                error="; ".join(errors),
+            )
+        images = images + _save_plan_images(request.files.getlist("plan"))
+        db.execute(
+            "UPDATE storerooms SET house_id = ?, number = ?, area_m2 = ?, "
+            "price_per_m2 = ?, price = ?, status = ?, plan_images = ? WHERE id = ?",
+            (
+                data["house_id"], data["number"], data["area_m2"],
+                data["price_per_m2"], data["price"], data["status"],
+                json.dumps(images), storeroom_id,
+            ),
+        )
+        db.commit()
+        flash("Кладовая обновлена", "success")
+        return redirect(url_for("agents.admin_storeroom_edit", storeroom_id=storeroom_id))
+
+    return render_template(
+        "agents/admin_storeroom_form.html",
+        houses=houses,
+        values=_storeroom_form_values(storeroom=storeroom),
+        images=images,
+        is_edit=True,
+        storeroom_id=storeroom_id,
+        error=None,
+    )
+
+
+@agents_bp.route("/admin/storerooms/<int:storeroom_id>/images/delete", methods=["POST"])
+@admin_required
+def admin_storeroom_image_delete(storeroom_id):
+    db = get_db()
+    storeroom = db.execute(
+        "SELECT * FROM storerooms WHERE id = ?", (storeroom_id,)
+    ).fetchone()
+    if storeroom is None:
+        abort(404)
+    target = request.form.get("image", "")
+    images = _decode_images(storeroom["plan_images"])
+    if target in images:
+        _delete_plan_file(target)
+        images = [u for u in images if u != target]
+        db.execute(
+            "UPDATE storerooms SET plan_images = ? WHERE id = ?",
+            (json.dumps(images), storeroom_id),
+        )
+        db.commit()
+        flash("План удалён", "success")
+    return redirect(url_for("agents.admin_storeroom_edit", storeroom_id=storeroom_id))
+
+
+@agents_bp.route("/admin/storerooms/<int:storeroom_id>/delete", methods=["POST"])
+@admin_required
+def admin_storeroom_delete(storeroom_id):
+    db = get_db()
+    storeroom = db.execute(
+        "SELECT * FROM storerooms WHERE id = ?", (storeroom_id,)
+    ).fetchone()
+    if storeroom is None:
+        abort(404)
+    for url in _decode_images(storeroom["plan_images"]):
+        _delete_plan_file(url)
+    db.execute("DELETE FROM storeroom_reservations WHERE storeroom_id = ?", (storeroom_id,))
+    db.execute("DELETE FROM storerooms WHERE id = ?", (storeroom_id,))
+    db.commit()
+    flash("Кладовая удалена", "success")
+    return redirect(url_for("agents.admin_storerooms"))
