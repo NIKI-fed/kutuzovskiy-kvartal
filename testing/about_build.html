@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-        <title>Кутузовский квартал</title>
-        <meta name="description" content="Уникальный апартамент-комплекс">
+        <title>О стройке — Кутузовский квартал</title>
+        <meta name="description" content="О ходе строительства жилого комплекса Кутузовский квартал">
         <link rel="preload" href="fonts/Inter-VariableFont_opsz_wght.woff" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="css/main.css">
     </head>
@@ -16,19 +16,19 @@
                     <img src="assets/images/logo.png" alt="Комфорт-квартал на Кутузова">
                     <div>Комфорт-квартал<br>на Кутузова</div>
                 </a>
-                
+
                 <nav class="nav" id="mainNav">
                     <a href="about_build.html" class="nav__link">о стройке</a>
                     <a href="about.html" class="nav__link">о комплексе</a>
                     <a href="kvartiry.html" class="nav__link">про квартиры</a>
                 </nav>
-                
+
                 <div class="header__right">
                     <a href="tel:+74872702703" class="header__phone">
                         <span>+7 (4872)</span> 702-703
                     </a>
                 </div>
-                
+
                 <button class="mobile-menu-toggle" id="menuToggle" aria-label="Меню">
                     <span></span>
                     <span></span>
@@ -40,68 +40,82 @@
         <main>
 
             <!-- Hero-секция-->
-            <section class="hero hero__kutuzov">
+            <section class="hero hero__build">
                 <div class="overlay"></div>
                 <div class="hero__container">
                     <div class="hero__subtitle">Тула • ул. Кутузова</div>
-                    <h1 class="hero__title">Клубный дом<br>"На Кутузова"</h1>
+                    <h1 class="hero__title">О стройке</h1>
 
-                    <div class="hero__grid">
-
-                        <!-- <div class="hero__left">
-                            <div class="hero-feature">15 минут <span>до центра</span></div>
-                            <button class="btn btn--primary btn--large btn--modal" data-modal-open>Подобрать квартиру ⟶</button>
-                        </div> -->
-
-                    </div>
-
+                    <div class="hero__grid"></div>
                 </div>
             </section>
 
-            <!-- Секция "Доступные планировки" -->
-            <section class="planning-section" data-house="kutuzov">
-                <div class="planning-container">
-                    <!-- Заголовок -->
-                    <span class="planning__badge">• КВАРТИРЫ</span>
-                    <div class="planning__header">
-                        <h2 class="planning__title">ДОСТУПНЫЕ ПЛАНИРОВКИ</h2>
-                        <p class="planning__description">
-                            Для тех, кто выбирает комфорт - в квартирном фонде ЖК "Кутузовский квартал" каждый найдёт жильё в своём ритме жизни.
+            <!-- Описание и факты о стройке -->
+            <section class="about">
+                <div class="about__inner">
+                    <!-- Левая колонка: описание -->
+                    <div class="about__content">
+                        <span class="section__tag">[ О стройке ]</span>
+                        <h2 class="section__title dark-card__title">Строим <span>надёжно</span><br>и в срок</h2>
+                        <p class="section__text">
+                            Строительство ЖК «Кутузовский квартал» ведётся по современной монолитно-каркасной
+                            технологии с использованием долговечных материалов. Каждый этап работ проходит
+                            строгий контроль качества, а отчётность о ходе стройки доступна нашим будущим
+                            жильцам на всех стадиях.
                         </p>
                     </div>
 
-                    <!-- Карточка квартиры -->
-                    <div class="apartment-card">
-                        <img src="" class="image-placeholder">
-                        <!-- Контент -->
-                        <div class="apartment-card__content">
-                            <h3 class="apartment-card__title">1 комнатная квартира</h3>
-
-                            <div class="apartment-card__info">
-                                <img src="/assets/icons/logo_metr.svg"></img>
-                                <span>От 35 кв метров</span>
-                            </div>
-
-                            <div class="apartment-card__info">
-                                <img src="/assets/icons/logo_geo.svg"></img>
-                                <span>Клубный дом "На Кутузова"</span>
-                            </div>
-
-
-
-                            <div class="apartment-card__rooms">
-                                <span class="floors-label">Количество комнат</span>
-                                <div class="floors-list">
-                                    <button class="floor-btn active" data-room="1">1</button>
-                                    <button class="floor-btn" data-room="2">2</button>
-                                    <button class="floor-btn" data-room="3">3</button>
-                                </div>
-                            </div>
-                            <button class="btn btn--booking" data-modal-open>
-                                ЗАБрОНИРОВАТЬ
-                            </button>
+                    <!-- Правая колонка: факты -->
+                    <div class="features__grid about__links">
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">III квартал 2028</h3>
+                            <p class="card__text">Срок сдачи клубных домов</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Монолит</h3>
+                            <p class="card__text">Современная монолитно-каркасная технология</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Контроль качества</h3>
+                            <p class="card__text">Технадзор на каждом этапе строительства</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Отчётность</h3>
+                            <p class="card__text">Регулярные фото- и видеоотчёты со стройплощадки</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Виджет с фотографиями со стройплощадки -->
+            <section class="section__inner">
+                <span class="section__tag">[ Ход строительства ]</span>
+                <h2 class="section__title">Стройплощадка <span>в деталях</span></h2>
+                <p class="section__text" style="margin-bottom: 48px;">
+                    Следите за прогрессом работ — публикуем свежие кадры с объекта.
+                </p>
+
+                <div class="infrastructure__gallery">
+                    <div class="gallery-img gallery-img--large-1">
+                        <img src="assets/images/kutuzov/1_1.jpg" alt="Стройплощадка">
+                        <div class="gallery-img__caption">Возведение каркаса</div>
+                    </div>
+                    <div class="gallery-img gallery-img--small-1">
+                        <img src="assets/images/kutuzov/1_2.jpg" alt="Монолитные работы">
+                        <div class="gallery-img__caption">Монолитные работы</div>
+                    </div>
+                    <div class="gallery-img gallery-img--small-2">
+                        <img src="assets/images/kutuzov/1_3.jpg" alt="Объект">
+                        <div class="gallery-img__caption">Вид на объект</div>
+                    </div>
+                    <div class="gallery-img gallery-img--large-2">
+                        <img src="assets/images/kutuzov/1_4.jpg" alt="Фасад">
+                        <div class="gallery-img__caption">Оформление фасада</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 60px;">
+                    <button class="btn btn--primary btn--large btn--modal" data-modal-open>Узнать подробнее ⟶</button>
                 </div>
             </section>
 
@@ -129,7 +143,7 @@
             <div class="modal__overlay" data-modal-close></div>
             <div class="modal__content">
                 <button class="modal__close" data-modal-close>×</button>
-                
+
                 <div class="modal__body" id="modal-body">
                     <h3>Подобрать квартиру</h3>
                     <p>Оставьте контакты — мы перезвоним и ответим на все вопросы</p>

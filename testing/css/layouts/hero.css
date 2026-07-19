@@ -34,6 +34,14 @@
     background-image: url("../../assets/images/tolstoy/2_3.png");
 }
 
+.hero__build::before {
+    background-image: url("../../assets/images/kutuzov/1_1.jpg");
+}
+
+.hero__complex::before {
+    background-image: url("../../assets/images/tolstoy/2_1.png");
+}
+
 @keyframes heroBgScale {
     0% {
         transform: scale(1.2);

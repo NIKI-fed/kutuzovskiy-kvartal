@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <title>Про квартиры — Кутузовский квартал</title>
+        <meta name="description" content="Подбор квартир жилого комплекса Кутузовский квартал">
+        <meta name="robots" content="noindex">
+        <link rel="preload" href="fonts/Inter-VariableFont_opsz_wght.woff" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="css/main.css">
+        <script>
+            // Случайный переход на один из клубных домов
+            (function () {
+                var pages = ['tolstoy.html', 'kutuzov.html'];
+                var target = pages[Math.floor(Math.random() * pages.length)];
+                window.location.replace(target);
+            })();
+        </script>
+    </head>
+    <body>
+        <main style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 60px 20px;">
+            <div>
+                <span class="section__tag">[ Про квартиры ]</span>
+                <h1 class="section__title">Перенаправляем…</h1>
+                <p class="section__text" style="margin-bottom: 32px;">
+                    Если страница не открылась автоматически, выберите клубный дом:
+                </p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <a href="kutuzov.html" class="btn btn--primary btn--large">Клубный дом «На Кутузова»</a>
+                    <a href="tolstoy.html" class="btn btn--primary btn--large">Клубный дом «Толстой»</a>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

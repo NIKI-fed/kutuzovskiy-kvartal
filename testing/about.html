@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <title>О комплексе — Кутузовский квартал</title>
+        <meta name="description" content="О жилом комплексе Кутузовский квартал">
+        <link rel="preload" href="fonts/Inter-VariableFont_opsz_wght.woff" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+
+        <header class="header">
+            <div class="header__inner">
+                <a href="/" class="logo">
+                    <img src="assets/images/logo.png" alt="Комфорт-квартал на Кутузова">
+                    <div>Комфорт-квартал<br>на Кутузова</div>
+                </a>
+
+                <nav class="nav" id="mainNav">
+                    <a href="about_build.html" class="nav__link">о стройке</a>
+                    <a href="about.html" class="nav__link">о комплексе</a>
+                    <a href="kvartiry.html" class="nav__link">про квартиры</a>
+                </nav>
+
+                <div class="header__right">
+                    <a href="tel:+74872702703" class="header__phone">
+                        <span>+7 (4872)</span> 702-703
+                    </a>
+                </div>
+
+                <button class="mobile-menu-toggle" id="menuToggle" aria-label="Меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- Hero-секция-->
+            <section class="hero hero__complex">
+                <div class="overlay"></div>
+                <div class="hero__container">
+                    <div class="hero__subtitle">Тула • ул. Кутузова</div>
+                    <h1 class="hero__title">О комплексе</h1>
+
+                    <div class="hero__grid"></div>
+                </div>
+            </section>
+
+            <!-- Описание комплекса -->
+            <section class="about">
+                <div class="about__inner">
+                    <!-- Левая колонка: описание -->
+                    <div class="about__content">
+                        <span class="section__tag">[ О комплексе ]</span>
+                        <h2 class="section__title dark-card__title">Для тех, кто ценит эксклюзивные виды,<br>свободу и <span>стремится жить в эстетике</span></h2>
+                        <p class="section__text">
+                            «Кутузовский квартал» — это современный апартамент-комплекс с лаконичной
+                            архитектурой и продуманной инфраструктурой. Респектабельное расположение,
+                            закрытая территория и высокий уровень сервиса создают идеальные условия
+                            для комфортной жизни.
+                        </p>
+                    </div>
+
+                    <!-- Правая колонка: преимущества -->
+                    <div class="features__grid about__links">
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">2 клубных дома</h3>
+                            <p class="card__text">Одинаковый уровень комфорта и приватности</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">15 минут</h3>
+                            <p class="card__text">До центра города Тулы</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Офисы и коворкинги</h3>
+                            <p class="card__text">Рабочее пространство на первых этажах</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="card__title dark-card__title">Торговый центр</h3>
+                            <p class="card__text">Кофейни, студии, магазины и клиники рядом</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Виджет с фотографиями комплекса -->
+            <section class="section__inner">
+                <span class="section__tag">[ Галерея ]</span>
+                <h2 class="section__title">Атмосфера <span>комплекса</span></h2>
+                <p class="section__text" style="margin-bottom: 48px;">
+                    Архитектура, интерьеры и пространство — взгляните на комплекс глазами будущих жителей.
+                </p>
+
+                <div class="infrastructure__gallery">
+                    <div class="gallery-img gallery-img--large-1">
+                        <img src="assets/images/tolstoy/2_1.png" alt="Клубный дом Толстой">
+                        <div class="gallery-img__caption">Клубный дом «Толстой»</div>
+                    </div>
+                    <div class="gallery-img gallery-img--small-1">
+                        <img src="assets/images/tolstoy/2_2.png" alt="Архитектура">
+                        <div class="gallery-img__caption">Архитектура</div>
+                    </div>
+                    <div class="gallery-img gallery-img--small-2">
+                        <img src="assets/images/tolstoy/2_3.png" alt="Вид на комплекс">
+                        <div class="gallery-img__caption">Вид на комплекс</div>
+                    </div>
+                    <div class="gallery-img gallery-img--large-2">
+                        <img src="assets/images/tolstoy/2_4.png" alt="Благоустройство">
+                        <div class="gallery-img__caption">Благоустройство</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 60px;">
+                    <button class="btn btn--primary btn--large btn--modal" data-modal-open>Получить консультацию ⟶</button>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer__inner">
+                    <div class="footer__copy">© 2026 Кутузовский квартал</div>
+                    <div class="footer__links">
+                        <a href="privacy.html">Политика конфиденциальности</a>
+                        <a href="consent.html">Согласие на обработку ПД</a>
+                        <a href="cookies.html">Политика cookie</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <!-- Кнопка ВВЕРХ -->
+        <button class="go-top" aria-label="Наверх"></button>
+
+        <!-- Модальное окно -->
+        <div class="modal" id="modal">
+            <div class="modal__overlay" data-modal-close></div>
+            <div class="modal__content">
+                <button class="modal__close" data-modal-close>×</button>
+
+                <div class="modal__body" id="modal-body">
+                    <h3>Подобрать квартиру</h3>
+                    <p>Оставьте контакты — мы перезвоним и ответим на все вопросы</p>
+                    <form id="callback-form">
+                        <input type="text" name="name" placeholder="Ваше имя" required>
+                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="consent" required>
+                            <label for="consent">Я согласен на <a href="consent.html" target="_blank">обработку персональных данных</a></label>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full">Отправить</button>
+                    </form>
+                </div>
+
+                <div class="modal__body modal__success" id="modal-success" style="display: none;">
+                    <div class="success-icon">✓</div>
+                    <h3>Спасибо!</h3>
+                    <p>Мы свяжемся с вами в ближайшее время.</p>
+                    <button class="btn btn--primary" data-modal-close>Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Cookies-уведомление -->
+        <div class="cookies-notice" id="cookies-notice" style="display: none;">
+            <p>Мы используем cookie-файлы для улучшения работы сайта. <a href="cookies.html" target="_blank">Подробнее</a></p>
+            <button class="btn btn--small" id="cookies-accept">Принять</button>
+        </div>
+
+        <script type="module" src="js/main.js"></script>
+
+    </body>
+</html>
