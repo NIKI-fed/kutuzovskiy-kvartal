@@ -6,20 +6,20 @@
 const kutuzovData = {
     1: {
         title: '1 комнатная квартира',
-        image: '/assets/images/kutuzov/1_1.jpg',
-        area: 'От 35 кв метров',
+        image: '/assets/images/plans/bs_1/1.png',
+        area: 'От 43 кв метров',
         address: 'Клубный дом "На Кутузова"'
     },
     2: {
         title: '2 комнатная квартира',
-        image: '/assets/images/kutuzov/1_2.jpg',
-        area: 'От 52 кв метров',
+        image: '/assets/images/plans/bs_1/2.png',
+        area: 'От 54 кв метров',
         address: 'Клубный дом "На Кутузова"'
     },
     3: {
         title: '3 комнатная квартира',
-        image: '/assets/images/kutuzov/1_3.jpg',
-        area: 'От 78 кв метров',
+        image: '/assets/images/plans/bs_1/3.png',
+        area: 'От 75 кв метров',
         address: 'Клубный дом "На Кутузова"'
     }
 };
@@ -28,14 +28,14 @@ const kutuzovData = {
 const tolstoyData = {
     2: {
         title: '2 комнатная квартира',
-        image: '/assets/images/tolstoy/2_2.png',
-        area: 'От 55 кв метров',
+        image: '/assets/images/plans/bs_2/2.png',
+        area: 'От 54 кв метров',
         address: 'Клубный дом "На Толстого"'
     },
     3: {
         title: '3 комнатная квартира',
-        image: '/assets/images/tolstoy/2_3.png',
-        area: 'От 82 кв метров',
+        image: '/assets/images/plans/bs_2/3.png',
+        area: 'От 73 кв метров',
         address: 'Клубный дом "На Толстого"'
     }
 };
