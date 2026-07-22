@@ -81,6 +81,40 @@
     margin-bottom: 60px;
 }
 
+/* ===== БЛОК-ОПИСАНИЕ В HERO (О СТРОЙКЕ) ===== */
+.hero__about-grid {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: center;
+    gap: clamp(40px, 6vw, 120px);
+}
+
+.hero__about-grid .hero__title {
+    margin-bottom: 0;
+}
+
+.hero__intro {
+    font-family: Jonova-Regular, 'Inter';
+    font-size: clamp(1rem, 0.7841rem + 0.9622vw, 1.625rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 520px;
+    justify-self: end;
+    text-align: right;
+}
+
+@media (max-width: 1023px) {
+    .hero__about-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .hero__intro {
+        justify-self: start;
+        text-align: left;
+    }
+}
+
 .hero__left {
     display: flex;
     flex-direction: column;
