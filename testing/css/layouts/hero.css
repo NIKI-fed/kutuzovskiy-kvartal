@@ -99,6 +99,18 @@
     font-weight: 500;
 }
 
+.hero__features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hero-feature-sub {
+    font-size: clamp(0.875rem, 0.6364rem + 1.0628vw, 1.5rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .hero__text {
     font-size: 18px;
     max-width: 90%;

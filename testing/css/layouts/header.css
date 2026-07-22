@@ -68,6 +68,13 @@
     text-decoration: underline;
 }
 
+/* ===== ЛЕВАЯ ЧАСТЬ (телефон рядом с лого) ===== */
+.header__left {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
 /* ===== ПРАВАЯ ЧАСТЬ ===== */
 .header__right {
     display: flex;
