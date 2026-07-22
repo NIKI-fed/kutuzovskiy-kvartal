@@ -19,7 +19,7 @@ const kutuzovData = {
     3: {
         title: '3 комнатная квартира',
         image: '/assets/images/plans/bs_1/3.png',
-        area: 'От 75 кв метров',
+        area: 'От 73 кв метров',
         address: 'Клубный дом "На Кутузова"'
     }
 };
@@ -73,7 +73,12 @@ if (planningSection) {
 
         // Обновляем изображение: карусель (фильтрация) или одиночная картинка
         if (carouselEl && carouselEl.__carousel) {
-            carouselEl.__carousel.filter(slide => parseInt(slide.dataset.room) === roomNumber);
+            const roomSlides = carouselEl.querySelectorAll(`[data-carousel-slide][data-room="${roomNumber}"]`);
+            if (roomSlides.length > 0) {
+                carouselEl.__carousel.filter(slide => parseInt(slide.dataset.room) === roomNumber);
+            } else {
+                carouselEl.__carousel.filter(() => true);
+            }
         } else if (imageElement) {
             imageElement.src = roomData.image;
             imageElement.alt = roomData.title;

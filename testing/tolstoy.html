@@ -16,19 +16,20 @@
                     <img src="assets/images/logo.png" alt="Комфорт-квартал на Кутузова">
                     <div>Комфорт-квартал<br>на Кутузова</div>
                 </a>
-                
-                <nav class="nav" id="mainNav">
-                    <a href="about_build.html" class="nav__link">о стройке</a>
-                    <a href="about.html" class="nav__link">о комплексе</a>
-                    <a href="kvartiry.html" class="nav__link">про квартиры</a>
-                </nav>
-                
-                <div class="header__right">
+
+                <div class="header__left">
                     <a href="tel:+74872702703" class="header__phone">
                         <span>+7 (4872)</span> 702-703
                     </a>
                 </div>
-                
+
+                <nav class="nav" id="mainNav">
+                    <a href="about_build.html" class="nav__link">о стройке</a>
+                    <a href="about.html" class="nav__link">о комплексе</a>
+                    <a href="kutuzov.html" class="nav__link">дом «5 этажей»</a>
+                    <a href="tolstoy.html" class="nav__link">дом «8 этажей»</a>
+                </nav>
+
                 <button class="mobile-menu-toggle" id="menuToggle" aria-label="Меню">
                     <span></span>
                     <span></span>
@@ -44,7 +45,7 @@
                 <div class="overlay"></div>
                 <div class="hero__container">
                     <div class="hero__subtitle">Тула • ул. Кутузова</div>
-                    <h1 class="hero__title">Клубный дом<br>"Толстой"</h1>
+                    <h1 class="hero__title">Клубный дом<br>"На Кутузова" (8 этажей)</h1>
 
                     <div class="hero__grid">
 
@@ -55,6 +56,40 @@
 
                     </div>
 
+                </div>
+            </section>
+
+            <!-- Секция "Современное лобби" -->
+            <section class="lobby-section">
+                <div class="lobby-container">
+                    <span class="lobby__badge">• ЛОББИ</span>
+                    <div class="lobby__header">
+                        <h2 class="lobby__title">СОВРЕМЕННОЕ ЛОББИ</h2>
+                        <p class="lobby__text">
+                            Здесь вы забудете о скучных однотипных подъездах. Входная группа с панорамным остеклением сочетает в себе современный подход к оформлению интерьеров - минимализм, натуральные материалы и единство стиля.
+                        </p>
+                    </div>
+
+                    <div class="carousel lobby-carousel" data-carousel data-carousel-perview="3">
+                        <div class="carousel__viewport">
+                            <div class="carousel__track" data-carousel-track>
+                                <div class="carousel__slide" data-carousel-slide>
+                                    <img src="assets/images/tolstoy/lobby/01.jpg" alt="Входная группа">
+                                </div>
+                                <div class="carousel__slide" data-carousel-slide>
+                                    <img src="assets/images/tolstoy/lobby/02.jpg" alt="Входная группа">
+                                </div>
+                                <div class="carousel__slide" data-carousel-slide>
+                                    <img src="assets/images/tolstoy/lobby/03.jpg" alt="Входная группа">
+                                </div>
+                                <div class="carousel__slide" data-carousel-slide>
+                                    <img src="assets/images/tolstoy/lobby/04.jpg" alt="Входная группа">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Назад">‹</button>
+                        <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Вперёд">›</button>
+                    </div>
                 </div>
             </section>
 
@@ -72,7 +107,22 @@
 
                     <!-- Карточка квартиры -->
                     <div class="apartment-card">
-                        <img src="" class="image-placeholder">
+                        <div class="apartment-card__media">
+                            <div class="carousel carousel--plan" data-carousel data-carousel-perview="1">
+                                <div class="carousel__viewport">
+                                    <div class="carousel__track" data-carousel-track>
+                                        <div class="carousel__slide" data-carousel-slide data-room="2">
+                                            <img src="assets/images/tolstoy/plans/2д2к%20БР1.jpg" alt="2-комнатная квартира">
+                                        </div>
+                                        <div class="carousel__slide" data-carousel-slide data-room="2">
+                                            <img src="assets/images/tolstoy/plans/2д2к%20БР2.jpg" alt="2-комнатная квартира">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Назад">‹</button>
+                                <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Вперёд">›</button>
+                            </div>
+                        </div>
                         <!-- Контент -->
                         <div class="apartment-card__content">
                             <h3 class="apartment-card__title">1 комнатная квартира</h3>
@@ -97,7 +147,7 @@
                                 </div>
                             </div>
                             <button class="btn btn--booking" data-modal-open>
-                                ЗАБрОНИРОВАТЬ
+                                Купить квартиру
                             </button>
                         </div>
                     </div>
