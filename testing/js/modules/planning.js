@@ -54,6 +54,7 @@ if (planningSection) {
 
     // Находим все элементы
     const buttons = document.querySelectorAll('.floor-btn');
+    const carouselEl = document.querySelector('.planning-section [data-carousel]');
     const imageElement = document.querySelector('.image-placeholder');
     const titleElement = document.querySelector('.apartment-card__title');
     const infoSpans = document.querySelectorAll('.apartment-card__info span');
@@ -63,16 +64,20 @@ if (planningSection) {
         const roomData = roomsData[roomNumber];
         if (!roomData) return;
 
-        // Меняем картинку
-        imageElement.src = roomData.image;
-        imageElement.alt = roomData.title;
-
         // Меняем заголовок
-        titleElement.textContent = roomData.title;
+        if (titleElement) titleElement.textContent = roomData.title;
 
         // Меняем информацию
-        infoSpans[0].textContent = roomData.area;
-        infoSpans[1].textContent = roomData.address;
+        if (infoSpans[0]) infoSpans[0].textContent = roomData.area;
+        if (infoSpans[1]) infoSpans[1].textContent = roomData.address;
+
+        // Обновляем изображение: карусель (фильтрация) или одиночная картинка
+        if (carouselEl && carouselEl.__carousel) {
+            carouselEl.__carousel.filter(slide => parseInt(slide.dataset.room) === roomNumber);
+        } else if (imageElement) {
+            imageElement.src = roomData.image;
+            imageElement.alt = roomData.title;
+        }
 
         // Меняем активную кнопку
         buttons.forEach(btn => {

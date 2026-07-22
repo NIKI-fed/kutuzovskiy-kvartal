@@ -17,9 +17,11 @@
 @import url('sections/about_company.css');
 @import url('sections/sell.css');
 @import url('sections/planning.css');
+@import url('sections/lobby.css');
 
 /* Components */
 @import url('components/buttons.css');
+@import url('components/carousel.css');
 @import url('components/cookies.css');
 @import url('components/legal-page.css');
 @import url('components/modal.css');

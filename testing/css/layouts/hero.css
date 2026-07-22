@@ -27,7 +27,7 @@
 }
 
 .hero__kutuzov::before {
-    background-image: url("../../assets/images/kutuzov/1_3.jpg");
+    background-image: url("../../assets/images/kutuzov/main_5.png");
 }
 
 .hero__tolstoy::before {
@@ -39,7 +39,7 @@
 }
 
 .hero__complex::before {
-    background-image: url("../../assets/images/tolstoy/2_1.png");
+    background-image: url("../../assets/images/about/complex.png");
 }
 
 @keyframes heroBgScale {

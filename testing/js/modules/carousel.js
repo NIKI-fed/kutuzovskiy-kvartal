@@ -1,52 +1,75 @@
-// ========== КАРУСЕЛЬ АКЦИЙ ==========
-const track = document.getElementById('actionsTrack');
-const slides = Array.from(track?.children || []);
-const nextBtn = document.getElementById('actionsNext');
-const prevBtn = document.getElementById('actionsPrev');
-let currentIndex = 0;
-let slidesPerView = 1;
+// ========== УНИВЕРСАЛЬНАЯ КАРУСЕЛЬ ==========
+// Каждая карусель инициализируется по атрибуту [data-carousel].
+// Опционально data-carousel-perview задаёт макс. число слайдов на десктопе.
 
-function updateCarousel() {
-    if (!track || slides.length === 0) return;
-    
-    if (window.innerWidth >= 1024) slidesPerView = 3;
-    else if (window.innerWidth >= 640) slidesPerView = 2;
-    else slidesPerView = 1;
-    
-    const slideWidth = 100 / slidesPerView;
-    const gap = 30;
-    const gapPercent = (gap * (slidesPerView - 1)) / (window.innerWidth > 1024 ? 1280 : window.innerWidth);
-    
-    slides.forEach(slide => {
-        slide.style.flex = `0 0 calc(${slideWidth}% - ${(gapPercent * slideWidth)}%)`;
-    });
-    
-    const maxIndex = Math.max(0, slides.length - slidesPerView);
-    if (currentIndex > maxIndex) currentIndex = maxIndex;
-    
-    const shift = currentIndex * slideWidth;
-    track.style.transform = `translateX(-${shift}%)`;
-    
-    if (prevBtn) prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
-    if (nextBtn) nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+function initCarousel(root) {
+    const track = root.querySelector('[data-carousel-track]');
+    const viewport = root.querySelector('.carousel__viewport');
+    const prevBtn = root.querySelector('[data-carousel-prev]');
+    const nextBtn = root.querySelector('[data-carousel-next]');
+    if (!track) return;
+
+    const allSlides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
+    let visible = allSlides.slice();
+    let index = 0;
+    let perView = 1;
+
+    function getPerView() {
+        const max = parseInt(root.dataset.carouselPerview) || 1;
+        const w = window.innerWidth;
+        if (w >= 1024) return Math.max(1, max);
+        if (w >= 640) return Math.min(max, 2);
+        return 1;
+    }
+
+    function gap() {
+        const g = parseFloat(getComputedStyle(track).gap);
+        return isFinite(g) ? g : 0;
+    }
+
+    function render() {
+        perView = getPerView();
+        const g = gap();
+        const count = visible.length;
+
+        visible.forEach(slide => {
+            slide.style.flex = `0 0 calc((100% - ${g * (perView - 1)}px) / ${perView})`;
+        });
+
+        const maxIndex = Math.max(0, count - perView);
+        if (index > maxIndex) index = maxIndex;
+        if (index < 0) index = 0;
+
+        const containerWidth = (viewport || root).clientWidth;
+        const slideStep = count > 0 ? (containerWidth - g * (perView - 1)) / perView + g : 0;
+        track.style.transform = `translateX(-${index * slideStep}px)`;
+
+        if (prevBtn) prevBtn.disabled = (index === 0);
+        if (nextBtn) nextBtn.disabled = (count <= perView || index >= maxIndex);
+    }
+
+    function goTo(i) {
+        const maxIndex = Math.max(0, visible.length - perView);
+        index = Math.max(0, Math.min(i, maxIndex));
+        render();
+    }
+
+    function filter(predicate) {
+        visible = allSlides.filter(predicate);
+        allSlides.forEach(slide => {
+            slide.style.display = visible.includes(slide) ? '' : 'none';
+        });
+        index = 0;
+        render();
+    }
+
+    nextBtn?.addEventListener('click', () => goTo(index + 1));
+    prevBtn?.addEventListener('click', () => goTo(index - 1));
+
+    window.addEventListener('resize', render);
+
+    render();
+    root.__carousel = { render, goTo, filter };
 }
 
-if (track && slides.length) {
-    updateCarousel();
-    window.addEventListener('resize', updateCarousel);
-    
-    nextBtn?.addEventListener('click', () => {
-        const maxIndex = Math.max(0, slides.length - slidesPerView);
-        if (currentIndex < maxIndex) {
-            currentIndex++;
-            updateCarousel();
-        }
-    });
-    
-    prevBtn?.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
-    });
-}
+document.querySelectorAll('[data-carousel]').forEach(initCarousel);

@@ -23,6 +23,10 @@
     margin-right: auto;
 }
 
+.about__content .section__title {
+    font-size: clamp(1rem, 0.6427rem + 1.5909vw, 3rem);
+}
+
 .about__links {
     flex: 1;
     background: rgba(22,33,56);
