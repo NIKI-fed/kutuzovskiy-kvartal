@@ -26,3 +26,28 @@
     height: 120px;
     object-fit: contain;
 }
+
+/* ============================================
+АДАПТИВ «УСЛОВИЙ»
+============================================ */
+
+@media (max-width: 1024px) {
+    .conditions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .conditions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .condition-card {
+        padding: 28px 24px;
+    }
+
+    .condition-card__icon img {
+        width: 90px;
+        height: 90px;
+    }
+}

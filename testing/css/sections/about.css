@@ -69,3 +69,41 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
+
+/* ============================================
+АДАПТИВ ДЛЯ «О КОМПЛЕКСЕ»
+============================================ */
+
+@media (max-width: 1024px) {
+    .about__inner {
+        flex-direction: column;
+    }
+
+    .about__content {
+        padding: 80px 40px;
+    }
+
+    .about__content > * {
+        max-width: 100%;
+    }
+
+    .about__links {
+        padding: 80px 40px;
+        gap: 32px;
+    }
+
+    .about__links > * {
+        max-width: 100%;
+    }
+
+    .about-link__value {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .about__content,
+    .about__links {
+        padding: 56px 20px;
+    }
+}

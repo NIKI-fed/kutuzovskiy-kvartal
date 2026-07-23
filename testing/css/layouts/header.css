@@ -150,8 +150,8 @@
     }
 }
 
-/* 768px и меньше — включается бургер-меню */
-@media (max-width: 768px) {
+/* 1024px и меньше — включается бургер-меню */
+@media (max-width: 1024px) {
     .mobile-menu-toggle {
         display: flex;
         flex-shrink: 0;

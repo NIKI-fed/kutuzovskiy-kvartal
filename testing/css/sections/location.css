@@ -35,3 +35,25 @@
     height: 600px;
     border: none;
 }
+
+/* ============================================
+АДАПТИВ «РАСПОЛОЖЕНИЯ»
+============================================ */
+
+@media (max-width: 1024px) {
+    .location__stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .location__stats {
+        grid-template-columns: 1fr;
+        margin-block: 32px;
+    }
+
+    .location__map iframe {
+        height: 360px;
+    }
+}

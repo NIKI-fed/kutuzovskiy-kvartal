@@ -117,3 +117,50 @@
     font-size: 24px;
     text-decoration: none;
 }
+
+/* ============================================
+АДАПТИВ ДЛЯ «ОФИС ПРОДАЖ»
+============================================ */
+
+@media (max-width: 1024px) {
+    .sell__container {
+        padding: 0 40px;
+    }
+
+    .sell__inner {
+        padding: 40px;
+    }
+
+    .sell__contacts {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .sell__card {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 640px) {
+    .sell {
+        min-height: auto;
+    }
+
+    .sell__container {
+        padding: 0 20px;
+        height: 400px;
+    }
+
+    .sell__inner {
+        padding: 32px 20px;
+    }
+
+    .sell__title {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    .sell__card {
+        width: 100%;
+    }
+}

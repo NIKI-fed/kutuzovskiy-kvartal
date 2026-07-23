@@ -151,3 +151,37 @@
         gap: 30px;
     }
 }
+
+/* ============================================
+АДАПТИВ ИНФРАСТРУКТУРЫ (планшеты/телефоны)
+============================================ */
+
+@media (max-width: 1024px) {
+    .infrastructure__inner {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .infrastructure__gallery {
+        min-width: 0;
+    }
+
+    .gallery-img__caption {
+        font-size: 24px;
+        padding: 28px 16px 14px;
+    }
+}
+
+@media (max-width: 640px) {
+    .infrastructure {
+        padding: 48px 0;
+    }
+
+    .infrastructure__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-img__caption {
+        font-size: 18px;
+    }
+}
