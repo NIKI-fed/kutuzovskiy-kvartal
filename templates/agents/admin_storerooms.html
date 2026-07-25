@@ -9,27 +9,27 @@
 
     {% if storerooms %}
     <div class="table-wrap">
-        <table class="data-table">
+        <table class="data-table is-sortable">
             <thead>
                 <tr>
-                    <th>Дом</th>
-                    <th>Номер</th>
-                    <th>Площадь</th>
-                    <th>Цена/м²</th>
-                    <th>Стоимость</th>
-                    <th>Статус</th>
+                    <th data-sort="house_name">Дом</th>
+                    <th data-sort="number" data-sort-default>Номер</th>
+                    <th data-sort="area_m2">Площадь</th>
+                    <th data-sort="price_per_m2">Цена/м²</th>
+                    <th data-sort="price">Стоимость</th>
+                    <th data-sort="status">Статус</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for s in storerooms %}
                 <tr>
-                    <td><a href="{{ url_for('agents.house', house_id=s.house_id) }}">{{ s.house_name }}</a></td>
-                    <td>№ {{ s.number }}</td>
-                    <td>{{ '%.1f'|format(s.area_m2) }} м²</td>
-                    <td>{{ s.price_per_m2|format_price }} ₽</td>
-                    <td>{{ s.price|format_price }} ₽</td>
-                    <td><span class="status status--{{ s.status }}">{{ status_label(s.status) }}</span></td>
+                    <td data-sort="{{ s.house_name }}"><a href="{{ url_for('agents.house', house_id=s.house_id) }}">{{ s.house_name }}</a></td>
+                    <td data-sort="{{ s.number }}">№ {{ s.number }}</td>
+                    <td data-sort="{{ s.area_m2 }}">{{ '%.1f'|format(s.area_m2) }} м²</td>
+                    <td data-sort="{{ s.price_per_m2 }}">{{ s.price_per_m2|format_price }} ₽</td>
+                    <td data-sort="{{ s.price }}">{{ s.price|format_price }} ₽</td>
+                    <td data-sort="{{ status_label(s.status) }}"><span class="status status--{{ s.status }}">{{ status_label(s.status) }}</span></td>
                     <td><a href="{{ url_for('agents.admin_storeroom_edit', storeroom_id=s.id) }}" class="btn btn--small">Изменить</a></td>
                 </tr>
                 {% endfor %}
@@ -40,4 +40,8 @@
     <p class="empty">Кладовых пока нет. <a href="{{ url_for('agents.admin_storeroom_new') }}">Добавить первую</a>.</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('agents.static', filename='js/sortable.js') }}"></script>
 {% endblock %}

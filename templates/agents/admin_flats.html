@@ -9,31 +9,31 @@
 
     {% if flats %}
     <div class="table-wrap">
-        <table class="data-table">
+        <table class="data-table is-sortable">
             <thead>
                 <tr>
-                    <th>Дом</th>
-                    <th>Квартира</th>
-                    <th>Этаж</th>
-                    <th>Комнат</th>
-                    <th>Площадь</th>
-                    <th>Цена/м²</th>
-                    <th>Стоимость</th>
-                    <th>Статус</th>
+                    <th data-sort="house_name">Дом</th>
+                    <th data-sort="flat_number" data-sort-default>Квартира</th>
+                    <th data-sort="floor">Этаж</th>
+                    <th data-sort="rooms">Комнат</th>
+                    <th data-sort="area_m2">Площадь</th>
+                    <th data-sort="price_per_m2">Цена/м²</th>
+                    <th data-sort="price">Стоимость</th>
+                    <th data-sort="status">Статус</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for f in flats %}
                 <tr>
-                    <td><a href="{{ url_for('agents.house', house_id=f.house_id) }}">{{ f.house_name }}</a></td>
-                    <td>№ {{ f.flat_number }}</td>
-                    <td>{{ f.floor }}</td>
-                    <td>{{ f.rooms }}</td>
-                    <td>{{ '%.1f'|format(f.area_m2) }} м²</td>
-                    <td>{{ f.price_per_m2|format_price }} ₽</td>
-                    <td>{{ f.price|format_price }} ₽</td>
-                    <td><span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span></td>
+                    <td data-sort="{{ f.house_name }}"><a href="{{ url_for('agents.house', house_id=f.house_id) }}">{{ f.house_name }}</a></td>
+                    <td data-sort="{{ f.flat_number }}">№ {{ f.flat_number }}</td>
+                    <td data-sort="{{ f.floor }}">{{ f.floor }}</td>
+                    <td data-sort="{{ f.rooms }}">{{ f.rooms }}</td>
+                    <td data-sort="{{ f.area_m2 }}">{{ '%.1f'|format(f.area_m2) }} м²</td>
+                    <td data-sort="{{ f.price_per_m2 }}">{{ f.price_per_m2|format_price }} ₽</td>
+                    <td data-sort="{{ f.price }}">{{ f.price|format_price }} ₽</td>
+                    <td data-sort="{{ status_label(f.status) }}"><span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span></td>
                     <td><a href="{{ url_for('agents.admin_flat_edit', flat_id=f.id) }}" class="btn btn--small">Изменить</a></td>
                 </tr>
                 {% endfor %}
@@ -44,4 +44,8 @@
     <p class="empty">Квартир пока нет. <a href="{{ url_for('agents.admin_flat_new') }}">Добавить первую</a>.</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('agents.static', filename='js/sortable.js') }}"></script>
 {% endblock %}

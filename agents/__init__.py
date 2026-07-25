@@ -776,7 +776,7 @@ def admin_flats():
         "SELECT f.id, f.flat_number, f.floor, f.rooms, f.area_m2, f.price, f.price_per_m2, "
         "f.status, h.name AS house_name, h.id AS house_id "
         "FROM flats f JOIN houses h ON h.id = f.house_id "
-        "ORDER BY h.id, f.floor, f.flat_number"
+        "ORDER BY f.flat_number"
     ).fetchall()
     return render_template("agents/admin_flats.html", flats=flats)
 
@@ -918,7 +918,7 @@ def admin_storerooms():
         "SELECT s.id, s.number, s.area_m2, s.price, s.price_per_m2, "
         "s.status, h.name AS house_name, h.id AS house_id "
         "FROM storerooms s JOIN houses h ON h.id = s.house_id "
-        "ORDER BY h.id, s.number"
+        "ORDER BY s.number"
     ).fetchall()
     return render_template("agents/admin_storerooms.html", storerooms=storerooms)
 

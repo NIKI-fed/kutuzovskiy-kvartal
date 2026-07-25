@@ -595,6 +595,35 @@ img {
     font-size: 13px;
 }
 
+.data-table.is-sortable th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease;
+}
+
+.data-table.is-sortable th[data-sort]:hover {
+    color: var(--blue);
+}
+
+.data-table.is-sortable th[data-sort]::after {
+    content: "↕";
+    margin-left: 6px;
+    font-size: 10px;
+    opacity: 0.35;
+}
+
+.data-table.is-sortable th[data-sort][data-sort-dir="asc"]::after {
+    content: "▲";
+    opacity: 1;
+    color: var(--blue);
+}
+
+.data-table.is-sortable th[data-sort][data-sort-dir="desc"]::after {
+    content: "▼";
+    opacity: 1;
+    color: var(--blue);
+}
+
 /* ── Flash messages ──────────────────────────────────────── */
 .flash-group {
     display: flex;
