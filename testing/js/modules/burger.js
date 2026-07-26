@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isOpen = nav.classList.toggle('open');
         menuToggle.classList.toggle('active');
         overlay.classList.toggle('active');
+        document.body.classList.toggle('menu-open', isOpen);
         document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nav.classList.remove('open');
         menuToggle.classList.remove('active');
         overlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
         document.body.style.overflow = '';
     }
 
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Закрытие при изменении размера окна (если меню открыто и стало широко)
     window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && nav.classList.contains('open')) {
+        if (window.innerWidth > 1024 && nav.classList.contains('open')) {
             closeMenu();
         }
     });
