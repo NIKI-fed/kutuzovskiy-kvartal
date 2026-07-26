@@ -35,11 +35,11 @@
 }
 
 .hero__build::before {
-    background-image: url("../../assets/images/kutuzov/1_1.jpg");
+    background-image: url("../../assets/images/about_build/about_build.jpg");
 }
 
 .hero__complex::before {
-    background-image: url("../../assets/images/about/complex.png");
+    background-image: url("../../assets/images/about/about_complex.png");
 }
 
 @keyframes heroBgScale {
