@@ -17,7 +17,7 @@
 @import url('sections/about_company.css');
 @import url('sections/sell.css');
 @import url('sections/planning.css');
-@import url('sections/lobby.css');
+@import url('sections/content-section.css');
 
 /* Components */
 @import url('components/buttons.css');
