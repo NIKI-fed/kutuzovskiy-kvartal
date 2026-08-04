@@ -557,7 +557,7 @@ def _delete_plan_file(url: str) -> None:
         pass
 
 
-def _flat_form_values(flat=None, form=None) -> dict:
+def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
     if form is not None:
         return {
             "house_id": form.get("house_id", ""),
@@ -568,6 +568,8 @@ def _flat_form_values(flat=None, form=None) -> dict:
             "price_per_m2": form.get("price_per_m2", ""),
             "price": form.get("price", ""),
             "status": form.get("status", "available"),
+            "client_name": form.get("client_name", "").strip(),
+            "client_phone": form.get("client_phone", "").strip(),
         }
     if flat is not None:
         ppm = flat["price_per_m2"] if flat["price_per_m2"] else 0
@@ -580,6 +582,8 @@ def _flat_form_values(flat=None, form=None) -> dict:
             "price_per_m2": f"{ppm:g}" if ppm else "",
             "price": flat["price"],
             "status": flat["status"],
+            "client_name": (reservation["client_name"] if reservation else ""),
+            "client_phone": (reservation["client_phone"] if reservation else ""),
         }
     return {
         "house_id": "",
@@ -590,6 +594,8 @@ def _flat_form_values(flat=None, form=None) -> dict:
         "price_per_m2": "",
         "price": "",
         "status": "available",
+        "client_name": "",
+        "client_phone": "",
     }
 
 
@@ -604,6 +610,9 @@ def _validate_flat(db, form):
     price_per_m2 = form.get("price_per_m2", "").strip()
     price = form.get("price", "").strip()
     status = form.get("status", "available")
+    client_name = form.get("client_name", "").strip()
+    client_phone = form.get("client_phone", "").strip()
+    client_email = form.get("client_email", "").strip()
 
     house_id_i = None
     if house_id and house_id.lstrip("-").isdigit():
@@ -656,6 +665,11 @@ def _validate_flat(db, form):
     # Auto-compute total price when only area and price per m² were provided.
     if not price and area_f > 0 and ppm_f > 0:
         price_i = int(round(area_f * ppm_f))
+    if status == "reserved":
+        if len(client_name) < 2:
+            errors.append("При статусе «Бронь» укажите имя клиента (минимум 2 символа)")
+        if not _valid_phone(client_phone):
+            errors.append("При статусе «Бронь» укажите корректный телефон клиента")
 
     data = {
         "house_id": house_id_i,
@@ -666,6 +680,9 @@ def _validate_flat(db, form):
         "price_per_m2": ppm_f,
         "price": price_i,
         "status": status,
+        "client_name": client_name,
+        "client_phone": client_phone,
+        "client_email": client_email,
     }
     return data, errors
 
@@ -676,6 +693,33 @@ def _decode_images(raw) -> list:
     except (TypeError, ValueError):
         images = []
     return [img for img in images if isinstance(img, str)]
+
+
+def _sync_flat_reservation(db, flat_id, status, client_name, client_phone, client_email=""):
+    """Keep the reservations table consistent with a flat's status.
+
+    When status is 'reserved', create or update the reservation record;
+    otherwise delete any existing reservation so the two stay in sync.
+    """
+    existing = db.execute(
+        "SELECT id FROM reservations WHERE flat_id = ?", (flat_id,)
+    ).fetchone()
+    if status == "reserved":
+        if existing:
+            db.execute(
+                "UPDATE reservations SET client_name = ?, client_phone = ?, client_email = ? "
+                "WHERE flat_id = ?",
+                (client_name, client_phone, client_email, flat_id),
+            )
+        else:
+            db.execute(
+                "INSERT INTO reservations "
+                "(flat_id, agent_id, client_name, client_phone, client_email) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (flat_id, session.get("agent_id"), client_name, client_phone, client_email),
+            )
+    elif existing:
+        db.execute("DELETE FROM reservations WHERE flat_id = ?", (flat_id,))
 
 
 def _storeroom_form_values(storeroom=None, form=None) -> dict:
@@ -776,7 +820,7 @@ def admin_flats():
         "SELECT f.id, f.flat_number, f.floor, f.rooms, f.area_m2, f.price, f.price_per_m2, "
         "f.status, h.name AS house_name, h.id AS house_id "
         "FROM flats f JOIN houses h ON h.id = f.house_id "
-        "ORDER BY f.flat_number"
+        "ORDER BY h.name, CAST(f.flat_number AS INTEGER), f.flat_number"
     ).fetchall()
     return render_template("agents/admin_flats.html", flats=flats)
 
@@ -809,6 +853,10 @@ def admin_flat_new():
                 json.dumps(new_urls),
             ),
         )
+        _sync_flat_reservation(
+            db, cur.lastrowid, data["status"], data["client_name"], data["client_phone"],
+            data.get("client_email", ""),
+        )
         db.commit()
         flash("Квартира добавлена", "success")
         return redirect(url_for("agents.admin_flat_edit", flat_id=cur.lastrowid))
@@ -832,6 +880,9 @@ def admin_flat_edit(flat_id):
         abort(404)
     houses = db.execute("SELECT id, name FROM houses ORDER BY id").fetchall()
     images = _decode_images(flat["plan_images"])
+    reservation = db.execute(
+        "SELECT * FROM reservations WHERE flat_id = ?", (flat_id,)
+    ).fetchone()
 
     if request.method == "POST":
         data, errors = _validate_flat(db, request.form)
@@ -856,6 +907,10 @@ def admin_flat_edit(flat_id):
                 json.dumps(images), flat_id,
             ),
         )
+        _sync_flat_reservation(
+            db, flat_id, data["status"], data["client_name"], data["client_phone"],
+            data.get("client_email", ""),
+        )
         db.commit()
         flash("Квартира обновлена", "success")
         return redirect(url_for("agents.admin_flat_edit", flat_id=flat_id))
@@ -863,7 +918,7 @@ def admin_flat_edit(flat_id):
     return render_template(
         "agents/admin_flat_form.html",
         houses=houses,
-        values=_flat_form_values(flat=flat),
+        values=_flat_form_values(flat=flat, reservation=reservation),
         images=images,
         is_edit=True,
         flat_id=flat_id,

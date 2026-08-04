@@ -83,12 +83,24 @@
 
         <label class="field">
             <span class="field__label">Статус</span>
-            <select class="field__input" name="status">
+            <select class="field__input" name="status" id="status">
                 <option value="available" {% if values.status == 'available' %}selected{% endif %}>{{ status_label('available') }}</option>
                 <option value="reserved" {% if values.status == 'reserved' %}selected{% endif %}>{{ status_label('reserved') }}</option>
                 <option value="sold" {% if values.status == 'sold' %}selected{% endif %}>{{ status_label('sold') }}</option>
             </select>
         </label>
+
+        <div class="field-grid" id="client-fields" {% if values.status != 'reserved' %}hidden{% endif %}>
+            <label class="field">
+                <span class="field__label">Имя клиента</span>
+                <input class="field__input" type="text" name="client_name" value="{{ values.client_name }}" placeholder="ФИО клиента">
+            </label>
+            <label class="field">
+                <span class="field__label">Телефон клиента</span>
+                <input class="field__input" type="text" name="client_phone" value="{{ values.client_phone }}" placeholder="+7 900 000-00-00">
+            </label>
+        </div>
+        <div class="field-hint" id="client-hint" {% if values.status == 'reserved' %}hidden{% endif %}>При статусе «Бронь» потребуется указать имя и телефон клиента.</div>
 
         <label class="field">
             <span class="field__label">План квартиры (изображение)</span>
@@ -128,6 +140,19 @@
     }
     area.addEventListener('input', recompute);
     ppm.addEventListener('input', recompute);
+
+    var statusSel = document.getElementById('status');
+    var clientFields = document.getElementById('client-fields');
+    var clientHint = document.getElementById('client-hint');
+    if (statusSel && clientFields && clientHint) {
+        function toggleClient() {
+            var reserved = statusSel.value === 'reserved';
+            clientFields.hidden = !reserved;
+            clientHint.hidden = reserved;
+        }
+        statusSel.addEventListener('change', toggleClient);
+        toggleClient();
+    }
 })();
 </script>
 {% endblock %}
