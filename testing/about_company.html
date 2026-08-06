@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-        <title>Кутузовский квартал</title>
-        <meta name="description" content="Уникальный апартамент-комплекс">
+        <title>О компании — Кутузовский квартал</title>
+        <meta name="description" content="О компании застройщика ЖК Кутузовский квартал">
         <link rel="preload" href="fonts/Inter-VariableFont_opsz_wght.woff" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="css/main.css">
     </head>
@@ -30,7 +30,7 @@
                     <a href="kutuzov.html" class="nav__link">дом «5 этажей»</a>
                     <a href="tolstoy.html" class="nav__link">дом «8 этажей»</a>
                 </nav>
-                
+
                 <button class="mobile-menu-toggle" id="menuToggle" aria-label="Меню">
                     <span></span>
                     <span></span>
@@ -42,50 +42,45 @@
         <main>
 
             <!-- Hero-секция-->
-            <section class="hero">
+            <section class="hero hero__complex">
                 <div class="overlay"></div>
                 <div class="hero__container">
                     <div class="hero__subtitle">Тула • ул. Кутузова</div>
-                    <h1 class="hero__title">Жилой комплекс<br>Кутузовский квартал</h1>
+                    <h1 class="hero__title">О компании</h1>
 
-                    <div class="hero__grid">
-
-                        <div class="hero__left">
-                            <div class="hero__features">
-                                <div class="hero-feature">15 минут <span>до центра</span></div>
-                                <div class="hero-feature-sub">Готовая инфраструктура в шаговой доступности</div>
-                                <div class="hero-feature-sub">Новая высота твоей жизни!</div>
-                            </div>
-                            <button class="btn btn--primary btn--large btn--modal" data-modal-open>Подобрать квартиру ⟶</button>
-                        </div>
-
-                        <div class="hero__right">
-                            <div class="hero-queues">
-
-                                <a href="kutuzov.html" class="hero-queue-card">
-                                    <img class="hero-queue-img" src="assets/images/bs1_icon.jpeg">
-                                    <div class="hero-queue-card__value">
-                                        Клубный дом (5 этажей)<br>
-                                        <span>Сдача III квартал 2027</span>
-                                    </div>
-                                </a>
-
-                                <a href="tolstoy.html" class="hero-queue-card">
-                                    <img class="hero-queue-img" src="assets/images/bs2_icon.jpeg">
-                                    <div class="hero-queue-card__value">
-                                        Клубный дом (8 этажей)<br>
-                                        <span>Сдача III квартал 2027 года</span>
-                                    </div>
-                                </a>
-
-                            </div>
-                        </div>
-
-                    </div>
-
+                    <div class="hero__grid"></div>
                 </div>
             </section>
 
+            <!-- О компании -->
+            <section class="content-section">
+                <div class="content-container">
+                    <span class="content__badge">[ О компании ]</span>
+
+                    <div class="content__header">
+                        <h2 class="content__title">О&nbsp;компании</h2>
+                        <p class="content__text">
+                            Мы создаём не просто дома, а комфортную среду для жизни, объединяя качество, надёжность и внимание к деталям.
+                        </p>
+                    </div>
+
+                    <div class="content__media">
+                        <img
+                            src="assets/images/about_company/paper_1.jpg"
+                            alt="О компании"
+                            class="content__image"
+                        >
+                    </div>
+
+                    <div class="content__media">
+                        <img
+                            src="assets/images/about_company/paper_2.jpg"
+                            alt="О компании"
+                            class="content__image"
+                        >
+                    </div>
+                </div>
+            </section>
 
         </main>
 
@@ -111,7 +106,7 @@
             <div class="modal__overlay" data-modal-close></div>
             <div class="modal__content">
                 <button class="modal__close" data-modal-close>×</button>
-                
+
                 <div class="modal__body" id="modal-body">
                     <h3>Подобрать квартиру</h3>
                     <p>Оставьте контакты — мы перезвоним и ответим на все вопросы</p>
