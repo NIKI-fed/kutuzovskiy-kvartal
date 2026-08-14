@@ -488,13 +488,94 @@ def cancel_storeroom_reservation(house_id, storeroom_id):
     return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
 
 
+@agents_bp.route("/houses/<int:house_id>/flats/<int:flat_id>/confirm", methods=["POST"])
+@admin_required
+def confirm_flat(house_id, flat_id):
+    db = get_db()
+    reservation = db.execute(
+        "SELECT * FROM reservations WHERE flat_id = ?", (flat_id,)
+    ).fetchone()
+    if reservation is None:
+        abort(404)
+    db.execute(
+        "UPDATE reservations SET is_confirmed = CASE WHEN is_confirmed = 1 THEN 0 ELSE 1 END "
+        "WHERE flat_id = ?",
+        (flat_id,),
+    )
+    db.commit()
+    flash(
+        "Бронь подтверждена" if not reservation["is_confirmed"]
+        else "Подтверждение снято",
+        "success",
+    )
+    return redirect(url_for("agents.flat", house_id=house_id, flat_id=flat_id))
+
+
+@agents_bp.route("/houses/<int:house_id>/storerooms/<int:storeroom_id>/confirm", methods=["POST"])
+@admin_required
+def confirm_storeroom(house_id, storeroom_id):
+    db = get_db()
+    reservation = db.execute(
+        "SELECT * FROM storeroom_reservations WHERE storeroom_id = ?", (storeroom_id,)
+    ).fetchone()
+    if reservation is None:
+        abort(404)
+    db.execute(
+        "UPDATE storeroom_reservations "
+        "SET is_confirmed = CASE WHEN is_confirmed = 1 THEN 0 ELSE 1 END "
+        "WHERE storeroom_id = ?",
+        (storeroom_id,),
+    )
+    db.commit()
+    flash(
+        "Бронь подтверждена" if not reservation["is_confirmed"]
+        else "Подтверждение снято",
+        "success",
+    )
+    return redirect(url_for("agents.storeroom", house_id=house_id, storeroom_id=storeroom_id))
+
+
+def _purge_expired_reservations(db):
+    """Delete unconfirmed reservations older than 2 days and free their units.
+
+    Runs on each load of the admin reservations page. Both the flats and the
+    storerooms reservation tables are cleaned, mirroring manual cancellation.
+    """
+    cutoff = "-2 days"
+    db.execute(
+        "UPDATE flats SET status = 'available' "
+        "WHERE id IN (SELECT flat_id FROM reservations "
+        "             WHERE is_confirmed = 0 AND created_at < datetime('now', ?))",
+        (cutoff,),
+    )
+    db.execute(
+        "DELETE FROM reservations "
+        "WHERE is_confirmed = 0 AND created_at < datetime('now', ?)",
+        (cutoff,),
+    )
+    db.execute(
+        "UPDATE storerooms SET status = 'available' "
+        "WHERE id IN (SELECT storeroom_id FROM storeroom_reservations "
+        "             WHERE is_confirmed = 0 AND created_at < datetime('now', ?))",
+        (cutoff,),
+    )
+    db.execute(
+        "DELETE FROM storeroom_reservations "
+        "WHERE is_confirmed = 0 AND created_at < datetime('now', ?)",
+        (cutoff,),
+    )
+    db.commit()
+
+
 @agents_bp.route("/admin/reservations")
 @admin_required
 def admin_reservations():
     db = get_db()
+    _purge_expired_reservations(db)
     reservations = db.execute(
         "SELECT * FROM ( "
         "SELECT r.id, r.client_name, r.client_phone, r.client_email, r.created_at, "
+        "r.is_confirmed, "
         "a.name AS agent_name, a.username AS agent_username, "
         "h.name AS house_name, h.id AS house_id, "
         "f.flat_number AS unit_number, f.area_m2, f.price, f.status, "
@@ -505,6 +586,7 @@ def admin_reservations():
         "JOIN houses h ON h.id = f.house_id "
         "UNION ALL "
         "SELECT r.id, r.client_name, r.client_phone, r.client_email, r.created_at, "
+        "r.is_confirmed, "
         "a.name AS agent_name, a.username AS agent_username, "
         "h.name AS house_name, h.id AS house_id, "
         "s.number AS unit_number, s.area_m2, s.price, s.status, "
@@ -564,6 +646,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "floor": form.get("floor", ""),
             "flat_number": form.get("flat_number", ""),
             "rooms": form.get("rooms", ""),
+            "riser": form.get("riser", ""),
             "area_m2": form.get("area_m2", ""),
             "price_per_m2": form.get("price_per_m2", ""),
             "price": form.get("price", ""),
@@ -578,6 +661,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "floor": flat["floor"],
             "flat_number": flat["flat_number"],
             "rooms": flat["rooms"],
+            "riser": flat["riser"],
             "area_m2": f'{flat["area_m2"]:g}',
             "price_per_m2": f"{ppm:g}" if ppm else "",
             "price": flat["price"],
@@ -590,6 +674,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
         "floor": "",
         "flat_number": "",
         "rooms": "1",
+        "riser": "",
         "area_m2": "",
         "price_per_m2": "",
         "price": "",
@@ -606,6 +691,7 @@ def _validate_flat(db, form):
     flat_number = form.get("flat_number", "").strip()
     floor = form.get("floor", "").strip()
     rooms = form.get("rooms", "").strip()
+    riser = form.get("riser", "").strip()
     area_m2 = form.get("area_m2", "").strip()
     price_per_m2 = form.get("price_per_m2", "").strip()
     price = form.get("price", "").strip()
@@ -637,6 +723,13 @@ def _validate_flat(db, form):
     except ValueError:
         errors.append("Количество комнат должно быть целым числом")
         rooms_i = 1
+    try:
+        riser_i = int(riser) if riser else 0
+        if riser_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Стояк должен быть неотрицательным целым числом")
+        riser_i = 0
     try:
         area_f = float(area_m2.replace(",", "."))
         if area_f <= 0:
@@ -676,6 +769,7 @@ def _validate_flat(db, form):
         "flat_number": flat_number,
         "floor": floor_i,
         "rooms": rooms_i,
+        "riser": riser_i,
         "area_m2": area_f,
         "price_per_m2": ppm_f,
         "price": price_i,
@@ -817,7 +911,7 @@ def _validate_storeroom(db, form):
 def admin_flats():
     db = get_db()
     flats = db.execute(
-        "SELECT f.id, f.flat_number, f.floor, f.rooms, f.area_m2, f.price, f.price_per_m2, "
+        "SELECT f.id, f.flat_number, f.floor, f.rooms, f.riser, f.area_m2, f.price, f.price_per_m2, "
         "f.status, h.name AS house_name, h.id AS house_id "
         "FROM flats f JOIN houses h ON h.id = f.house_id "
         "ORDER BY h.name, CAST(f.flat_number AS INTEGER), f.flat_number"
@@ -845,12 +939,12 @@ def admin_flat_new():
         new_urls = _save_plan_images(request.files.getlist("plan"))
         cur = db.execute(
             "INSERT INTO flats "
-            "(house_id, flat_number, floor, rooms, area_m2, price_per_m2, price, status, plan_images) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "(house_id, flat_number, floor, rooms, riser, area_m2, price_per_m2, price, status, plan_images) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 data["house_id"], data["flat_number"], data["floor"], data["rooms"],
-                data["area_m2"], data["price_per_m2"], data["price"], data["status"],
-                json.dumps(new_urls),
+                data["riser"], data["area_m2"], data["price_per_m2"], data["price"],
+                data["status"], json.dumps(new_urls),
             ),
         )
         _sync_flat_reservation(
@@ -899,12 +993,12 @@ def admin_flat_edit(flat_id):
         images = images + _save_plan_images(request.files.getlist("plan"))
         db.execute(
             "UPDATE flats SET house_id = ?, flat_number = ?, floor = ?, rooms = ?, "
-            "area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
+            "riser = ?, area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
             "WHERE id = ?",
             (
                 data["house_id"], data["flat_number"], data["floor"], data["rooms"],
-                data["area_m2"], data["price_per_m2"], data["price"], data["status"],
-                json.dumps(images), flat_id,
+                data["riser"], data["area_m2"], data["price_per_m2"], data["price"],
+                data["status"], json.dumps(images), flat_id,
             ),
         )
         _sync_flat_reservation(

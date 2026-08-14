@@ -221,6 +221,67 @@ img {
     margin-top: 8px;
 }
 
+/* ── Tabs (house detail: Квартиры / Кладовые) ────────────── */
+.tabs__list {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+}
+
+.tabs__tab {
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tabs__tab:hover {
+    color: var(--blue);
+}
+
+.tabs__tab.is-active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+}
+
+.tabs__panel {
+    display: none;
+}
+
+.tabs__panel.is-active {
+    display: block;
+}
+
+/* ── Confirmation badges ─────────────────────────────────── */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.badge--confirmed {
+    background: var(--reserved-bg);
+    color: var(--reserved);
+}
+
+.badge--pending {
+    background: rgba(192, 138, 30, 0.14);
+    color: #8a6212;
+}
+
 /* House card */
 .house-card {
     background: #fff;

@@ -17,6 +17,7 @@
                     <th>Клиент</th>
                     <th>Телефон</th>
                     <th>Email</th>
+                    <th>Подтверждение</th>
                     <th>Статус</th>
                 </tr>
             </thead>
@@ -39,6 +40,13 @@
                     <td>{{ r.client_name }}</td>
                     <td>{{ r.client_phone }}</td>
                     <td>{{ r.client_email or '—' }}</td>
+                    <td>
+                        {% if r.is_confirmed %}
+                        <span class="badge badge--confirmed">Подтверждена</span>
+                        {% else %}
+                        <span class="badge badge--pending">Ожидает</span>
+                        {% endif %}
+                    </td>
                     <td><span class="status status--{{ r.status }}">{{ status_label(r.status) }}</span></td>
                 </tr>
                 {% endfor %}

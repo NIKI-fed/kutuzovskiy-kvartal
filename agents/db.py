@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS flats (
     flat_number   TEXT NOT NULL,
     floor         INTEGER NOT NULL,
     rooms         INTEGER NOT NULL,
+    riser         INTEGER NOT NULL DEFAULT 0,
     area_m2       REAL NOT NULL,
     price_per_m2  REAL NOT NULL DEFAULT 0,
     price         INTEGER NOT NULL,
@@ -72,6 +73,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     client_phone  TEXT NOT NULL,
     client_email  TEXT NOT NULL DEFAULT '',
     created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    is_confirmed  INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (flat_id) REFERENCES flats (id),
     FOREIGN KEY (agent_id) REFERENCES agents (id)
 );
@@ -96,6 +98,7 @@ CREATE TABLE IF NOT EXISTS storeroom_reservations (
     client_phone  TEXT NOT NULL,
     client_email  TEXT NOT NULL DEFAULT '',
     created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    is_confirmed  INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (storeroom_id) REFERENCES storerooms (id),
     FOREIGN KEY (agent_id) REFERENCES agents (id)
 );
@@ -189,6 +192,25 @@ def _migrate_price_per_m2(db: sqlite3.Connection):
             "UPDATE flats SET price_per_m2 = ? WHERE id = ?", (ppm, row["id"])
         )
     if rows:
+        db.commit()
+
+
+def _migrate_reservation_confirmation_columns(db: sqlite3.Connection):
+    """Add the 'is_confirmed' column to the reservation tables, if missing."""
+    for table in ("reservations", "storeroom_reservations"):
+        columns = {row["name"] for row in db.execute(f"PRAGMA table_info({table})")}
+        if "is_confirmed" not in columns:
+            db.execute(
+                f"ALTER TABLE {table} ADD COLUMN is_confirmed INTEGER NOT NULL DEFAULT 0"
+            )
+            db.commit()
+
+
+def _migrate_riser_column(db: sqlite3.Connection):
+    """Add the 'riser' column to a pre-existing flats table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
+    if "riser" not in columns:
+        db.execute("ALTER TABLE flats ADD COLUMN riser INTEGER NOT NULL DEFAULT 0")
         db.commit()
 
 
@@ -329,6 +351,8 @@ def init_db():
         _migrate_agent_profile_columns(db)
         _migrate_price_per_m2(db)
         _migrate_asset_paths(db)
+        _migrate_reservation_confirmation_columns(db)
+        _migrate_riser_column(db)
         _ensure_admin(db)
         _seed(db)
     finally:

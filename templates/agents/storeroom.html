@@ -57,6 +57,11 @@
             {% elif storeroom.status == 'reserved' and reservation %}
             <div class="reserve-info reserve-info--admin">
                 <div class="reserve-info__title">Данные о резерве (режим администратора)</div>
+                {% if reservation.is_confirmed %}
+                <div class="badge badge--confirmed">Бронь подтверждена</div>
+                {% else %}
+                <div class="badge badge--pending">Ожидает подтверждения</div>
+                {% endif %}
                 <dl class="spec">
                     <div class="spec__row"><dt>Агент</dt><dd>{{ reservation.agent_name }} ({{ reservation.agent_username }})</dd></div>
                     <div class="spec__row"><dt>Клиент</dt><dd>{{ reservation.client_name }}</dd></div>
@@ -66,6 +71,14 @@
                     {% endif %}
                     <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
                 </dl>
+                <form method="post"
+                      action="{{ url_for('agents.confirm_storeroom', house_id=house.id, storeroom_id=storeroom.id) }}">
+                    {% if reservation.is_confirmed %}
+                    <button type="submit" class="btn btn--ghost btn--full">Отменить подтверждение</button>
+                    {% else %}
+                    <button type="submit" class="btn btn--primary btn--full">Подтвердить бронь</button>
+                    {% endif %}
+                </form>
                 <form method="post"
                       action="{{ url_for('agents.cancel_storeroom_reservation', house_id=house.id, storeroom_id=storeroom.id) }}"
                       onsubmit="return confirm('Снять бронь с этой кладовой?');">

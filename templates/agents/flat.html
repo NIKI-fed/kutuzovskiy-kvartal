@@ -32,6 +32,7 @@
                 <div class="spec__row"><dt>Комнат</dt><dd>{{ flat.rooms }}</dd></div>
                 <div class="spec__row"><dt>Площадь</dt><dd>{{ '%.1f'|format(flat.area_m2) }} м²</dd></div>
                 <div class="spec__row"><dt>Этаж</dt><dd>{{ flat.floor }}</dd></div>
+                <div class="spec__row"><dt>Стояк</dt><dd>{{ flat.riser }}</dd></div>
                 <div class="spec__row"><dt>Цена за м²</dt><dd>{{ flat.price_per_m2|format_price }} ₽</dd></div>
                 <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
             </dl>
@@ -59,6 +60,11 @@
             {% elif flat.status == 'reserved' and reservation %}
             <div class="reserve-info reserve-info--admin">
                 <div class="reserve-info__title">Данные о резерве (режим администратора)</div>
+                {% if reservation.is_confirmed %}
+                <div class="badge badge--confirmed">Бронь подтверждена</div>
+                {% else %}
+                <div class="badge badge--pending">Ожидает подтверждения</div>
+                {% endif %}
                 <dl class="spec">
                     <div class="spec__row"><dt>Агент</dt><dd>{{ reservation.agent_name }} ({{ reservation.agent_username }})</dd></div>
                     <div class="spec__row"><dt>Клиент</dt><dd>{{ reservation.client_name }}</dd></div>
@@ -68,6 +74,14 @@
                     {% endif %}
                     <div class="spec__row"><dt>Дата брони</dt><dd>{{ reservation.created_at }}</dd></div>
                 </dl>
+                <form method="post"
+                      action="{{ url_for('agents.confirm_flat', house_id=house.id, flat_id=flat.id) }}">
+                    {% if reservation.is_confirmed %}
+                    <button type="submit" class="btn btn--ghost btn--full">Отменить подтверждение</button>
+                    {% else %}
+                    <button type="submit" class="btn btn--primary btn--full">Подтвердить бронь</button>
+                    {% endif %}
+                </form>
                 <form method="post"
                       action="{{ url_for('agents.cancel_reservation', house_id=house.id, flat_id=flat.id) }}"
                       onsubmit="return confirm('Снять бронь с этой квартиры?');">

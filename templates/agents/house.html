@@ -10,47 +10,56 @@
 
     <h1 class="page-title">{{ house.name }}</h1>
 
-    <section class="house-group">
-        <h2 class="group-title">Квартиры</h2>
-        <div class="card-grid">
-            {% for f in flats %}
-            <a class="flat-card flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
-                <div class="flat-card__top">
-                    <span class="flat-card__num">№ {{ f.flat_number }}</span>
-                    <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
-                </div>
-                <div class="flat-card__body">
-                    <div class="flat-card__rooms">{{ f.rooms }}-комн.</div>
-                    <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
-                    <div class="flat-card__floor">этаж {{ f.floor }}</div>
-                    <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
-                </div>
-            </a>
-            {% else %}
-            <p class="empty">Квартир пока нет.</p>
-            {% endfor %}
+    <div class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist">
+            <button type="button" class="tabs__tab is-active" role="tab" data-tab="flats" aria-selected="true">Квартиры</button>
+            <button type="button" class="tabs__tab" role="tab" data-tab="storerooms" aria-selected="false">Кладовые</button>
         </div>
-    </section>
 
-    {% if storerooms %}
-    <section class="house-group">
-        <h2 class="group-title">Кладовые</h2>
-        <div class="card-grid">
-            {% for s in storerooms %}
-            <a class="flat-card flat-card--{{ s.status }}" href="{{ url_for('agents.storeroom', house_id=house.id, storeroom_id=s.id) }}">
-                <div class="flat-card__top">
-                    <span class="flat-card__num">№ {{ s.number }}</span>
-                    <span class="status status--{{ s.status }}">{{ status_label(s.status) }}</span>
-                </div>
-                <div class="flat-card__body">
-                    <div class="flat-card__rooms">Кладовая</div>
-                    <div class="flat-card__area">{{ '%.1f'|format(s.area_m2) }} м²</div>
-                    <div class="flat-card__price">{{ s.price|format_price }} ₽</div>
-                </div>
-            </a>
-            {% endfor %}
+        <div class="tabs__panel is-active" role="tabpanel" data-panel="flats">
+            <div class="card-grid">
+                {% for f in flats %}
+                <a class="flat-card flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
+                    <div class="flat-card__top">
+                        <span class="flat-card__num">№ {{ f.flat_number }}</span>
+                        <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
+                    </div>
+                    <div class="flat-card__body">
+                        <div class="flat-card__rooms">{{ f.rooms }}-комн.</div>
+                        <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
+                        <div class="flat-card__floor">этаж {{ f.floor }}</div>
+                        <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
+                    </div>
+                </a>
+                {% else %}
+                <p class="empty">Квартир пока нет.</p>
+                {% endfor %}
+            </div>
         </div>
-    </section>
-    {% endif %}
+
+        <div class="tabs__panel" role="tabpanel" data-panel="storerooms">
+            <div class="card-grid">
+                {% for s in storerooms %}
+                <a class="flat-card flat-card--{{ s.status }}" href="{{ url_for('agents.storeroom', house_id=house.id, storeroom_id=s.id) }}">
+                    <div class="flat-card__top">
+                        <span class="flat-card__num">№ {{ s.number }}</span>
+                        <span class="status status--{{ s.status }}">{{ status_label(s.status) }}</span>
+                    </div>
+                    <div class="flat-card__body">
+                        <div class="flat-card__rooms">Кладовая</div>
+                        <div class="flat-card__area">{{ '%.1f'|format(s.area_m2) }} м²</div>
+                        <div class="flat-card__price">{{ s.price|format_price }} ₽</div>
+                    </div>
+                </a>
+                {% else %}
+                <p class="empty">Кладовых пока нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('agents.static', filename='js/house_tabs.js') }}"></script>
 {% endblock %}

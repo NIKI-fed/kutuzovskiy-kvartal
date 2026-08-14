@@ -64,16 +64,22 @@
                 <input class="field__input" type="number" name="rooms" min="0" value="{{ values.rooms }}">
             </label>
             <label class="field">
-                <span class="field__label">Общая площадь (м²)</span>
-                <input class="field__input" type="number" step="0.01" name="area_m2" id="area_m2" value="{{ values.area_m2 }}" required>
+                <span class="field__label">Стояк</span>
+                <input class="field__input" type="number" name="riser" min="0" value="{{ values.riser }}">
             </label>
         </div>
 
         <div class="field-grid">
             <label class="field">
+                <span class="field__label">Общая площадь (м²)</span>
+                <input class="field__input" type="number" step="0.01" name="area_m2" id="area_m2" value="{{ values.area_m2 }}" required>
+            </label>
+            <label class="field">
                 <span class="field__label">Цена за м² (₽)</span>
                 <input class="field__input" type="number" step="1" name="price_per_m2" id="price_per_m2" value="{{ values.price_per_m2 }}">
             </label>
+        </div>
+        <div class="field-grid">
             <label class="field">
                 <span class="field__label">Общая стоимость (₽)</span>
                 <input class="field__input" type="number" step="1" name="price" id="price" value="{{ values.price }}">

@@ -16,6 +16,7 @@
                     <th data-sort="flat_number">Квартира</th>
                     <th data-sort="floor">Этаж</th>
                     <th data-sort="rooms">Комнат</th>
+                    <th data-sort="riser">Стояк</th>
                     <th data-sort="area_m2">Площадь</th>
                     <th data-sort="price_per_m2">Цена/м²</th>
                     <th data-sort="price">Стоимость</th>
@@ -30,6 +31,7 @@
                     <td data-sort="{{ f.flat_number }}">№ {{ f.flat_number }}</td>
                     <td data-sort="{{ f.floor }}">{{ f.floor }}</td>
                     <td data-sort="{{ f.rooms }}">{{ f.rooms }}</td>
+                    <td data-sort="{{ f.riser }}">{{ f.riser }}</td>
                     <td data-sort="{{ f.area_m2 }}">{{ '%.1f'|format(f.area_m2) }} м²</td>
                     <td data-sort="{{ f.price_per_m2 }}">{{ f.price_per_m2|format_price }} ₽</td>
                     <td data-sort="{{ f.price }}">{{ f.price|format_price }} ₽</td>
