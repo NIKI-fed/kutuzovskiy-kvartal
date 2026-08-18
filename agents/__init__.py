@@ -246,15 +246,36 @@ def house(house_id):
     if house is None:
         abort(404)
     flats = db.execute(
-        "SELECT * FROM flats WHERE house_id = ? ORDER BY floor, flat_number",
+        "SELECT * FROM flats WHERE house_id = ? "
+        "ORDER BY riser, floor DESC, CAST(flat_number AS INTEGER), flat_number",
         (house_id,),
     ).fetchall()
     storerooms = db.execute(
         "SELECT * FROM storerooms WHERE house_id = ? ORDER BY number",
         (house_id,),
     ).fetchall()
+
+    # Grid layout: one column per riser, one row per floor (top floor first).
+    risers = [
+        row[0]
+        for row in db.execute(
+            "SELECT DISTINCT riser FROM flats WHERE house_id = ? ORDER BY riser",
+            (house_id,),
+        ).fetchall()
+    ]
+    floors = sorted({f["floor"] for f in flats}, reverse=True)
+    grid = {}
+    for f in flats:
+        grid.setdefault((f["riser"], f["floor"]), []).append(f)
+
     return render_template(
-        "agents/house.html", house=house, flats=flats, storerooms=storerooms
+        "agents/house.html",
+        house=house,
+        flats=flats,
+        risers=risers,
+        floors=floors,
+        grid=grid,
+        storerooms=storerooms,
     )
 
 
@@ -645,6 +666,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "house_id": form.get("house_id", ""),
             "floor": form.get("floor", ""),
             "flat_number": form.get("flat_number", ""),
+            "riser": form.get("riser", ""),
             "rooms": form.get("rooms", ""),
             "riser": form.get("riser", ""),
             "area_m2": form.get("area_m2", ""),
@@ -660,6 +682,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "house_id": flat["house_id"],
             "floor": flat["floor"],
             "flat_number": flat["flat_number"],
+            "riser": flat["riser"],
             "rooms": flat["rooms"],
             "riser": flat["riser"],
             "area_m2": f'{flat["area_m2"]:g}',
@@ -673,6 +696,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
         "house_id": "",
         "floor": "",
         "flat_number": "",
+        "riser": "",
         "rooms": "1",
         "riser": "",
         "area_m2": "",
@@ -690,6 +714,7 @@ def _validate_flat(db, form):
     house_id = form.get("house_id", "").strip()
     flat_number = form.get("flat_number", "").strip()
     floor = form.get("floor", "").strip()
+    riser = form.get("riser", "").strip()
     rooms = form.get("rooms", "").strip()
     riser = form.get("riser", "").strip()
     area_m2 = form.get("area_m2", "").strip()
@@ -716,6 +741,13 @@ def _validate_flat(db, form):
     except ValueError:
         errors.append("Этаж должен быть неотрицательным целым числом")
         floor_i = 0
+    try:
+        riser_i = int(riser) if riser else 0
+        if riser_i < 0:
+            raise ValueError
+    except ValueError:
+        errors.append("Стояк должен быть неотрицательным целым числом")
+        riser_i = 0
     try:
         rooms_i = int(rooms) if rooms else 1
         if rooms_i < 0:
@@ -768,6 +800,7 @@ def _validate_flat(db, form):
         "house_id": house_id_i,
         "flat_number": flat_number,
         "floor": floor_i,
+        "riser": riser_i,
         "rooms": rooms_i,
         "riser": riser_i,
         "area_m2": area_f,
@@ -939,11 +972,11 @@ def admin_flat_new():
         new_urls = _save_plan_images(request.files.getlist("plan"))
         cur = db.execute(
             "INSERT INTO flats "
-            "(house_id, flat_number, floor, rooms, riser, area_m2, price_per_m2, price, status, plan_images) "
+            "(house_id, flat_number, floor, riser, rooms, area_m2, price_per_m2, price, status, plan_images) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
-                data["house_id"], data["flat_number"], data["floor"], data["rooms"],
-                data["riser"], data["area_m2"], data["price_per_m2"], data["price"],
+                data["house_id"], data["flat_number"], data["floor"], data["riser"],
+                data["rooms"], data["area_m2"], data["price_per_m2"], data["price"],
                 data["status"], json.dumps(new_urls),
             ),
         )
@@ -992,13 +1025,14 @@ def admin_flat_edit(flat_id):
             )
         images = images + _save_plan_images(request.files.getlist("plan"))
         db.execute(
-            "UPDATE flats SET house_id = ?, flat_number = ?, floor = ?, rooms = ?, "
-            "riser = ?, area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
+            "UPDATE flats SET house_id = ?, flat_number = ?, floor = ?, riser = ?, rooms = ?, "
+            "area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
             "WHERE id = ?",
             (
-                data["house_id"], data["flat_number"], data["floor"], data["rooms"],
-                data["riser"], data["area_m2"], data["price_per_m2"], data["price"],
-                data["status"], json.dumps(images), flat_id,
+                data["house_id"], data["flat_number"], data["floor"], data["riser"],
+                data["rooms"],
+                data["area_m2"], data["price_per_m2"], data["price"], data["status"],
+                json.dumps(images), flat_id,
             ),
         )
         _sync_flat_reservation(

@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS flats (
     house_id      INTEGER NOT NULL,
     flat_number   TEXT NOT NULL,
     floor         INTEGER NOT NULL,
+    riser         INTEGER NOT NULL DEFAULT 0,
     rooms         INTEGER NOT NULL,
     riser         INTEGER NOT NULL DEFAULT 0,
     area_m2       REAL NOT NULL,
@@ -176,6 +177,14 @@ def _migrate_agent_profile_columns(db: sqlite3.Connection):
         db.commit()
 
 
+def _migrate_riser_column(db: sqlite3.Connection):
+    """Add the 'riser' column to a pre-existing flats table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
+    if "riser" not in columns:
+        db.execute("ALTER TABLE flats ADD COLUMN riser INTEGER NOT NULL DEFAULT 0")
+        db.commit()
+
+
 def _migrate_price_per_m2(db: sqlite3.Connection):
     """Add the 'price_per_m2' column to a pre-existing flats table, if missing,
     and backfill it from price / area_m2 for existing rows."""
@@ -264,12 +273,13 @@ def _seed(db: sqlite3.Connection):
             for flat in _sample_flats(h["plans"]):
                 db.execute(
                     "INSERT INTO flats "
-                    "(house_id, flat_number, floor, rooms, area_m2, price, status, plan_images) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    "(house_id, flat_number, floor, riser, rooms, area_m2, price, status, plan_images) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         house_id,
                         flat["flat_number"],
                         flat["floor"],
+                        flat["riser"],
                         flat["rooms"],
                         flat["area_m2"],
                         flat["price"],
@@ -311,6 +321,7 @@ def _sample_flats(plan_pool):
             {
                 "flat_number": f"{floor}{(i % 4) + 1:02d}",
                 "floor": floor,
+                "riser": (i % 4) + 1,
                 "rooms": rooms,
                 "area_m2": area,
                 "price": price,
@@ -350,6 +361,7 @@ def init_db():
         _migrate_password_column(db)
         _migrate_agent_profile_columns(db)
         _migrate_price_per_m2(db)
+        _migrate_riser_column(db)
         _migrate_asset_paths(db)
         _migrate_reservation_confirmation_columns(db)
         _migrate_riser_column(db)

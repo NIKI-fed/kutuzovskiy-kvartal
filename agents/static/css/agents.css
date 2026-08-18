@@ -260,6 +260,84 @@ img {
     display: block;
 }
 
+/* ── Riser grid (house view: one column per riser) ───────── */
+.riser-grid-wrap {
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.riser-grid {
+    display: grid;
+    grid-template-columns: minmax(64px, auto) repeat(var(--riser-count), minmax(190px, 1fr));
+    gap: 10px;
+    min-width: max-content;
+}
+
+.riser-grid__corner,
+.riser-grid__head {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    text-align: center;
+    padding: 8px 4px;
+    border-bottom: 2px solid var(--line);
+}
+
+.riser-grid__corner {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.riser-grid__floor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    background: rgba(32, 71, 115, 0.06);
+    border-radius: 10px;
+    min-height: 48px;
+}
+
+.riser-grid__cell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 48px;
+}
+
+.riser-grid__cell:not(:empty) {
+    min-height: 0;
+}
+
+.riser-grid .flat-card--cell {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 12px;
+}
+
+.riser-grid .flat-card--cell .flat-card__num {
+    font-size: 16px;
+}
+
+.riser-grid .flat-card--cell .flat-card__rooms {
+    font-size: 14px;
+}
+
+.riser-grid .flat-card--cell .flat-card__area {
+    font-size: 13px;
+}
+
+.riser-grid .flat-card--cell .flat-card__price {
+    margin-top: 4px;
+    font-size: 15px;
+}
+
+.riser-grid .flat-card--cell .flat-card__body {
+    gap: 2px;
+}
+
 /* ── Confirmation badges ─────────────────────────────────── */
 .badge {
     display: inline-block;
@@ -858,6 +936,11 @@ img {
 
     .card-grid {
         grid-template-columns: 1fr;
+    }
+
+    .riser-grid {
+        grid-template-columns: minmax(48px, auto) repeat(var(--riser-count), minmax(170px, 1fr));
+        gap: 6px;
     }
 
     .flat-detail__info {
