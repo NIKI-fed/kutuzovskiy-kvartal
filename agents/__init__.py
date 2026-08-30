@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import re
@@ -19,6 +20,7 @@ from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 
 from agents.db import (
+    BASE_DIR,
     PLANS_DIR,
     PLANS_URL_PREFIX,
     close_db,
@@ -619,6 +621,33 @@ def admin_reservations():
         ") ORDER BY created_at DESC, id DESC"
     ).fetchall()
     return render_template("agents/admin_reservations.html", reservations=reservations)
+
+
+# ── Admin: site submissions ───────────────────────────────────────────────────
+
+SUBMISSIONS_CSV = os.path.join(BASE_DIR, "submissions.csv")
+
+
+def _read_submissions() -> list:
+    """Read site callback submissions from the CSV file, newest first."""
+    rows = []
+    if not os.path.isfile(SUBMISSIONS_CSV):
+        return rows
+    try:
+        with open(SUBMISSIONS_CSV, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                rows.append({k: (v or "").strip() for k, v in row.items()})
+    except (OSError, csv.Error):
+        return []
+    rows.sort(key=lambda r: r.get("timestamp", ""), reverse=True)
+    return rows
+
+
+@agents_bp.route("/admin/submissions")
+@admin_required
+def admin_submissions():
+    submissions = _read_submissions()
+    return render_template("agents/admin_submissions.html", submissions=submissions)
 
 
 # ── Admin: flats management ───────────────────────────────────────────────────

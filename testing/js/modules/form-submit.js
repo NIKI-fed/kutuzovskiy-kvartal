@@ -36,8 +36,7 @@ if (form) {
         
         const formData = new FormData(form);
         
-        // ⚠️ ЗАМЕНИТЕ НА URL ВАШЕГО БЭКА
-        const BACKEND_URL = 'https://ваш-бэк.ру/api/send';
+        const BACKEND_URL = '/api/send';
         
         // Блокируем кнопку на время отправки, чтобы не было двойных запросов
         if (submitBtn) {
