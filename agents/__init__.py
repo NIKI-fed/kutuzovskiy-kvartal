@@ -13,6 +13,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    Response,
     session,
     url_for,
 )
@@ -636,7 +637,11 @@ def _read_submissions() -> list:
     try:
         with open(SUBMISSIONS_CSV, newline="", encoding="utf-8") as f:
             for row in csv.DictReader(f):
-                rows.append({k: (v or "").strip() for k, v in row.items()})
+                rows.append({
+                    k: v.strip() if isinstance(v, str) else ""
+                    for k, v in row.items()
+                    if k
+                })
     except (OSError, csv.Error):
         return []
     rows.sort(key=lambda r: r.get("timestamp", ""), reverse=True)
@@ -648,6 +653,24 @@ def _read_submissions() -> list:
 def admin_submissions():
     submissions = _read_submissions()
     return render_template("agents/admin_submissions.html", submissions=submissions)
+
+
+@agents_bp.route("/admin/submissions/download")
+@admin_required
+def admin_submissions_download():
+    submissions = _read_submissions()
+    lines = ["Заявки с сайта"]
+    for s in submissions:
+        lines.append(
+            f"{s.get('timestamp', '')}\t{s.get('name', '')}\t"
+            f"{s.get('phone', '')}\t{s.get('email', '') or '—'}"
+        )
+    content = "\n".join(lines) + "\n"
+    return Response(
+        content,
+        mimetype="text/plain",
+        headers={"Content-Disposition": "attachment; filename=submissions.txt"},
+    )
 
 
 # ── Admin: flats management ───────────────────────────────────────────────────

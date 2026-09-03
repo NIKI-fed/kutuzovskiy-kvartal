@@ -2,7 +2,12 @@
 {% block title %}Заявки с сайта — Панель администратора{% endblock %}
 {% block content %}
 <div class="cab-container">
-    <h1 class="page-title">Заявки с сайта</h1>
+    <h1 class="page-title">
+        Заявки с сайта
+        {% if submissions %}
+        <a class="btn btn--ghost" href="{{ url_for('agents.admin_submissions_download') }}">Скачать txt</a>
+        {% endif %}
+    </h1>
 
     {% if submissions %}
     <div class="table-wrap">
