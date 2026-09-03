@@ -30,13 +30,13 @@ const tolstoyData = {
         title: '2 комнатная квартира',
         image: '/assets/images/plans/bs_2/2.png',
         area: 'От 54 кв метров',
-        address: 'Клубный дом "На Толстого"'
+        address: 'Клубный дом "На Кутузова"'
     },
     3: {
         title: '3 комнатная квартира',
         image: '/assets/images/plans/bs_2/3.png',
         area: 'От 73 кв метров',
-        address: 'Клубный дом "На Толстого"'
+        address: 'Клубный дом "На Кутузова"'
     }
 };
 
