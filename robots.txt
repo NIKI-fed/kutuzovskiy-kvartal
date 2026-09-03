@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /cart/
+Disallow: /search/
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*&sort=
+Disallow: /*&page=
+
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /images/
