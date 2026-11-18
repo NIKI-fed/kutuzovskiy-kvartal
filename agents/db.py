@@ -53,11 +53,11 @@ CREATE TABLE IF NOT EXISTS houses (
 CREATE TABLE IF NOT EXISTS flats (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     house_id      INTEGER NOT NULL,
+    entrance      INTEGER NOT NULL DEFAULT 0,
     flat_number   TEXT NOT NULL,
     floor         INTEGER NOT NULL,
     riser         INTEGER NOT NULL DEFAULT 0,
     rooms         INTEGER NOT NULL,
-    riser         INTEGER NOT NULL DEFAULT 0,
     area_m2       REAL NOT NULL,
     price_per_m2  REAL NOT NULL DEFAULT 0,
     price         INTEGER NOT NULL,
@@ -177,11 +177,11 @@ def _migrate_agent_profile_columns(db: sqlite3.Connection):
         db.commit()
 
 
-def _migrate_riser_column(db: sqlite3.Connection):
-    """Add the 'riser' column to a pre-existing flats table, if missing."""
+def _migrate_entrance_column(db: sqlite3.Connection):
+    """Add the 'entrance' column to a pre-existing flats table, if missing."""
     columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
-    if "riser" not in columns:
-        db.execute("ALTER TABLE flats ADD COLUMN riser INTEGER NOT NULL DEFAULT 0")
+    if "entrance" not in columns:
+        db.execute("ALTER TABLE flats ADD COLUMN entrance INTEGER NOT NULL DEFAULT 0")
         db.commit()
 
 
@@ -362,9 +362,9 @@ def init_db():
         _migrate_agent_profile_columns(db)
         _migrate_price_per_m2(db)
         _migrate_riser_column(db)
+        _migrate_entrance_column(db)
         _migrate_asset_paths(db)
         _migrate_reservation_confirmation_columns(db)
-        _migrate_riser_column(db)
         _ensure_admin(db)
         _seed(db)
     finally:

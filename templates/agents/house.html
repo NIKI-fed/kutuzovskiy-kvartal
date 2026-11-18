@@ -17,18 +17,21 @@
         </div>
 
         <div class="tabs__panel is-active" role="tabpanel" data-panel="flats">
-            {% if risers %}
+            {% set all_sections = sections if sections is not none else ([{'number': 0, 'risers': risers, 'floors': floors, 'grid': grid}] if risers else []) %}
+            {% if all_sections %}
+            {% for s in all_sections %}
+            {% if s.number %}<h2 class="entrance-title">Подъезд {{ s.number }}</h2>{% endif %}
             <div class="riser-grid-wrap">
-                <div class="riser-grid" style="--riser-count: {{ risers|length }};">
+                <div class="riser-grid" style="--riser-count: {{ s.risers|length }};">
                     <div class="riser-grid__corner">Этаж / Стояк</div>
-                    {% for r in risers %}
+                    {% for r in s.risers %}
                     <div class="riser-grid__head">{{ 'Стояк ' ~ r if r else 'Без стояка' }}</div>
                     {% endfor %}
-                    {% for floor in floors %}
+                    {% for floor in s.floors %}
                     <div class="riser-grid__floor">{{ floor }}</div>
-                    {% for r in risers %}
+                    {% for r in s.risers %}
                     <div class="riser-grid__cell">
-                        {% for f in grid.get((r, floor), []) %}
+                        {% for f in s.grid.get((r, floor), []) %}
                         <a class="flat-card flat-card--cell flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
                             <div class="flat-card__top">
                                 <span class="flat-card__num">№ {{ f.flat_number }}</span>
@@ -46,6 +49,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% endfor %}
             {% else %}
             <p class="empty">Квартир пока нет.</p>
             {% endif %}

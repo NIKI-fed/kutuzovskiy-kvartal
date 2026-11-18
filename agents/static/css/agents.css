@@ -261,6 +261,17 @@ img {
 }
 
 /* ── Riser grid (house view: one column per riser) ───────── */
+.entrance-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 28px 0 12px;
+}
+
+.entrance-title:first-child {
+    margin-top: 0;
+}
+
 .riser-grid-wrap {
     overflow-x: auto;
     padding-bottom: 8px;
@@ -1004,6 +1015,10 @@ img {
     gap: 16px;
 }
 
+.field-grid--three {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
 .field-hint {
     color: var(--muted);
     font-size: 13px;
@@ -1090,7 +1105,8 @@ img {
 }
 
 @media (max-width: 640px) {
-    .field-grid {
+    .field-grid,
+    .field-grid--three {
         grid-template-columns: 1fr;
     }
 

@@ -58,7 +58,7 @@
             </label>
         </div>
 
-        <div class="field-grid">
+        <div class="field-grid field-grid--three">
             <label class="field">
                 <span class="field__label">Комнат</span>
                 <input class="field__input" type="number" name="rooms" min="0" value="{{ values.rooms }}">
@@ -66,6 +66,11 @@
             <label class="field">
                 <span class="field__label">Стояк</span>
                 <input class="field__input" type="number" name="riser" min="0" value="{{ values.riser }}">
+            </label>
+            <label class="field">
+                <span class="field__label">Подъезд</span>
+                <input class="field__input" type="number" name="entrance" min="0" value="{{ values.entrance }}">
+                <span class="field-hint">0 — дом без подъездов.</span>
             </label>
         </div>
 
