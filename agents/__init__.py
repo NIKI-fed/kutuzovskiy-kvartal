@@ -253,10 +253,12 @@ def house(house_id):
         "ORDER BY entrance, riser, floor DESC, CAST(flat_number AS INTEGER), flat_number",
         (house_id,),
     ).fetchall()
-    storerooms = db.execute(
-        "SELECT * FROM storerooms WHERE house_id = ? ORDER BY number",
-        (house_id,),
-    ).fetchall()
+    storerooms = []
+    if house_id != 3:
+        storerooms = db.execute(
+            "SELECT * FROM storerooms WHERE house_id = ? ORDER BY number",
+            (house_id,),
+        ).fetchall()
 
     entrances = [
         row[0]
@@ -277,7 +279,23 @@ def house(house_id):
         return {"risers": risers, "floors": floors, "grid": grid}
 
     sections = None
-    if entrances:
+    entrance_sections = None
+    commercial = []
+    if house_id == 3:
+        # House 3 gets one tab per entrance plus a separate commercial tab
+        # (flats with entrance = 0 are grouped into entrance 1).
+        grouped = {}
+        for f in flats:
+            if f["is_commercial"]:
+                commercial.append(f)
+            else:
+                grouped.setdefault(max(f["entrance"], 1), []).append(f)
+        entrance_sections = [
+            {"number": entrance, **build_section(grouped[entrance])}
+            for entrance in sorted(grouped)
+        ]
+        risers, floors, grid = [], [], {}
+    elif entrances:
         # Houses with entrances: one grid per entrance (flats with entrance = 0,
         # if any, are grouped into a leading section without a header).
         grouped = {}
@@ -300,6 +318,8 @@ def house(house_id):
         floors=floors,
         grid=grid,
         sections=sections,
+        entrance_sections=entrance_sections,
+        commercial=commercial,
         storerooms=storerooms,
     )
 
@@ -748,6 +768,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "price_per_m2": form.get("price_per_m2", ""),
             "price": form.get("price", ""),
             "status": form.get("status", "available"),
+            "is_commercial": "1" if form.get("is_commercial") else "",
             "client_name": form.get("client_name", "").strip(),
             "client_phone": form.get("client_phone", "").strip(),
         }
@@ -765,6 +786,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
             "price_per_m2": f"{ppm:g}" if ppm else "",
             "price": flat["price"],
             "status": flat["status"],
+            "is_commercial": 1 if flat["is_commercial"] else "",
             "client_name": (reservation["client_name"] if reservation else ""),
             "client_phone": (reservation["client_phone"] if reservation else ""),
         }
@@ -780,6 +802,7 @@ def _flat_form_values(flat=None, form=None, reservation=None) -> dict:
         "price_per_m2": "",
         "price": "",
         "status": "available",
+        "is_commercial": "",
         "client_name": "",
         "client_phone": "",
     }
@@ -872,6 +895,7 @@ def _validate_flat(db, form):
         price_i = 0
     if status not in ("available", "reserved", "sold"):
         status = "available"
+    is_commercial = 1 if form.get("is_commercial") == "1" else 0
     # Auto-compute total price when only area and price per m² were provided.
     if not price and area_f > 0 and ppm_f > 0:
         price_i = int(round(area_f * ppm_f))
@@ -893,6 +917,7 @@ def _validate_flat(db, form):
         "price_per_m2": ppm_f,
         "price": price_i,
         "status": status,
+        "is_commercial": is_commercial,
         "client_name": client_name,
         "client_phone": client_phone,
         "client_email": client_email,
@@ -1030,7 +1055,7 @@ def _validate_storeroom(db, form):
 def admin_flats():
     db = get_db()
     flats = db.execute(
-        "SELECT f.id, f.flat_number, f.floor, f.rooms, f.riser, f.entrance, f.area_m2, f.price, f.price_per_m2, "
+        "SELECT f.id, f.flat_number, f.floor, f.rooms, f.riser, f.entrance, f.is_commercial, f.area_m2, f.price, f.price_per_m2, "
         "f.status, h.name AS house_name, h.id AS house_id "
         "FROM flats f JOIN houses h ON h.id = f.house_id "
         "ORDER BY h.name, CAST(f.flat_number AS INTEGER), f.flat_number"
@@ -1058,12 +1083,12 @@ def admin_flat_new():
         new_urls = _save_plan_images(request.files.getlist("plan"))
         cur = db.execute(
             "INSERT INTO flats "
-            "(house_id, entrance, flat_number, floor, riser, rooms, area_m2, price_per_m2, price, status, plan_images) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "(house_id, entrance, flat_number, floor, riser, rooms, area_m2, price_per_m2, price, status, is_commercial, plan_images) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 data["house_id"], data["entrance"], data["flat_number"], data["floor"],
                 data["riser"], data["rooms"], data["area_m2"], data["price_per_m2"],
-                data["price"], data["status"], json.dumps(new_urls),
+                data["price"], data["status"], data["is_commercial"], json.dumps(new_urls),
             ),
         )
         _sync_flat_reservation(
@@ -1112,13 +1137,13 @@ def admin_flat_edit(flat_id):
         images = images + _save_plan_images(request.files.getlist("plan"))
         db.execute(
             "UPDATE flats SET house_id = ?, entrance = ?, flat_number = ?, floor = ?, riser = ?, rooms = ?, "
-            "area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, plan_images = ? "
+            "area_m2 = ?, price_per_m2 = ?, price = ?, status = ?, is_commercial = ?, plan_images = ? "
             "WHERE id = ?",
             (
                 data["house_id"], data["entrance"], data["flat_number"], data["floor"],
                 data["riser"], data["rooms"],
                 data["area_m2"], data["price_per_m2"], data["price"], data["status"],
-                json.dumps(images), flat_id,
+                data["is_commercial"], json.dumps(images), flat_id,
             ),
         )
         _sync_flat_reservation(

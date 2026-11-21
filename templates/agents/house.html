@@ -1,6 +1,36 @@
 {% extends "agents/base.html" %}
 {% block title %}{{ house.name }} — Личный кабинет агента{% endblock %}
 {% block content %}
+{% macro riser_grid(section) %}
+<div class="riser-grid-wrap">
+    <div class="riser-grid" style="--riser-count: {{ section.risers|length }};">
+        <div class="riser-grid__corner">Этаж / Стояк</div>
+        {% for r in section.risers %}
+        <div class="riser-grid__head">{{ 'Стояк ' ~ r if r else 'Без стояка' }}</div>
+        {% endfor %}
+        {% for floor in section.floors %}
+        <div class="riser-grid__floor">{{ floor }}</div>
+        {% for r in section.risers %}
+        <div class="riser-grid__cell">
+            {% for f in section.grid.get((r, floor), []) %}
+            <a class="flat-card flat-card--cell flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
+                <div class="flat-card__top">
+                    <span class="flat-card__num">№ {{ f.flat_number }}</span>
+                    <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
+                </div>
+                <div class="flat-card__body">
+                    <div class="flat-card__rooms">{{ f.rooms }}-комн.</div>
+                    <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
+                    <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
 <div class="cab-container">
     <nav class="breadcrumbs">
         <a href="{{ url_for('agents.houses') }}">Дома</a>
@@ -12,43 +42,53 @@
 
     <div class="tabs" data-tabs>
         <div class="tabs__list" role="tablist">
+            {% if entrance_sections is not none %}
+            {% for s in entrance_sections %}
+            <button type="button" class="tabs__tab{% if loop.first %} is-active{% endif %}" role="tab" data-tab="entrance-{{ s.number }}" aria-selected="{{ 'true' if loop.first else 'false' }}">Квартиры (подъезд {{ s.number }})</button>
+            {% endfor %}
+            <button type="button" class="tabs__tab{% if not entrance_sections %} is-active{% endif %}" role="tab" data-tab="commercial" aria-selected="{{ 'true' if not entrance_sections else 'false' }}">Коммерция</button>
+            {% else %}
             <button type="button" class="tabs__tab is-active" role="tab" data-tab="flats" aria-selected="true">Квартиры</button>
             <button type="button" class="tabs__tab" role="tab" data-tab="storerooms" aria-selected="false">Кладовые</button>
+            {% endif %}
         </div>
 
+        {% if entrance_sections is not none %}
+        {% for s in entrance_sections %}
+        <div class="tabs__panel{% if loop.first %} is-active{% endif %}" role="tabpanel" data-panel="entrance-{{ s.number }}">
+            {% if s.grid %}
+            {{ riser_grid(s) }}
+            {% else %}
+            <p class="empty">Квартир в этом подъезде пока нет.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="tabs__panel{% if not entrance_sections %} is-active{% endif %}" role="tabpanel" data-panel="commercial">
+            <div class="card-grid">
+                {% for f in commercial %}
+                <a class="flat-card flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
+                    <div class="flat-card__top">
+                        <span class="flat-card__num">№ {{ f.flat_number }}</span>
+                        <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
+                    </div>
+                    <div class="flat-card__body">
+                        <div class="flat-card__rooms">Коммерция</div>
+                        <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
+                        <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
+                    </div>
+                </a>
+                {% else %}
+                <p class="empty">Коммерческих помещений пока нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
         <div class="tabs__panel is-active" role="tabpanel" data-panel="flats">
             {% set all_sections = sections if sections is not none else ([{'number': 0, 'risers': risers, 'floors': floors, 'grid': grid}] if risers else []) %}
             {% if all_sections %}
             {% for s in all_sections %}
             {% if s.number %}<h2 class="entrance-title">Подъезд {{ s.number }}</h2>{% endif %}
-            <div class="riser-grid-wrap">
-                <div class="riser-grid" style="--riser-count: {{ s.risers|length }};">
-                    <div class="riser-grid__corner">Этаж / Стояк</div>
-                    {% for r in s.risers %}
-                    <div class="riser-grid__head">{{ 'Стояк ' ~ r if r else 'Без стояка' }}</div>
-                    {% endfor %}
-                    {% for floor in s.floors %}
-                    <div class="riser-grid__floor">{{ floor }}</div>
-                    {% for r in s.risers %}
-                    <div class="riser-grid__cell">
-                        {% for f in s.grid.get((r, floor), []) %}
-                        <a class="flat-card flat-card--cell flat-card--{{ f.status }}" href="{{ url_for('agents.flat', house_id=house.id, flat_id=f.id) }}">
-                            <div class="flat-card__top">
-                                <span class="flat-card__num">№ {{ f.flat_number }}</span>
-                                <span class="status status--{{ f.status }}">{{ status_label(f.status) }}</span>
-                            </div>
-                            <div class="flat-card__body">
-                                <div class="flat-card__rooms">{{ f.rooms }}-комн.</div>
-                                <div class="flat-card__area">{{ '%.1f'|format(f.area_m2) }} м²</div>
-                                <div class="flat-card__price">{{ f.price|format_price }} ₽</div>
-                            </div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                    {% endfor %}
-                    {% endfor %}
-                </div>
-            </div>
+            {{ riser_grid(s) }}
             {% endfor %}
             {% else %}
             <p class="empty">Квартир пока нет.</p>
@@ -74,6 +114,7 @@
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

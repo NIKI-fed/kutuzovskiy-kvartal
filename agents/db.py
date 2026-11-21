@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS flats (
     price_per_m2  REAL NOT NULL DEFAULT 0,
     price         INTEGER NOT NULL,
     status        TEXT NOT NULL DEFAULT 'available',
+    is_commercial INTEGER NOT NULL DEFAULT 0,
     plan_images   TEXT NOT NULL DEFAULT '[]',
     FOREIGN KEY (house_id) REFERENCES houses (id)
 );
@@ -182,6 +183,14 @@ def _migrate_entrance_column(db: sqlite3.Connection):
     columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
     if "entrance" not in columns:
         db.execute("ALTER TABLE flats ADD COLUMN entrance INTEGER NOT NULL DEFAULT 0")
+        db.commit()
+
+
+def _migrate_commercial_column(db: sqlite3.Connection):
+    """Add the 'is_commercial' column to a pre-existing flats table, if missing."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(flats)")}
+    if "is_commercial" not in columns:
+        db.execute("ALTER TABLE flats ADD COLUMN is_commercial INTEGER NOT NULL DEFAULT 0")
         db.commit()
 
 
@@ -363,6 +372,7 @@ def init_db():
         _migrate_price_per_m2(db)
         _migrate_riser_column(db)
         _migrate_entrance_column(db)
+        _migrate_commercial_column(db)
         _migrate_asset_paths(db)
         _migrate_reservation_confirmation_columns(db)
         _ensure_admin(db)

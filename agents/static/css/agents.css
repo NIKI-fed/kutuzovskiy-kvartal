@@ -921,6 +921,18 @@ img {
     border-color: var(--blue);
 }
 
+.field--check {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.field--check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--blue);
+}
+
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 900px) {
     .flat-detail {

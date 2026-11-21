@@ -74,6 +74,11 @@
             </label>
         </div>
 
+        <label class="field field--check">
+            <input type="checkbox" name="is_commercial" value="1" {% if values.is_commercial %}checked{% endif %}>
+            <span class="field__label">Коммерческое помещение</span>
+        </label>
+
         <div class="field-grid">
             <label class="field">
                 <span class="field__label">Общая площадь (м²)</span>

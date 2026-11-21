@@ -34,6 +34,7 @@
                 <div class="spec__row"><dt>Этаж</dt><dd>{{ flat.floor }}</dd></div>
                 <div class="spec__row"><dt>Стояк</dt><dd>{{ flat.riser }}</dd></div>
                 {% if flat.entrance %}<div class="spec__row"><dt>Подъезд</dt><dd>{{ flat.entrance }}</dd></div>{% endif %}
+                {% if flat.is_commercial %}<div class="spec__row"><dt>Назначение</dt><dd>Коммерческое помещение</dd></div>{% endif %}
                 <div class="spec__row"><dt>Цена за м²</dt><dd>{{ flat.price_per_m2|format_price }} ₽</dd></div>
                 <div class="spec__row"><dt>Цена</dt><dd>{{ flat.price|format_price }} ₽</dd></div>
             </dl>
